@@ -1,0 +1,15 @@
+Homebus.pages/
+Source/rWerkstattplan.h
+USB_Stepper.xcodeproj/
+/Source/*
+designable.nib
+keyedobjects.nib
+applet.*
+main.scpt
+applet
+*_new.c
+*jpg
+/English/*
+*.icns
+*.ico
+/nibs/*
