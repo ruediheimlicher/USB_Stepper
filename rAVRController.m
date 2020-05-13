@@ -804,6 +804,20 @@ private void button4_Click(object sender, EventArgs e)
          // Index fuer zu loeschende Daten im Schnittdatenarray
          switch (abschnittcode)
          {
+            case 0xAF:
+            {
+               NSLog(@"readUSB  AF next ");
+               NSLog(@"next Abschnitt");
+               uint8_t abschnittnummer = (UInt8)buffer[5]; 
+               uint8_t ladeposition = (UInt8)buffer[6]; 
+               [NotificationDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"abschnittcode"];
+                [NotificationDic setObject:[NSNumber numberWithInt:abschnittnummer] forKey:@"abschnittnummer"];
+                [NotificationDic setObject:[NSNumber numberWithInt:ladeposition] forKey:@"abschnittcode"];
+               NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+               [nc postNotificationName:@"usbread" object:self userInfo:NotificationDic];
+               return;
+               
+            }break;
             case 0xE1: // Antwort auf Mouseup 0xE0 HALT
             {
                NSLog(@"readUSB  mouseup ");
@@ -980,9 +994,7 @@ private void button4_Click(object sender, EventArgs e)
             NSLog(@"mausistdown==2");
             Stepperposition=0;
          }
-         
-         
-         
+                  
          NSMutableIndexSet* EndIndexSet=[NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0xAA,4)]; // Datenreihe ist fertig, kein Anschlag
          [EndIndexSet addIndexesInRange:NSMakeRange(0xA5,4)];
          

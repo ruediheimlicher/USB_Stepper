@@ -2247,7 +2247,7 @@ return returnInt;
       //      }
       if (i<8)
       {
-          //NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
+          NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
       }
       
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
@@ -9075,11 +9075,18 @@ return returnInt;
       homeanschlagCount = [[[note userInfo]objectForKey:@"homeanschlagset"]count];
    }
 
-   if([[note userInfo]objectForKey:@"abschnittfertig"])
+   //if([[note userInfo]objectForKey:@"abschnittcode"])
+   if([[note userInfo]objectForKey:@"abschnittcode"])
    {
-      int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittfertig"]intValue];
+      int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];
+      
       switch (abschnittfertig)
       {
+         case 0xAF:
+         {
+             NSLog(@"AVR USBReadAktion next %@",[[note userInfo] description]);
+            
+         }break;
          case 0xAA:
          {
           //  NSLog(@"AVR End Abschnitt von A");
