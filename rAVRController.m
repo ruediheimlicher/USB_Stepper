@@ -1127,7 +1127,7 @@ private void button4_Click(object sender, EventArgs e)
       {
          NSMutableDictionary* timerDic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"home",[NSNumber numberWithInt:1],@"halt", nil];
 
-         readTimer = [[NSTimer scheduledTimerWithTimeInterval:0.05 
+         readTimer = [[NSTimer scheduledTimerWithTimeInterval:0.005 
                                                        target:self 
                                                      selector:@selector(readUSB:) 
                                                      userInfo:timerDic repeats:YES]retain];

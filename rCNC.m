@@ -265,10 +265,11 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 
    }
 
+   motorstatus |= (1<<MOTOR_A);
    
    //NSLog(@"motorstatus: DistanzAX:\t%2.2f\t DistanzAY:\t%2.2f\t DistanzBX:\t%2.2f\t DistanzBY:\t%2.2f\tmotorstatus: %d",DistanzAX,DistanzAY,DistanzBX,DistanzBY,motorstatus);
 
-//   NSLog(@"motorstatus: %d",motorstatus);
+   NSLog(@"SteuerdatenVonDic motorstatus: %d",motorstatus);
    /*
     Routine aus CNCSlave fuer Feststellung des rel Motors
     if (StepCounterA > StepCounterB) 
