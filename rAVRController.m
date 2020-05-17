@@ -657,22 +657,22 @@ private void button4_Click(object sender, EventArgs e)
 
 - (void)readUSB:(NSTimer*) inTimer
 {
-	char        buffer[32]={};
-	int	 		result = 0;
-	NSData*		dataRead;
-	int         reportSize=32;
-	
+   char        buffer[32]={};
+   int          result = 0;
+   NSData*      dataRead;
+   int         reportSize=32;
+   
    /*
-   double dauer0 = 0;
-   double dauer1 = 0;
-   double dauer2 = 0;
-   double dauer3 = 0;
-   double dauer4 = 0;
-   double dauer5 = 0;
-   double dauer6 = 0;
-   double dauer7 = 0;
-   double dauer8 = 0;
-   */
+    double dauer0 = 0;
+    double dauer1 = 0;
+    double dauer2 = 0;
+    double dauer3 = 0;
+    double dauer4 = 0;
+    double dauer5 = 0;
+    double dauer6 = 0;
+    double dauer7 = 0;
+    double dauer8 = 0;
+    */
    
    if (Stepperposition ==0)//< [SchnittDatenArray count])
    {
@@ -680,13 +680,13 @@ private void button4_Click(object sender, EventArgs e)
       [self stopTimer];
       return;
    }
-	//NSLog(@"readUSB A");
+   //NSLog(@"readUSB A");
    
    
-    result = rawhid_recv(0, buffer, 32, 50);
+   result = rawhid_recv(0, buffer, 32, 50);
    
-
-//fprintf(stderr,"readUSB rawhid_recv: %d\n",result);
+   
+   //fprintf(stderr,"readUSB rawhid_recv: %d\n",result);
    dataRead = [NSData dataWithBytes:buffer length:reportSize];
    
    //NSLog(@"ignoreDuplicates: %d",ignoreDuplicates);
@@ -738,7 +738,7 @@ private void button4_Click(object sender, EventArgs e)
       
       NSLog(@"**read_USB   buffer 0: %02X motor: %d",(UInt8)buffer[0],(UInt8)buffer[21]);
       
-//       if (abschnittcode >= 0xA0) // Code fuer Fertig: AD
+      //       if (abschnittcode >= 0xA0) // Code fuer Fertig: AD
       {
          // verschoben von oben 
          NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
@@ -771,7 +771,7 @@ private void button4_Click(object sender, EventArgs e)
          [NotificationDic setObject:[NSNumber numberWithInt:mausistdown] forKey:@"mausistdown"];
          // end verschieben
          
-           /*
+         /*
           Array:
           
           0    schritteax lb
@@ -807,16 +807,6 @@ private void button4_Click(object sender, EventArgs e)
             case 0xAF:
             {
                NSLog(@"readUSB  AF next ");
-               NSLog(@"next Abschnitt");
-               uint8_t abschnittnummer = (UInt8)buffer[5]; 
-               uint8_t ladeposition = (UInt8)buffer[6]; 
-               [NotificationDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"abschnittcode"];
-                [NotificationDic setObject:[NSNumber numberWithInt:abschnittnummer] forKey:@"abschnittnummer"];
-                [NotificationDic setObject:[NSNumber numberWithInt:ladeposition] forKey:@"abschnittcode"];
-               NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-               [nc postNotificationName:@"usbread" object:self userInfo:NotificationDic];
-               return;
-               
             }break;
             case 0xE1: // Antwort auf Mouseup 0xE0 HALT
             {
@@ -994,7 +984,7 @@ private void button4_Click(object sender, EventArgs e)
             NSLog(@"mausistdown==2");
             Stepperposition=0;
          }
-                  
+         
          NSMutableIndexSet* EndIndexSet=[NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0xAA,4)]; // Datenreihe ist fertig, kein Anschlag
          [EndIndexSet addIndexesInRange:NSMakeRange(0xA5,4)];
          
@@ -1073,7 +1063,7 @@ private void button4_Click(object sender, EventArgs e)
       }
       
       anzDaten++;
-       
+      
    }
    //free (buffer);
    //  NSDate* dateB=[NSDate date];
@@ -1127,7 +1117,7 @@ private void button4_Click(object sender, EventArgs e)
       {
          NSMutableDictionary* timerDic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"home",[NSNumber numberWithInt:1],@"halt", nil];
 
-         readTimer = [[NSTimer scheduledTimerWithTimeInterval:0.005 
+         readTimer = [[NSTimer scheduledTimerWithTimeInterval:0.05 
                                                        target:self 
                                                      selector:@selector(readUSB:) 
                                                      userInfo:timerDic repeats:YES]retain];
