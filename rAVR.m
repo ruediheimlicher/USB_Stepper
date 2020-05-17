@@ -8894,7 +8894,7 @@ return returnInt;
       
       int antwort=[Warnung runModal];
       return;
-
+      
    }
    //NSLog(@"SchnittdatenArray 0: %@",[SchnittdatenArray description]);
    
@@ -8921,7 +8921,7 @@ return returnInt;
          NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
          [Warnung addButtonWithTitle:@"Einschalten"];
          [Warnung addButtonWithTitle:@"Ignorieren"];
-         //	[Warnung addButtonWithTitle:@""];
+         //   [Warnung addButtonWithTitle:@""];
          [Warnung addButtonWithTitle:@"Abbrechen"];
          [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"reportUSB_sendArray 1: CNC Schnitt starten"]];
          
@@ -9017,7 +9017,7 @@ return returnInt;
       NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
       [Warnung addButtonWithTitle:@"Einstecken und einschalten"];
       [Warnung addButtonWithTitle:@"Zurück"];
-      //	[Warnung addButtonWithTitle:@""];
+      //   [Warnung addButtonWithTitle:@""];
       //[Warnung addButtonWithTitle:@"Abbrechen"];
       [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"CNC Schnitt starten?"]];
       
@@ -9044,7 +9044,7 @@ return returnInt;
 
 - (void)USBReadAktion:(NSNotification*)note
 {
-   NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
+   //NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
    if ([[note userInfo]objectForKey:@"inposition"])
    {
       if ([[[note userInfo]objectForKey:@"outposition"]intValue] > [PositionFeld intValue])
@@ -9053,59 +9053,52 @@ return returnInt;
          [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"outposition"]intValue]];
          //[ProfilGraph setNeedsDisplay:YES];
       }
-       if ([[[note userInfo]objectForKey:@"stepperposition"]intValue] > [CNCPositionFeld intValue])
-       {
+      if ([[[note userInfo]objectForKey:@"stepperposition"]intValue] > [CNCPositionFeld intValue])
+      {
          [CNCPositionFeld setIntValue:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
-          //[ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
-          //[ProfilGraph setNeedsDisplay:YES];
-       }
+         //[ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
+         //[ProfilGraph setNeedsDisplay:YES];
+      }
    }
    
    if ([[[note userInfo]objectForKey:@"slaveversion"]intValue])
    {
       int slaveversionint =[[[note userInfo]objectForKey:@"slaveversion"]intValue];
       [SlaveVersionFeld setStringValue:[NSString stringWithFormat:@"Slaveversion: %03d",slaveversionint]];
-   
+      
    }
-  
+   
    
    int homeanschlagCount=0;
    if ([[note userInfo]objectForKey:@"homeanschlagset"])
    {
       homeanschlagCount = [[[note userInfo]objectForKey:@"homeanschlagset"]count];
    }
-
-   //if([[note userInfo]objectForKey:@"abschnittcode"])
-   if([[note userInfo]objectForKey:@"abschnittcode"])
+   
+   if([[note userInfo]objectForKey:@"abschnittfertig"])
    {
-      int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];
-      
+      int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittfertig"]intValue];
       switch (abschnittfertig)
       {
-         case 0xAF:
-         {
-             NSLog(@"AVR USBReadAktion next %@",[[note userInfo] description]);
-            
-         }break;
          case 0xAA:
          {
-          //  NSLog(@"AVR End Abschnitt von A");
+            //  NSLog(@"AVR End Abschnitt von A");
             
          }break;
-         
+            
          case 0xAB:
          {
-          //  NSLog(@"AVR End Abschnitt von B");
+            //  NSLog(@"AVR End Abschnitt von B");
          }break;
             
          case 0xAC:
          {
-          //  NSLog(@"AVR End Abschnitt von C");
+            //  NSLog(@"AVR End Abschnitt von C");
          }break;
             
          case 0xAD:
          {
-          //  NSLog(@"AVR End Abschnitt von D");
+            //  NSLog(@"AVR End Abschnitt von D");
          }break;
             
          case 0xB5:
@@ -9127,7 +9120,7 @@ return returnInt;
          {
             NSLog(@"AVR Anschlag D0 home first");
          }break;
-         
+            
          case 0xA5:   
          {
             NSLog(@"AVR Anschlag A0");
@@ -9142,7 +9135,7 @@ return returnInt;
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittfertig] forKey:@"anschlagb0"];
             [AnschlagUntenIndikator setTransparent:NO];
             [CNC_Downtaste setEnabled:NO];
-
+            
          }break;
             
          case 0xA7:   
@@ -9160,16 +9153,12 @@ return returnInt;
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittfertig] forKey:@"anschlagd0"];
             [AnschlagUntenIndikator setTransparent:NO];
             [CNC_Downtaste setEnabled:NO];
-
+            
          }break;
-         
-         case 0xE3: //
-         {
-            NSLog(@"setPWM");
-         }break;
-
+            
+            
       }
-
+      
    }
    
    if([[note userInfo]objectForKey:@"home"])
@@ -9181,19 +9170,19 @@ return returnInt;
          home = [[[note userInfo]objectForKey:@"home"]intValue];
       }
       if ((home==2)&& (homeanschlagCount <4)) // senkrekten Abschnitt von home schicken.
-//      if ((homeanschlagCount <4)) // senkrekten Abschnitt von home schicken.
+         //      if ((homeanschlagCount <4)) // senkrekten Abschnitt von home schicken.
       {
          [self homeSenkrechtSchicken];
          [HomeTaste setState:0];
       }
       if (homeanschlagCount == 4)
-          {
-             NSLog(@"AVR USBReadAktion Home erreicht");
-             [self setBusy:0];
-          }
+      {
+         NSLog(@"AVR USBReadAktion Home erreicht");
+         [self setBusy:0];
+      }
       
    }
-
+   
 }
 
 - (void)setUSB_Device_Status:(int)status
