@@ -243,7 +243,7 @@ private void button4_Click(object sender, EventArgs e)
 /*******************************************************************/
 - (void)USB_SchnittdatenAktion:(NSNotification*)note
 {
-   NSLog(@"USB_SchnittdatenAktion usbstatus: %d usb_present: %d",usbstatus,usb_present());
+   //NSLog(@"USB_SchnittdatenAktion usbstatus: %d usb_present: %d",usbstatus,usb_present());
    int antwort=0;
    int delayok=0;
    
@@ -327,7 +327,7 @@ private void button4_Click(object sender, EventArgs e)
    if ([[note userInfo]objectForKey:@"pwm"])
    {
       pwm = [[[note userInfo]objectForKey:@"pwm"]intValue];
-      NSLog(@"USB_SchnittdatenAktion pwm: %d",pwm);
+      //NSLog(@"USB_SchnittdatenAktion pwm: %d",pwm);
    }
    
    
@@ -344,6 +344,7 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"USB_SchnittdatenAktion Object 0 aus SchnittDatenArray aus note: %@",[[[[note userInfo]objectForKey:@"schnittdatenarray"]objectAtIndex:0] description]);
       
       [SchnittDatenArray setArray:[[note userInfo]objectForKey:@"schnittdatenarray"]];
+      NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
       
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray %@",[[SchnittDatenArray objectAtIndex:0] description]);
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
@@ -474,7 +475,10 @@ private void button4_Click(object sender, EventArgs e)
          
          // sendbuffer mit Daten von Schnittdatenarray an pos Stepperposition fuellen
          NSMutableArray* tempSchnittdatenArray=(NSMutableArray*)[SchnittDatenArray objectAtIndex:Stepperposition];
-         //[tempSchnittdatenArray addObject:[NSNumber numberWithInt:[AVR pwm]]];
+         NSLog(@"writeCNCAbschnitt tempSchnittdatenArray: %@",[tempSchnittdatenArray description]);
+         
+         [tempSchnittdatenArray replaceObjectAtIndex:20 withObject:[NSNumber numberWithInt:[AVR pwm]]];
+         
          NSScanner *theScanner;
          unsigned     value;
          //NSLog(@"writeCNCAbschnitt tempSchnittdatenArray count: %d",[tempSchnittdatenArray count]);
@@ -593,8 +597,8 @@ private void button4_Click(object sender, EventArgs e)
          //dauer4 = [dateA timeIntervalSinceNow]*1000;
          //         int senderfolg= rawhid_send(0, newsendbuffer, 32, 50);
          
-         NSLog(@"writeCNCAbschnitt senderfolg: %X",senderfolg);
-         NSLog(@"writeCNCAbschnitt End Stepperposition: %d ",Stepperposition);
+         //NSLog(@"writeCNCAbschnitt senderfolg: %X",senderfolg);
+         //NSLog(@"writeCNCAbschnitt End Stepperposition: %d ",Stepperposition);
          
          Stepperposition++;
          
