@@ -8901,6 +8901,8 @@ return returnInt;
    if (AVR_USBStatus)
    {
       //NSLog(@"SchnittdatenArray 0: %@",[SchnittdatenArray description]);
+      int anzabschnitte = [SchnittdatenArray count];
+      int l = [[SchnittdatenArray objectAtIndex:0]count];
       
       if (([[[SchnittdatenArray objectAtIndex:0]objectAtIndex:1]intValue] <= 0x7F) || ([[[SchnittdatenArray objectAtIndex:0]objectAtIndex:9]intValue] <= 0x7F))
       {
@@ -8912,6 +8914,9 @@ return returnInt;
          [AnschlagUntenIndikator setTransparent:YES];
       }
       
+      //  [tempSchnittdatenArray replaceObjectAtIndex:20 withObject:[NSNumber numberWithInt:[AVR pwm]]];
+      
+      [[SchnittdatenArray objectAtIndex:0]addObject:[NSNumber numberWithInt:[SchnittdatenArray count]]];
       // von 32
       
       int antwort=0;
@@ -8964,6 +8969,7 @@ return returnInt;
       
       // end von 32
       
+      
       //NSLog(@"AVR  reportUSB_sendArray cncposition: %d\n\n",cncposition);
       [CNC_Halttaste setEnabled:YES];
       [CNC_Stoptaste setState:0];
@@ -8996,6 +9002,8 @@ return returnInt;
       //   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       //NSLog(@"reportUSB_SendArray delayok: %d",delayok);
       [SchnittdatenDic setObject:[NSNumber numberWithInt:delayok] forKey:@"delayok"];
+      
+      
       
       if (delayok)
       {
