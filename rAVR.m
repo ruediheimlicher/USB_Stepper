@@ -1134,11 +1134,11 @@ return returnInt;
    [[[StepperTab tabViewItemAtIndex:0]view]addSubview:ProfilGraphScroller];
 	
    /*
-	NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,NSMaxY([[RaumScroller documentView] frame])
+	NSPoint   neuRaumScrollOrigin=NSMakePoint(0.0,NSMaxY([[RaumScroller documentView] frame])
 															-NSHeight([[RaumScroller contentView] bounds]));
 	*/
-   NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,0.0);
-   [[ProfilGraphScroller documentView] scrollPoint:newRaumScrollOrigin];
+   NSPoint   neuRaumScrollOrigin=NSMakePoint(0.0,0.0);
+   [[ProfilGraphScroller documentView] scrollPoint:neuRaumScrollOrigin];
 	//[RaumScroller addSubview:ProfilTable];
 	
 	[CNC_Starttaste setState:0];
@@ -1392,7 +1392,10 @@ return returnInt;
    [[self window]setInitialFirstResponder:[[StepperTab tabViewItemAtIndex:0]view]];
    //[[self window]setInitialFirstResponder: CNC_Starttaste];
    
+   KoordinatenString = [NSString string];
+   KoordinatenStringArray = [[NSMutableArray alloc]initWithCapacity:0];
    //NSLog(@"awake end");
+   
 }
 
 - (IBAction)reportBoardPop:(id)sender;
@@ -1691,7 +1694,7 @@ return returnInt;
 	[DrehgeberFeld setFloatValue:[sender floatValue]];
 
 }
-
+#pragma mark START STOP
 - (IBAction)reportStartKnopf:(id)sender
 {
    
@@ -1743,7 +1746,7 @@ return returnInt;
          NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:KoordinateAX, @"ax",KoordinateAY,@"ay",KoordinateBX, @"bx",KoordinateBY,@"by" ,[NSNumber numberWithInt:nowpwm],@"pwm",[NSNumber numberWithInt:0],@"index", nil];
          
          [KoordinatenTabelle addObject:tempDic];
-
+         
         	[CNCDatenArray removeAllObjects];
          [CNCTable reloadData];
          if ([KoordinatenTabelle count])
@@ -1768,6 +1771,7 @@ return returnInt;
       [self setStepperstrom:1];
    }
 		//NSLog(@"reportStartKnopf end: %@",[KoordinatenTabelle description]);
+   
 	/*
 	if ([StopKnopf state])
 	{
@@ -1907,6 +1911,19 @@ return returnInt;
       
    }
    
+   
+   for (i=0;i<[KoordinatenTabelle count];i++)
+   {
+   float ax = [[[KoordinatenTabelle objectAtIndex:i] objectForKey:@"ax"]floatValue];
+   float ay = [[[KoordinatenTabelle objectAtIndex:i] objectForKey:@"ay"]floatValue];
+ 
+   float bx = [[[KoordinatenTabelle objectAtIndex:i] objectForKey:@"bx"]floatValue];
+      float by = [[[KoordinatenTabelle objectAtIndex:i] objectForKey:@"by"]floatValue];
+NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f\n",i,ax,ay,bx,by];
+   //NSLog(@"%@",zeilenstring);
+   KoordinatenString = [KoordinatenString stringByAppendingString:zeilenstring];
+
+   }
    
    
    [tempKoordinatenTabelle addObject:[KoordinatenTabelle objectAtIndex:0]];
@@ -2098,6 +2115,14 @@ return returnInt;
          
          NSMutableDictionary* tempOKDic = [NSMutableDictionary dictionaryWithDictionary:[KoordinatenTabelle objectAtIndex:i+1]];
          [tempKoordinatenTabelle addObject:tempOKDic];
+ //        NSArray *keys = [tempOKDic allKeys];
+ //        NSArray *values = [tempOKDic allValues];
+//         float ax = [[tempOKDic objectForKey:@"ax"]floatValue];
+ //        float ay = [[tempOKDic objectForKey:@"ay"]floatValue];
+//         NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2F\t%.2F\n",i,ax,ay];
+//         NSLog(@"%@",zeilenstring);
+ //        KoordinatenString = [KoordinatenString stringByAppendingString:zeilenstring];
+         //[KoordinatenStringArray addObject:zeilenstring];
          //[tempKoordinatenTabelle addObject:[KoordinatenTabelle objectAtIndex:i]];
          //NSLog(@"i: %d okindex: %d",i,okindex);
          okindex++;
@@ -2258,7 +2283,7 @@ return returnInt;
       //      }
       if (i<8)
       {
-          NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
+        //  NSLog(@"reportStop i: %d \ntempDic: %@",i,[tempDic description]);
       }
       
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
@@ -2367,7 +2392,8 @@ return returnInt;
 	//NSLog(@"reportStopKnopf SchnittdatenArray: %@",[SchnittdatenArray description]);
    //NSLog(@"reportStopKnopf KoordinatenTabelle: %@",[KoordinatenTabelle description]);
    
-   
+   NSLog(@"reportStopKnopf KoordinatenString: \n%@",KoordinatenString );
+//   NSLog(@"KoordinatenStringArray: \n%@",KoordinatenStringArray);
 	[CNCPositionFeld setIntValue:0];
    [PositionFeld setStringValue:@""];
    
@@ -2392,7 +2418,7 @@ return returnInt;
    //NSLog(@"reportStopKnopf tempKoordinatenTabelle: %@ count: %d ",[tempKoordinatenTabelle description],[tempKoordinatenTabelle count]);
    //NSLog(@"reportStopKnopf tempKoordinatenTabelle count: %d ",[tempKoordinatenTabelle count]);
    //NSLog(@"reportStopKnopf KoordinatenTabelle count: %d",[KoordinatenTabelle count]);
-   NSLog(@"reportStopKnopf KoordinatenTabelle neu: %@",[KoordinatenTabelle description]);
+//   NSLog(@"reportStopKnopf KoordinatenTabelle neu: %@",[KoordinatenTabelle description]);
    int anzDaten=[KoordinatenTabelle count]-1;
    NSLog(@"reportStopKnopf anzDaten: %d",anzDaten);
    //[PositionFeld setIntValue:[KoordinatenTabelle count]-1];
@@ -6853,7 +6879,7 @@ return returnInt;
    
    // Einlauf und Auslauf in gleicher funktion. Unterschieden durch Parameter 'Lage'.
    // Lage: 0: Einlauf 1: Auslauf
-   NSLog(@"KoordinatenTabelle: %@",KoordinatenTabelle);
+   //NSLog(@"KoordinatenTabelle: %@",KoordinatenTabelle);
    
    float full_pwm = 1;
    float red_pwm = [red_pwmFeld floatValue];// fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
@@ -6958,7 +6984,7 @@ return returnInt;
    [KoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",[NSNumber numberWithFloat:aktuellepwm*red_pwm],@"pwm",nil]];
 
    
-   NSLog(@"KoordinatenTabelle: %@",KoordinatenTabelle);
+   //NSLog(@"KoordinatenTabelle: %@",KoordinatenTabelle);
    [self updateIndex];
    [CNCTable scrollRowToVisible:[KoordinatenTabelle count] - 1];
    [CNCTable selectRowIndexes:[NSIndexSet indexSetWithIndex:[KoordinatenTabelle count]-1] byExtendingSelection:NO];
@@ -7626,6 +7652,7 @@ return returnInt;
 	[CNC_Terminatetaste setEnabled:NO];
    [HomeTaste setState:0];
    [DC_Taste setState:0];
+   [self setStepperstrom:1];
     
 	[KoordinatenTabelle removeAllObjects];
    if (BlockrahmenArray&&[BlockrahmenArray count])
@@ -7693,6 +7720,7 @@ return returnInt;
 	[CNC_Sendtaste setEnabled:![sender state]];
 	[CNC_Terminatetaste setEnabled:![sender state]];
 	[DC_Taste setState:0];
+   [self setStepperstrom:1];
    [self setBusy:0];
    [PositionFeld setIntValue:0];
    [PositionFeld setStringValue:@""];
@@ -7741,8 +7769,8 @@ return returnInt;
          int index = [[tempZeilenDic objectForKey:@"index"]intValue];
          tempax -= schritt;
          tempbx -= schritt;
-         NSDictionary* newZeilenDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax] ,@"ax",[NSNumber numberWithFloat:tempay] ,@"ay",[NSNumber numberWithFloat:tempbx] ,@"bx",[NSNumber numberWithFloat:tempby] ,@"by",[NSNumber numberWithInt:index] ,@"index", nil];
-         [KoordinatenTabelle replaceObjectAtIndex:i  withObject:newZeilenDic];
+         NSDictionary* neuZeilenDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax] ,@"ax",[NSNumber numberWithFloat:tempay] ,@"ay",[NSNumber numberWithFloat:tempbx] ,@"bx",[NSNumber numberWithFloat:tempby] ,@"by",[NSNumber numberWithInt:index] ,@"index", nil];
+         [KoordinatenTabelle replaceObjectAtIndex:i  withObject:neuZeilenDic];
       }
       
    }
@@ -7801,7 +7829,7 @@ return returnInt;
          tempbx += x;
          tempby += y;
          
-         NSMutableDictionary* newZeilenDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax] ,@"ax",[NSNumber numberWithFloat:tempay] ,@"ay",[NSNumber numberWithFloat:tempbx] ,@"bx",[NSNumber numberWithFloat:tempby] ,@"by",[NSNumber numberWithInt:index] ,@"index", nil];
+         NSMutableDictionary* neuZeilenDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax] ,@"ax",[NSNumber numberWithFloat:tempay] ,@"ay",[NSNumber numberWithFloat:tempbx] ,@"bx",[NSNumber numberWithFloat:tempby] ,@"by",[NSNumber numberWithInt:index] ,@"index", nil];
          
          float tempabrax = 0;
          float tempabray = 0;
@@ -7814,14 +7842,14 @@ return returnInt;
             tempabray = [[tempZeilenDic objectForKey:@"abray"]floatValue]+y;
             tempabrbx = [[tempZeilenDic objectForKey:@"abrbx"]floatValue]+x;
             tempabrby = [[tempZeilenDic objectForKey:@"abrby"]floatValue]+y;
-            [newZeilenDic setObject:[NSNumber numberWithFloat:tempabrax] forKey:@"abrax"];
-            [newZeilenDic setObject:[NSNumber numberWithFloat:tempabray] forKey:@"abray"];
-            [newZeilenDic setObject:[NSNumber numberWithFloat:tempabrbx] forKey:@"abrbx"];
-            [newZeilenDic setObject:[NSNumber numberWithFloat:tempabrby] forKey:@"abrby"];
+            [neuZeilenDic setObject:[NSNumber numberWithFloat:tempabrax] forKey:@"abrax"];
+            [neuZeilenDic setObject:[NSNumber numberWithFloat:tempabray] forKey:@"abray"];
+            [neuZeilenDic setObject:[NSNumber numberWithFloat:tempabrbx] forKey:@"abrbx"];
+            [neuZeilenDic setObject:[NSNumber numberWithFloat:tempabrby] forKey:@"abrby"];
          }
       
          
-         [KoordinatenTabelle replaceObjectAtIndex:i  withObject:newZeilenDic];
+         [KoordinatenTabelle replaceObjectAtIndex:i  withObject:neuZeilenDic];
       
       }
       
@@ -7848,9 +7876,9 @@ return returnInt;
          tempay += y;
          tempbx += x;
          tempby += y;
-         NSDictionary* newZeilenDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax] ,@"ax",[NSNumber numberWithFloat:tempay] ,@"ay",[NSNumber numberWithFloat:tempbx] ,@"bx",[NSNumber numberWithFloat:tempby] ,@"by",[NSNumber numberWithInt:lage] ,@"lage",[NSNumber numberWithInt:index] ,@"index", nil];
-         //NSLog(@"i: %d newZeilenDic: %@",i,[newZeilenDic description]);
-         [BlockKoordinatenTabelle replaceObjectAtIndex:i  withObject:newZeilenDic];
+         NSDictionary* neuZeilenDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax] ,@"ax",[NSNumber numberWithFloat:tempay] ,@"ay",[NSNumber numberWithFloat:tempbx] ,@"bx",[NSNumber numberWithFloat:tempby] ,@"by",[NSNumber numberWithInt:lage] ,@"lage",[NSNumber numberWithInt:index] ,@"index", nil];
+         //NSLog(@"i: %d neuZeilenDic: %@",i,[neuZeilenDic description]);
+         [BlockKoordinatenTabelle replaceObjectAtIndex:i  withObject:neuZeilenDic];
         
       }
       
@@ -8020,8 +8048,8 @@ return returnInt;
       float tempx = tempEcke.x-minX;
       tempx *= -1;
       tempx += maxX;
-      NSString* newEckestring = NSStringFromPoint(NSMakePoint(tempx, tempEcke.y));
-      [BlockrahmenArray replaceObjectAtIndex:i  withObject:newEckestring];
+      NSString* neuEckestring = NSStringFromPoint(NSMakePoint(tempx, tempEcke.y));
+      [BlockrahmenArray replaceObjectAtIndex:i  withObject:neuEckestring];
     }
    [ProfilGraph setRahmenArray:BlockrahmenArray];
    //NSLog(@"reportRechteSeiteLinkeSeite RahmenArray: %@",[BlockrahmenArray description]);
@@ -8241,8 +8269,8 @@ return returnInt;
       float tempy = tempEcke.y-minY;
       tempy *= -1;
       tempy += maxY;
-      NSString* newEckestring = NSStringFromPoint(NSMakePoint(tempEcke.x,tempy));
-      [BlockrahmenArray replaceObjectAtIndex:i  withObject:newEckestring];
+      NSString* neuEckestring = NSStringFromPoint(NSMakePoint(tempEcke.x,tempy));
+      [BlockrahmenArray replaceObjectAtIndex:i  withObject:neuEckestring];
    }
    [ProfilGraph setRahmenArray:BlockrahmenArray];
    //NSLog(@"reportVertikalSpiegeln RahmenArray nach Spiegeln: %@",[BlockrahmenArray description]);

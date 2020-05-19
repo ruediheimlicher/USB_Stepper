@@ -788,11 +788,12 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    }
    else{
       NSLog(@"kein Panel");
-      return;
+      return nil;
    }
     
 //    return;
-	NSURL* FigurPfad=[ProfilOpenPanel URL];
+   NSArray* urlarray = [ProfilOpenPanel URLs];
+	NSURL* FigurPfad=[urlarray objectAtIndex:0];
     
 	NSLog(@"readFigur: URL: %@",FigurPfad);
 	NSError* err=0;

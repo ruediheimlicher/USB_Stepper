@@ -140,7 +140,8 @@
    NSString*					CNCdataPfad;
    NSMutableArray*			EEPROMArray;
    NSMutableArray*			KoordinatenTabelle;
-   
+   NSString*               KoordinatenString;
+   NSArray*                KoordinatenStringArray;
    NSMutableArray*			UndoKoordinatenTabelle;
    NSMutableIndexSet*      UndoSet;
 
