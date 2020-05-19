@@ -861,7 +861,7 @@ return returnInt;
             }
             
             
-            if ([tempPListDic objectForKey:@"redpwm"])
+            if ([tempPListDic objectForKey:@"redpwm"])// fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
             {
                //NSLog(@"redpwm: %2.2f",[[tempPListDic objectForKey:@"redpwm"]floatValue]);
                //[Spannweite setIntValue:[[tempPListDic objectForKey:@"minimaldistanz"]intValue]];
@@ -1098,36 +1098,47 @@ return returnInt;
 	CNC_PList = [[NSMutableDictionary alloc]initWithDictionary:[self readCNC_PList]];
    //CNC_PList = [self readCNC_PList];
    
-	
-	NSRect RaumViewFeld;
-	RaumViewFeld=[ProfilFeld  frame]; 
-	ProfilGraph =[[rProfilGraph alloc] initWithFrame:RaumViewFeld];	
-	
-	NSRect RaumScrollerFeld=RaumViewFeld;	//	Feld fuer Scroller, in dem der RaumView liegt
-	
+   NSRect RaumViewFeld;
+   RaumViewFeld=[ProfilFeld  frame]; 
+   
+   NSRect ProfilViewFeld = RaumViewFeld;
+   ProfilViewFeld.size.height = 800;
+   ProfilGraph =[[rProfilGraph alloc] initWithFrame:ProfilViewFeld];   
+   
+   NSRect ProfilGraphScrollerFeld=RaumViewFeld;   //   Feld fuer Scroller, in dem der RaumView liegt
+   
+   // Feld im Scroller ist abhaengig von Anzahl Tagbalken
+   RaumViewFeld.size.height -=10; // Hoehe vergroessern
+   //   NSLog(@"RaumTagplanAbstand: %d   ",RaumTagplanAbstand);
+   
+   ProfilGraphScroller = [[NSScrollView alloc] initWithFrame:ProfilGraphScrollerFeld];
+   
 	// Feld im Scroller ist abhaengig von Anzahl Tagbalken
 	RaumViewFeld.size.height -=10; // Hoehe vergroessern
 	//	NSLog(@"RaumTagplanAbstand: %d	",RaumTagplanAbstand);
 	
-	NSScrollView* RaumScroller = [[NSScrollView alloc] initWithFrame:RaumScrollerFeld];
+	ProfilGraphScroller = [[NSScrollView alloc] initWithFrame:ProfilGraphScrollerFeld];
 	
 	
 	//NSView* ProfilView=[[NSView alloc] initWithFrame:RaumScrollerFeld];
 	//[[[StepperTab tabViewItemAtIndex:0]view]addSubview:ProfilView];
 	// View-Hierarchie 	
 	
-	[RaumScroller setDocumentView:ProfilGraph];
-	[RaumScroller setBorderType:NSLineBorder];
-	[RaumScroller setHasVerticalScroller:NO];
-	[RaumScroller setHasHorizontalScroller:NO];
-	[RaumScroller setLineScroll:10.0];
-	[RaumScroller setAutohidesScrollers:YES];
-	//[RaumTabView addSubview:RaumScroller];
-	[[[StepperTab tabViewItemAtIndex:0]view]addSubview:RaumScroller];
+   [ProfilGraphScroller setDocumentView:ProfilGraph];
+   [ProfilGraphScroller setBorderType:NSLineBorder];
+   [ProfilGraphScroller setHasVerticalScroller:YES];
+   [ProfilGraphScroller setHasHorizontalScroller:YES];
+   [ProfilGraphScroller setLineScroll:10.0];
+   [ProfilGraphScroller setAutohidesScrollers:NO];
+   //[RaumTabView addSubview:ProfilGraphScroller];
+   [[[StepperTab tabViewItemAtIndex:0]view]addSubview:ProfilGraphScroller];
 	
+   /*
 	NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,NSMaxY([[RaumScroller documentView] frame])
 															-NSHeight([[RaumScroller contentView] bounds]));
-	[[RaumScroller documentView] scrollPoint:newRaumScrollOrigin];
+	*/
+   NSPoint   newRaumScrollOrigin=NSMakePoint(0.0,0.0);
+   [[ProfilGraphScroller documentView] scrollPoint:newRaumScrollOrigin];
 	//[RaumScroller addSubview:ProfilTable];
 	
 	[CNC_Starttaste setState:0];
@@ -1786,7 +1797,7 @@ return returnInt;
 	int i;
    [CNCDatenArray removeAllObjects];
    [HomeTaste setState:0];
-   [DC_Taste setState:0];
+   [DC_Taste setState:0]; // 
    if ([SpeedFeld intValue])
    {
       [CNC setSpeed:[SpeedFeld intValue]];
@@ -1809,7 +1820,7 @@ return returnInt;
    
    if ([DC_PWM intValue])
    {
-      [CNC setredpwm:[red_pwmFeld floatValue]];
+      [CNC setredpwm:[red_pwmFeld floatValue]];// fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
    }
    else
    {
@@ -2508,7 +2519,7 @@ return returnInt;
    {
       [CNC_busySpinner stopAnimation:NULL];
       [CNC_Halttaste setState:0];
-      [CNC_Halttaste setEnabled:NO];
+ //     [CNC_Halttaste setEnabled:NO];
 
       //[DC_Taste setState:0];
      
@@ -2785,7 +2796,7 @@ return returnInt;
       [tempPListDic setObject:[NSNumber numberWithInt:[Portalabstand intValue]] forKey:@"portalabstand"];
       [tempPListDic setObject:[NSNumber numberWithFloat:[AbbrandFeld floatValue]] forKey:@"abbranda"];
 
-      [tempPListDic setObject:[NSNumber numberWithFloat:[red_pwmFeld floatValue]] forKey:@"redpwm"];
+      [tempPListDic setObject:[NSNumber numberWithFloat:[red_pwmFeld floatValue]] forKey:@"redpwm"];// fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
 
       //NSLog(@"saveSpeed: gesicherter PListDic: %@",[tempPListDic description]);
       
@@ -6707,7 +6718,7 @@ return returnInt;
 	[nc postNotificationName:@"usbopen" object:self userInfo:tempDic];
    int lastSpeed = [CNC speed];
    [CNC setSpeed:14];
-   [CNC setredpwm:[red_pwmFeld floatValue]];
+   [CNC setredpwm:[red_pwmFeld floatValue]]; // fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
    
    float plattendicke = 50;
    
@@ -6845,7 +6856,7 @@ return returnInt;
    NSLog(@"KoordinatenTabelle: %@",KoordinatenTabelle);
    
    float full_pwm = 1;
-   float red_pwm = [red_pwmFeld floatValue];
+   float red_pwm = [red_pwmFeld floatValue];// fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
    [CNC setredpwm:red_pwm];
    int aktuellepwm=[DC_PWM intValue];
    
@@ -6908,6 +6919,7 @@ return returnInt;
 //   PositionB.x -= 1;
    PositionB.y += (blockoberkante/2 - bohrung/2);
    [KoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",[NSNumber numberWithFloat:aktuellepwm*red_pwm],@"pwm",nil]];
+//red_pwm: // fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
 // Ende Bohrung
    
    
@@ -6966,7 +6978,7 @@ return returnInt;
    // Lage: 0: Einlauf 1: Auslauf
    
    float full_pwm = 1;
-   float red_pwm = [red_pwmFeld floatValue];
+   float red_pwm = [red_pwmFeld floatValue]; // fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
    [CNC setredpwm:red_pwm];
    int aktuellepwm=[DC_PWM intValue];
    
@@ -7593,8 +7605,10 @@ return returnInt;
   // NSLog(@"reportNeuTaste KoordinatenTabelle vor: %@",[KoordinatenTabelle description]);
 	[CNC_Preparetaste setEnabled:YES];
    [CNC_Halttaste setState:0];
-   [CNC_Halttaste setEnabled:NO];
-	[CNC_Sendtaste setEnabled:NO];
+   
+ //  [CNC_Halttaste setEnabled:NO];
+
+   [CNC_Sendtaste setEnabled:NO];
 	[CNC_Starttaste setEnabled:YES];
    [CNC_Stoptaste setEnabled:NO];
    [NeuesElementTaste setEnabled:NO];
@@ -8245,7 +8259,7 @@ return returnInt;
 	[nc postNotificationName:@"usbopen" object:self userInfo:tempDic];
 
    float full_pwm = 1;
-   float red_pwm = [red_pwmFeld floatValue];
+   float red_pwm = [red_pwmFeld floatValue]; // fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
    [CNC setredpwm:red_pwm];
    int aktuellepwm=[DC_PWM intValue];
    int lastSpeed = [CNC speed];

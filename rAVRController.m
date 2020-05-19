@@ -1175,7 +1175,7 @@ private void button4_Click(object sender, EventArgs e)
       pwm =[[[note userInfo]objectForKey:@"pwm"]intValue];
       //NSLog(@"AVRController DC_Aktion pwm: %d",pwm);
    }
-   //NSLog(@"AVRController DC_Aktion pwm: %d",pwm);
+   NSLog(@"AVRController DC_Aktion pwm: %d",pwm);
    char*      sendbuffer;
    
    sendbuffer=malloc(32);
@@ -1212,7 +1212,7 @@ private void button4_Click(object sender, EventArgs e)
    if ([[note userInfo]objectForKey:@"ein"])
    {
       ein =[[[note userInfo]objectForKey:@"ein"]intValue];
-      //NSLog(@"StepperstromAktion ein: %d",ein);
+      NSLog(@"StepperstromAktion ein: %d",ein);
    }
    char*      sendbuffer;
    
@@ -1222,8 +1222,9 @@ private void button4_Click(object sender, EventArgs e)
    {
       sendbuffer[i] = 0;
    }
-   sendbuffer[8]=1;
-   sendbuffer[20]=0;
+   sendbuffer[8]=ein; // STROM ON
+   sendbuffer[20]=0; // PWM
+   
    // code fuer Task angeben:
    sendbuffer[16]=0xE4; // code fuer Stepperstrom 
    
@@ -1235,7 +1236,7 @@ private void button4_Click(object sender, EventArgs e)
     
 }
 
-
+/* nicht verwendet */
 - (void)StepperstromEinschalten:(int)ein
 {
    char*      sendbuffer;

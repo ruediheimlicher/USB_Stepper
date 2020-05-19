@@ -16,7 +16,7 @@ float det(float v0[],float v1[]);
 	NSMutableArray*		DatenArray;
 	int			speed;
 	int			steps;
-   float red_pwm;
+   float red_pwm; // fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
    float schalendicke;
 
 }

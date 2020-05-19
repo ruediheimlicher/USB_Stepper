@@ -70,6 +70,8 @@
    IBOutlet id					StepperTab;
    IBOutlet	id					ProfilFeld;
    
+   IBOutlet   id           ProfilGraphScroller;
+   
    IBOutlet	id					ProfilTiefeFeldA;
    IBOutlet	id					ProfilTiefeFeldB;
 
@@ -282,7 +284,7 @@
    IBOutlet	id					AbmessungX;
    IBOutlet	id					AbmessungY;
    
-   IBOutlet	id					red_pwmFeld;
+   IBOutlet	id					red_pwmFeld; // fuer Abschnitte mit red Heizleistung (Weg schon geschnitten
    
    IBOutlet id					RechtsLinksRadio;
 
