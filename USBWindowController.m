@@ -561,11 +561,11 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 
 	// 
 	//CNC
-	SchnittDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+	SchnittDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
    
    pfeilaktion=0; // signalisiert in writeCNCAbschnitt, dass eine der Pfeiltasten im Fenster gedrückt und wieder losgelassen wurde,also Pfeil beenden 
 	
-   HomeAnschlagSet = [[NSMutableIndexSet indexSet]retain];
+   HomeAnschlagSet = [NSMutableIndexSet indexSet];
    
    schliessencounter=0;	// Zaehlt FensterschliessenAktionen
     
@@ -579,7 +579,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
    
    if (usbstatus==0)
    {
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"Einstecken und einschalten"];
       [Warnung addButtonWithTitle:@"Weiter"];
       //	[Warnung addButtonWithTitle:@""];
@@ -671,7 +671,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
                                                            kIOPublishNotification,
                                                            matchingDict2,
                                                            DeviceAdded,
-                                                           self,           
+                                                           (__bridge void *)(self),           
                                                            &portIterator);
    while (IOIteratorNext(portIterator)) {}; // Run out the iterator or notifications won't start (you can also use it to iterate the available devices).
    
@@ -684,7 +684,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
                                              kIOTerminatedNotification,
                                              matchingDict2,
                                              DeviceRemoved,
-                                             self,         // refCon/contextInfo
+                                             (__bridge void *)(self),         // refCon/contextInfo
                                              &portIterator);
    
    while (IOIteratorNext(portIterator)) {}; // Run out the iterator or notifications won't start (you can also use it to iterate the available devices).
@@ -699,17 +699,11 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 - (void) dealloc
 {
 	NSLog(@"dealloc");
-    [logEntries release];
-    [lastValueRead release];
-	[lastDataRead release];
-    [super dealloc];
 }
 
 
 - (void) setLastValueRead:(NSData*) inData
 {
-   [inData retain];
-   [lastValueRead release];
    lastValueRead = inData;
 	
 }
@@ -718,7 +712,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 - (void)keyDown:(NSEvent*)derEvent
 {
    //NSLog(@"keyDown: %@",[derEvent description]);
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [NotificationDic setObject:[NSNumber  numberWithInt:[derEvent keyCode]]forKey:@"pfeiltaste"];
    /*
    [NotificationDic setObject:[NSNumber  numberWithInt:Klickpunkt]forKey:@"klickpunkt"];
@@ -765,7 +759,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 	BOOL USBDatenDa=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* USBPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/CNCDaten"]retain];
+	NSString* USBPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/CNCDaten"];
 	USBDatenDa= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
 	//NSLog(@"mountedVolume:    USBPfad: %@",USBPfad);	
 	if (USBDatenDa)
@@ -780,7 +774,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 		NSLog(@"awake: PListPfad: %@ ",PListPfad);
 		if (PListPfad)		
 		{
-			NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			NSMutableDictionary* tempPListDic;
 			if ([Filemanager fileExistsAtPath:PListPfad])
 			{
 				tempPListDic=[NSMutableDictionary dictionaryWithContentsOfFile:PListPfad];
@@ -797,7 +791,6 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 		//	NSLog(@"PListOK: %d",PListOK);
 		
 	}//USBDatenDa
-   [USBPfad release];
 }
 
 - (void)savePListAktion:(NSNotification*)note
@@ -805,7 +798,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 	BOOL USBDatenDa=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* USBPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/CNCDaten"]retain];
+	NSString* USBPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/CNCDaten"];
    NSURL* USBURL=[NSURL fileURLWithPath:USBPfad];
 	USBDatenDa= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
 	//NSLog(@"mountedVolume:    USBPfad: %@",USBPfad );	
@@ -837,7 +830,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
       
       
      
-		NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+		NSMutableDictionary* tempPListDic;
 		NSFileManager *Filemanager=[NSFileManager defaultManager];
 		if ([Filemanager fileExistsAtPath:PListPfad])
 		{
@@ -847,7 +840,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 		
 		else
 		{
-			tempPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+			tempPListDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 			//NSLog(@"savePListAktion: neuer PListDic");
 		}
 		//[tempPListDic setObject:[NSNumber numberWithInt:AnzahlAufgaben] forKey:@"anzahlaufgaben"];
@@ -871,7 +864,6 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 		
 	}
 	//	NSLog(@"PListOK: %d",PListOK);
-	[USBPfad release];
 	//[tempUserInfo release];
 }
 
@@ -880,7 +872,6 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 	NSLog(@"windowShouldClose");
 /*	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* BeendenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 
 	[nc postNotificationName:@"IOWarriorBeenden" object:self userInfo:BeendenDic];
 
@@ -894,7 +885,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 	NSLog(@"windowWillClose");
    /*
     NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-    NSMutableDictionary* BeendenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+    NSMutableDictionary* BeendenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
     
     [nc postNotificationName:@"IOWarriorBeenden" object:self userInfo:BeendenDic];
     

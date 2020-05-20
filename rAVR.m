@@ -109,7 +109,7 @@ float det(float v0[],float v1[])
    NSRect Titelrect = [self frame];
    NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 32];
 	
-   titel = [[NSString stringWithFormat:@"Profil: %@",derTitel]retain];
+   titel = [NSString stringWithFormat:@"Profil: %@",derTitel];
 
    return;
    Titelrect.origin.y +=  30;
@@ -122,7 +122,6 @@ float det(float v0[],float v1[])
    [Titelfeld setFont:TitelFont];
    [Titelfeld setStringValue:titel];
       //[self addSubview:Titelfeld];
-   [Titelfeld release];
 }
 
 - (void)drawRect:(NSRect)Profilfeld
@@ -457,7 +456,7 @@ float det(float v0[],float v1[])
    
    [self setState:NSOffState];
    
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:richtung] forKey:@"richtung"];
 	
    int aktpwm=0;
@@ -482,7 +481,7 @@ float det(float v0[],float v1[])
    [self setState:NSOnState];
 	
    
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:richtung] forKey:@"richtung"];
 	[NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"push"];// Start, nur fuer AVR
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -623,7 +622,7 @@ return returnInt;
 	BOOL CNCDatenDa=NO;
 	BOOL istOrdner;
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* USBPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/CNCDaten"]retain];
+	NSString* USBPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/CNCDaten"];
    NSString* PListName=@"CNC.plist";
    NSString* PListPfad;
    PListPfad=[USBPfad stringByAppendingPathComponent:PListName];
@@ -641,7 +640,6 @@ return returnInt;
 		{
          //NSMutableDictionary* tempPListDic;// = [[NSMutableDictionary alloc]initWithCapacity:0];
 
-			//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 			if ([Filemanager fileExistsAtPath:PListPfad])
 			{
             
@@ -873,7 +871,6 @@ return returnInt;
             }
             
             return tempPListDic;
-            [tempPListDic release];
          }
          
 		
@@ -885,7 +882,6 @@ return returnInt;
 		
 	
    }//USBDatenDa
-   [USBPfad release];
 //   
    return NULL;
 }
@@ -1023,11 +1019,11 @@ return returnInt;
 	KoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
 	UndoKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
    //BlockKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
-   SchnittdatenArray=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+   SchnittdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	GraphEnd=0;
-	CNC=[[[rCNC alloc]init]retain];
-	ProfilDatenOA=[[[NSArray alloc]init]retain];
-	ProfilDatenUA=[[[NSArray alloc]init]retain];
+	CNC=[[rCNC alloc]init];
+	ProfilDatenOA=[[NSArray alloc]init];
+	ProfilDatenUA=[[NSArray alloc]init];
    
    mitOberseite =1;
    mitUnterseite=1;
@@ -1043,7 +1039,7 @@ return returnInt;
    
    AVR_USBStatus=0;
    
-   BlockKoordinatenTabelle=[[[NSMutableArray alloc]initWithCapacity:0]retain];
+   BlockKoordinatenTabelle=[[NSMutableArray alloc]initWithCapacity:0];
 	
    return self;
 }	//init
@@ -1068,11 +1064,11 @@ return returnInt;
    
  
 	int i;
-	NSMutableArray* tempArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSArray* bitnummerArray=[NSArray arrayWithObjects: @"null", @"eins",@"zwei",@"drei",@"vier",@"fuenf",nil];
 	
 	
-	NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	for (i=0;i<8;i++)
 	{
 		NSNumber* Hexint=[NSNumber numberWithInt:4*i];
@@ -1148,13 +1144,13 @@ return returnInt;
    //[ProfilTiefeFeldB setIntValue:90];
 	//[ProfilBOffsetXFeld setIntValue:0];
    
-   NSNumberFormatter* SimpleFormatter=[[[NSNumberFormatter alloc] init] autorelease];;
+   NSNumberFormatter* SimpleFormatter=[[NSNumberFormatter alloc] init];;
    [SimpleFormatter setFormat:@"###0.0;0.0;(##0.0)"];
    
    //   [ProfilWrenchFeld setFormatter:SimpleFormatter];
    //   [ProfilWrenchFeld setFloatValue:0];
    
-	ProfilDaten = [[[NSMutableArray alloc]initWithCapacity:0]retain];
+	ProfilDaten = [[NSMutableArray alloc]initWithCapacity:0];
 	
 	//Profil_DS=[[rProfil_DS alloc]init];
 	//[ProfilTable setDataSource: self];
@@ -1163,13 +1159,13 @@ return returnInt;
    
    
    //[ProfilTable setDelegate:self];
-	Utils = [[[rUtils alloc]init]retain];
+	Utils = [[rUtils alloc]init];
    
    
 	NSRect SegFeld=RaumViewFeld;
 	SegFeld.origin.y-=40;
 	SegFeld.size.height=50;
-	NSSegmentedControl* ObjektSeg=[[[NSSegmentedControl alloc]initWithFrame:SegFeld]autorelease];
+	NSSegmentedControl* ObjektSeg=[[NSSegmentedControl alloc]initWithFrame:SegFeld];
 	[ObjektSeg setSegmentCount:8];
 	[[ObjektSeg cell] setTrackingMode:1];
 	NSFont* SegFont=[NSFont fontWithName:@"Helvetica" size: 10];
@@ -1195,7 +1191,6 @@ return returnInt;
    [Titelfeld setTag:1001];
    [Titelfeld setStringValue:@""];
    [ProfilGraph addSubview:Titelfeld];
-   [Titelfeld release];
 
 //	[[self window]makeKeyAndOrderFront:self];
    [[self window]makeFirstResponder:ProfilGraph];
@@ -1235,7 +1230,7 @@ return returnInt;
    [TestPfeiltaste setTarget:self];
    [TestPfeiltaste setPeriodicDelay:0.1 interval:1];
    
-   NSNumberFormatter* Koordinatenformatter=[[[NSNumberFormatter alloc] init] autorelease];;
+   NSNumberFormatter* Koordinatenformatter=[[NSNumberFormatter alloc] init];;
    [Koordinatenformatter setFormat:@"###.00;0.00;(##0.00)"];
    
    
@@ -1295,7 +1290,7 @@ return returnInt;
    
    [PWMFeld setAlignment:NSTextAlignmentCenter];
    
-   UndoSet = [[NSMutableIndexSet indexSet]retain];
+   UndoSet = [NSMutableIndexSet indexSet];
    
    [Blockoberkante setIntValue:50];
    [OberkantenStepper setIntValue:[Blockoberkante intValue]];
@@ -1410,13 +1405,12 @@ return returnInt;
 
 - (NSArray*)readProfilLib
 {
-   NSMutableArray* tempLibElementArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* tempLibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
 	BOOL LibOK=NO;
 	BOOL istOrdner;
    
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
 	NSString*  ProfilLibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ProfilLib"];
-   [ProfilLibPfad retain];
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
    //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );
@@ -1466,7 +1460,7 @@ return returnInt;
 			{
 				NSLog(@"I2C Fehler");
 				
-				NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+				NSAlert *Warnung = [[NSAlert alloc] init];
 				[Warnung addButtonWithTitle:@"OK"];
 				//	[Warnung addButtonWithTitle:@""];
 				//	[Warnung addButtonWithTitle:@""];
@@ -1523,7 +1517,7 @@ return returnInt;
 			NSLog(@"CallBackAktion Eingangsdaten: %@ \nAnz: %d",[Eingangsdaten description],[Eingangsdaten count]);
 			
 			// EEPROMbalken der letzten Zeile anzeigen. Meist ist nur eine Zeile vorhanden.
-			NSMutableArray* tempEEPROMArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+			NSMutableArray* tempEEPROMArray=[[NSMutableArray alloc]initWithCapacity:0];
 			
 			
 			int k,bit;
@@ -1531,7 +1525,7 @@ return returnInt;
 			//		for (k=0;k<[Eingangsdaten count]/6+1;k++)
 			for (k=0;k<[Eingangsdaten count]/6;k++)
 			{
-				NSMutableDictionary* tempReportDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+				NSMutableDictionary* tempReportDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 				[tempReportDic setObject:[Datenarray objectAtIndex:0] forKey:@"report"];
 				[tempEEPROMArray removeAllObjects];
 				for (bit=0;bit<6;bit++)
@@ -1600,12 +1594,12 @@ return returnInt;
 */
 - (NSArray*)readLib
 {
-   NSMutableArray* LibElementArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* LibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
 	BOOL LibOK=NO;
 	BOOL istOrdner;
    
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
-	NSString* LibPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ElementLib"]retain];
+	NSString* LibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ElementLib"];
    NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:LibPfad isDirectory:&istOrdner]&&istOrdner);
    //   NSLog(@"readLib:    LibPfad: %@ LibOK: %d",LibPfad, LibOK );	
@@ -1654,7 +1648,6 @@ return returnInt;
 		//	NSLog(@"PListOK: %d",PListOK);
 		
 	}//LIBOK
-   [LibPfad release];
    return LibElementArray;
 }
 
@@ -1808,7 +1801,7 @@ return returnInt;
    }
    else
    {
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"OK"];
       [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Speed ist 0"]];
       
@@ -1828,7 +1821,7 @@ return returnInt;
    }
    else
    {
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"OK"];
       [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"PWM ist 0"]];
       
@@ -1845,7 +1838,7 @@ return returnInt;
    //NSLog(@"reportStopKnopf [KoordinatenTabelle count]: %d",[KoordinatenTabelle count]);
    if ([KoordinatenTabelle count]<=1)
    {
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       //[Warnung addButtonWithTitle:@"Einstecken und einschalten"];
       [Warnung addButtonWithTitle:@"OK"];
       //	[Warnung addButtonWithTitle:@""];
@@ -1867,7 +1860,7 @@ return returnInt;
    
    [ProfilGraph setgraphstatus:1];
    
-   NSMutableArray* tempKoordinatenTabelle = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* tempKoordinatenTabelle = [[NSMutableArray alloc]initWithCapacity:0];
    
    int  anzaxplus=0;
    int  anzaxminus=0;
@@ -2211,7 +2204,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
       
       
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       //     [tempDic setObject:tempStartPunktAString forKey:@"startpunkt"];
       //     [tempDic setObject:tempEndPunktAString forKey:@"endpunkt"];
       
@@ -2405,7 +2398,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [ProfilGraph setStepperposition:0];
    [ProfilGraph setNeedsDisplay:YES];
    
-	NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:KoordinatenTabelle forKey:@"koordinatentabelle"];
 	
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -2483,7 +2476,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    {
       [DC_Taste setState:0];
    }
-   NSMutableDictionary* DCDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* DCDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    
    [DCDic setObject:[NSNumber numberWithInt:pwmwert] forKey:@"pwm"]; // DC ein/aus, nur fuer AVRController
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -2597,7 +2590,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    {
       //NSLog(@"reportPWMSichern: PListPfad: %@ ",PListPfad);
       
-      NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempPListDic;
       NSFileManager *Filemanager=[NSFileManager defaultManager];
       if ([Filemanager fileExistsAtPath:PListPfad])
       {
@@ -2607,7 +2600,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
       else
       {
-         tempPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         tempPListDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          //NSLog(@"reportPWMSichern: neuer PListDic");
       }
       [tempPListDic setObject:[NSNumber numberWithInt:[DC_PWM intValue]] forKey:@"pwm"];
@@ -2657,7 +2650,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    {
       //NSLog(@"reportPWMSichern: PListPfad: %@ ",PListPfad);
       
-      NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempPListDic;
       NSFileManager *Filemanager=[NSFileManager defaultManager];
       if ([Filemanager fileExistsAtPath:PListPfad])
       {
@@ -2667,7 +2660,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
       else
       {
-         tempPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         tempPListDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          //NSLog(@"reportPWMSichern: neuer PListDic");
       }
       [tempPListDic setObject:[NSNumber numberWithFloat:[MinimaldistanzFeld floatValue]] forKey:@"minimaldistanz"];
@@ -2682,7 +2675,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (void)setStepperstrom:(int)ein
 {
-   NSMutableDictionary* StromDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* StromDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [StromDic setObject:[NSNumber numberWithInt:ein] forKey:@"ein"]; // Stepperstrom ein/aus, nur fuer AVRController
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
    [nc postNotificationName:@"stepperstrom" object:self userInfo:StromDic];
@@ -2727,7 +2720,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    {
       //NSLog(@"saveSpeed: PListPfad: %@ ",PListPfad);
       
-      NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempPListDic;
       NSFileManager *Filemanager=[NSFileManager defaultManager];
       if ([Filemanager fileExistsAtPath:PListPfad])
       {
@@ -2737,7 +2730,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
       else
       {
-         tempPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         tempPListDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          //NSLog(@"saveSpeed: neuer PListDic");
       }
       [tempPListDic setObject:[NSNumber numberWithInt:[SpeedFeld intValue]] forKey:@"speed"];
@@ -2790,7 +2783,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    {
       //NSLog(@"saveSpeed: PListPfad: %@ ",PListPfad);
       
-      NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempPListDic;
       NSFileManager *Filemanager=[NSFileManager defaultManager];
       if ([Filemanager fileExistsAtPath:PListPfad])
       {
@@ -2800,7 +2793,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
       else
       {
-         tempPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         tempPListDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          //NSLog(@"saveSpeed: neuer PListDic");
       }
       
@@ -3150,7 +3143,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       }
       NSLog(@"AVR  manRichtung aktpwm: %d",aktpwm);
       [self setStepperstrom:aktpwm];
-      NSMutableArray* ManArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+      NSMutableArray* ManArray = [[NSMutableArray alloc]initWithCapacity:0];
       
       // Startpunkt ist aktuelle Position. Lage: 2: Home horizontal
       NSPoint PositionA = NSMakePoint(0, 0);
@@ -3200,7 +3193,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       // von reportOberkanteAnfahren
       int i=0;
       int zoomfaktor=1.0;
-      NSMutableArray* HomeSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+      NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
       
       for (i=0;i<[ManArray count]-1;i++)
       {
@@ -3223,7 +3216,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          
          //NSLog(@"C i: %d",i);
          // Dic zusammenstellen
-         NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
          
          // AB
          if ([CNC_Seite1Check state])
@@ -3264,7 +3257,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          //NSLog(@"E i: %d",i);
       } // for i
       
-      NSMutableDictionary* HomeSchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
       //NSLog(@"AVR  reportManLeft HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
@@ -3303,7 +3296,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          return;
       }
       
-      NSMutableArray* ManArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+      NSMutableArray* ManArray = [[NSMutableArray alloc]initWithCapacity:0];
       
       // Startpunkt ist aktuelle Position. Lage: 2: Home horizontal
       NSPoint PositionA = NSMakePoint(0, 0);
@@ -3321,7 +3314,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       // von reportOberkanteAnfahren
       int i=0;
       int zoomfaktor=1.0;
-      NSMutableArray* HomeSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+      NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
       
       for (i=0;i<[ManArray count]-1;i++)
       {
@@ -3342,7 +3335,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          NSString* tempEndPunktBString= NSStringFromPoint(tempEndPunktB);
          
          // Dic zusammenstellen
-         NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
          
          // AB
          if ([CNC_Seite1Check state])
@@ -3383,7 +3376,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          
       } // for i
       
-      NSMutableDictionary* HomeSchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
       //NSLog(@"AVR  reportManLeft HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
@@ -3424,7 +3417,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSPoint Startpunkt = NSMakePoint(0,0);
    NSArray* PfeilArray = [CNC PfeilvonPunkt:Startpunkt mitLaenge:50 inRichtung:0];
    
-   NSMutableArray* PfeilSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* PfeilSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    float zoomfaktor=1;
    int i;
    for (i=0;i<[PfeilArray count]-1;i++)
@@ -3440,7 +3433,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 		NSString* tempEndPunktString= NSStringFromPoint(tempEndPunkt);
 		//NSLog(@"tempStartPunktString: %@ tempEndPunktString: %@",tempStartPunktString,tempEndPunktString);
       
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       
       [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
       
@@ -3477,7 +3470,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
    }
    
-   NSMutableDictionary* SchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:PfeilSchnittdatenArray forKey:@"schnittdatenarray"];
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
@@ -3509,7 +3502,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSPoint Startpunkt = NSMakePoint(0,0);
    NSArray* PfeilArray = [CNC PfeilvonPunkt:Startpunkt mitLaenge:50 inRichtung:1];
    
-   NSMutableArray* PfeilSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* PfeilSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    float zoomfaktor=1;
    int i;
    for (i=0;i<[PfeilArray count]-1;i++)
@@ -3525,7 +3518,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 		NSString* tempEndPunktString= NSStringFromPoint(tempEndPunkt);
 		//NSLog(@"tempStartPunktString: %@ tempEndPunktString: %@",tempStartPunktString,tempEndPunktString);
       
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
       
       if ([CNC_Seite1Check state])
@@ -3566,7 +3559,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
    }
    
-   NSMutableDictionary* SchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:PfeilSchnittdatenArray forKey:@"schnittdatenarray"];
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
@@ -3597,7 +3590,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSPoint Startpunkt = NSMakePoint(0,0);
    NSArray* PfeilArray = [CNC PfeilvonPunkt:Startpunkt mitLaenge:50 inRichtung:3];
    
-   NSMutableArray* PfeilSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* PfeilSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    float zoomfaktor=1;
    int i;
    for (i=0;i<[PfeilArray count]-1;i++)
@@ -3613,7 +3606,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 		NSString* tempEndPunktString= NSStringFromPoint(tempEndPunkt);
 		//NSLog(@"tempStartPunktString: %@ tempEndPunktString: %@",tempStartPunktString,tempEndPunktString);
       
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       [tempDic setObject:[NSNumber numberWithInt:i] forKey:@"index"];
       
       if ([CNC_Seite1Check state])
@@ -3650,7 +3643,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
    }
    
-   NSMutableDictionary* SchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:PfeilSchnittdatenArray forKey:@"schnittdatenarray"];
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
@@ -3680,7 +3673,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 	int anzDaten=0x20;
 	
 	// Array mit Schnittdaten
-	NSMutableArray*  AVR_SchnittdatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray*  AVR_SchnittdatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	int i=0;
 	for(i=0;i<[tempQuadratArray count];i++)
@@ -3720,7 +3713,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
    //NSLog(@"AVR_SchnittdatenArray: %@",[AVR_SchnittdatenArray description]);
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-   NSMutableDictionary* SchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:AVR_SchnittdatenArray forKey:@"schnittdatenarray"];
    [SchnittdatenDic setObject:[NSNumber numberWithInt:cncposition] forKey:@"cncposition"];
    // [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
@@ -4737,7 +4730,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          }break;
 
       }// switch pfeiltaste
-      NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [NotificationDic setObject:[NSNumber numberWithInt:richtung] forKey:@"richtung"];
       
       int aktpwm=0;
@@ -4865,7 +4858,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       {
          NSDictionary* tempZeilenDicA = [ProfilArrayA objectAtIndex:index];
          NSDictionary* tempZeilenDicB = [ProfilArrayB objectAtIndex:index];
-         NSMutableDictionary* tempZeilenDic =[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
@@ -4906,7 +4899,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          
          NSDictionary* tempZeilenDicA = [ProfilArrayA objectAtIndex:unterseiteindex];
          NSDictionary* tempZeilenDicB = [ProfilArrayB objectAtIndex:unterseiteindex];
-         NSMutableDictionary* tempZeilenDic =[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
@@ -4939,7 +4932,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (NSArray*)readFigur
 {
-   NSArray* FigurArray;
+   NSMutableArray* FigurArray;
    NSLog(@"readFigur start");
    
    /*
@@ -5020,7 +5013,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 	//NSLog(@"Utils openFigur tempArray count: %d",[tempArray count]);
 	int i=0;
 	
-	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
+	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	[numberFormatter setMaximumFractionDigits:4];
 	[numberFormatter setFormat:@"##0.0000"];
    
@@ -5134,10 +5127,9 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    BOOL LibOK=NO;
 	BOOL istOrdner;
    
-   NSMutableArray* ProfilnamenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* ProfilnamenArray = [[NSMutableArray alloc]initWithCapacity:0];
    NSFileManager *Filemanager = [NSFileManager defaultManager];
 	NSString* ProfilLibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ProfilLib"];
-   [ProfilLibPfad retain];
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
    //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d profilindex: %d",ProfilLibPfad, LibOK,[ProfilPop indexOfSelectedItem]+1);
@@ -5216,7 +5208,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          [KoordinatenTabelle removeObjectAtIndex:[KoordinatenTabelle count]-1]; // Letzen Punkt entfernen
       }
       
-      NSMutableDictionary* tempRahmenDic =[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempRahmenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
       
       NSPoint tempPunktA = StartpunktA;
       NSPoint tempPunktB = StartpunktB;
@@ -5348,7 +5340,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          tempBx += offsetB;
          [tempZeilenDicB setObject:[NSNumber numberWithFloat:tempBx] forKey:@"x"];
          
-         NSMutableDictionary* tempZeilenDic =[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
@@ -5479,7 +5471,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSLog(@"LibArray: %@",[LibElementnamenArray description]);
     */
    //NSLog(@"reportNeueLinie CNC_Eingabe: %@",[[CNC_Eingabe window]title]);
-   NSMutableDictionary* datenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* datenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 
    [datenDic setObject:@"Linie" forKey:@"element"];
    [datenDic setObject:[NSNumber numberWithFloat:[WertAXFeld floatValue]] forKey:@"startx"];
@@ -5701,7 +5693,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [AbmessungX setIntValue:maxX - minX];
    [AbmessungY setIntValue:maxY - minY];
    
-   NSMutableDictionary* StartwertDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* StartwertDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[StartwertDic setObject:[[KoordinatenTabelle lastObject]objectForKey:@"ax"] forKey:@"startx"];
 	[StartwertDic setObject:[[KoordinatenTabelle lastObject]objectForKey:@"ay"] forKey:@"starty"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -6019,7 +6011,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       int k=0;
       for(k=1;k<[EndleistenEinlaufArrayA count];k++)
       {
-         NSMutableDictionary* tempZeilenDic =[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          
          float tempax = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:0]floatValue];
          float tempay = [[[EndleistenEinlaufArrayA objectAtIndex:k]objectAtIndex:1]floatValue];
@@ -6144,7 +6136,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       {
          NSDictionary* tempZeilenDicA = [ProfilArrayA objectAtIndex:index];
          NSDictionary* tempZeilenDicB = [ProfilArrayB objectAtIndex:index];
-         NSMutableDictionary* tempZeilenDic =[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
@@ -6199,7 +6191,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          
          NSDictionary* tempZeilenDicA = [ProfilArrayA objectAtIndex:unterseiteindex];
          NSDictionary* tempZeilenDicB = [ProfilArrayB objectAtIndex:unterseiteindex];
-         NSMutableDictionary* tempZeilenDic =[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"x"] forKey:@"ax"];
          [tempZeilenDic setObject:[tempZeilenDicA objectForKey:@"y"] forKey:@"ay"];
          [tempZeilenDic setObject:[tempZeilenDicB objectForKey:@"x"] forKey:@"bx"];
@@ -6236,7 +6228,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       int l;
       for(l=1;l<[NasenleistenAuslaufArray count];l++)
       {
-         NSMutableDictionary* tempZeilenDic =[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* tempZeilenDic =[[NSMutableDictionary alloc]initWithCapacity:0];
          float tempx = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:0]floatValue];
          float tempy = [[[NasenleistenAuslaufArray objectAtIndex:l]objectAtIndex:1]floatValue];
          //NSLog(@"tempx: %2.2f tempy: %2.2f",tempx, tempy);
@@ -6293,7 +6285,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       {
          wrenchwinkel *= -1;
       }
-      KoordinatenTabelle = [[Utils wrenchProfilschnittlinie:KoordinatenTabelle mitWrench:wrenchwinkel]retain];
+      KoordinatenTabelle = [Utils wrenchProfilschnittlinie:KoordinatenTabelle mitWrench:wrenchwinkel];
       //NSLog(@"B");
    }
    
@@ -6356,7 +6348,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [AbmessungX setIntValue:maxX - minX];
    [AbmessungY setIntValue:maxY - minY];
    // Startwerte in mm in CNC_Eingabe aktualisieren
-   NSMutableDictionary* StartwertDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* StartwertDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[StartwertDic setObject:[[KoordinatenTabelle lastObject]objectForKey:@"ax"] forKey:@"startx"];
 	[StartwertDic setObject:[[KoordinatenTabelle lastObject]objectForKey:@"ay"] forKey:@"starty"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -6461,7 +6453,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [AbmessungY setIntValue:maxY - minY];
 
    
-   NSMutableDictionary* StartwertDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* StartwertDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[StartwertDic setObject:[[KoordinatenTabelle lastObject]objectForKey:@"ax"] forKey:@"startx"];
 	[StartwertDic setObject:[[KoordinatenTabelle lastObject]objectForKey:@"ay"] forKey:@"starty"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -6569,7 +6561,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    }
 
    
-   NSMutableDictionary* StartwertDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* StartwertDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[StartwertDic setObject:[[KoordinatenTabelle lastObject]objectForKey:@"ax"] forKey:@"startx"];
 	[StartwertDic setObject:[[KoordinatenTabelle lastObject]objectForKey:@"ay"] forKey:@"starty"];
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -6589,7 +6581,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (NSDictionary*)RahmenDic
 {
-   NSMutableDictionary* RahmenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* RahmenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    // Einlauf:
    float einlaufAX;
    float einlaufAY;
@@ -6753,7 +6745,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
    float dicke=[Blockdicke floatValue];
    float blockoberkante = [Blockoberkante floatValue];
-   NSMutableArray* AnfahrtArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    NSArray* tempLinienArray = [CNC LinieVonPunkt:NSMakePoint(0,0) mitLaenge:blockoberkante mitWinkel:90];
    
@@ -6780,7 +6772,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    // von reportStopKnopf
    int i=0;
    int zoomfaktor=1.0;
-   NSMutableArray* AnfahrtSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* AnfahrtSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    for (i=0;i<[AnfahrtArray count]-1;i++)
 	{
@@ -6801,7 +6793,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSString* tempEndPunktBString= NSStringFromPoint(tempEndPunktB);
       
       // Dic zusammenstellen
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       
       [tempDic setObject:tempStartPunktAString forKey:@"startpunkt"];
       [tempDic setObject:tempEndPunktAString forKey:@"endpunkt"];
@@ -6846,7 +6838,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    } // for i
    //NSLog(@"AnfahrtSchnittdatenArray: %@",[AnfahrtSchnittdatenArray description]);
    // Schnittdaten an CNC schicken
-   NSMutableDictionary* SchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:AnfahrtSchnittdatenArray forKey:@"schnittdatenarray"];
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
@@ -6895,7 +6887,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSPoint StartpunktA = NSMakePoint(einlaufAX, einlaufAY);
    NSPoint StartpunktB = NSMakePoint(einlaufBX, einlaufBY);
 
-   NSMutableArray* RumprohrArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* RumprohrArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    int index=0;
    
@@ -7450,7 +7442,6 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    } 
    else if (button == NSAlertSecondButtonReturn) 
    {
-      [input release];
       return nil;
    } 
    else 
@@ -7458,7 +7449,6 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSAssert1(NO, @"Invalid input dialog button %d", button);
       return nil;
    }
-   [input release];
 }
 
 
@@ -7471,7 +7461,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSDictionary* startDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0],@"ax",[NSNumber numberWithFloat:0],@"ay",[NSNumber numberWithInt:0],@"index", nil];
 
    int i=0;
-   NSMutableArray* ElementArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* ElementArray = [[NSMutableArray alloc]initWithCapacity:0];
    [ElementArray addObject:startDic];
    for (i= 1;i<[KoordinatenTabelle count];i++)
    {
@@ -7527,8 +7517,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    }
    else
    {
-      //saveElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-       saveElementArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+       saveElementArray=[[NSMutableArray alloc]initWithCapacity:0];
    }
    //[saveElementDic setObject:@"A" forKey:@"Name"];
    if ([saveElementArray count])
@@ -7539,7 +7528,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSLog(@"dupindex: %d",dupindex);
      if (dupindex<NSNotFound)
      {
-        NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+        NSAlert *Warnung = [[NSAlert alloc] init];
         [Warnung addButtonWithTitle:@"Ersetzen"];
         //[Warnung addButtonWithTitle:@""];
         //[Warnung addButtonWithTitle:@""];
@@ -7726,9 +7715,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [PositionFeld setStringValue:@""];
    
    
-   //NSMutableDictionary* haltInfoDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
 	//[haltInfoDic setObject:[NSNumber numberWithInt:[CNC_Halttaste state]] forKey:@"halt"];
-   NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[NotificationDic setObject:[NSNumber numberWithInt:[CNC_Halttaste state]] forKey:@"halt"];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"push"];
    
@@ -7808,7 +7796,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (void)shiftX:(float)x Y:(float)y Schritt:(int)schritt
 {
-   NSMutableArray* RahmenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* RahmenArray=[[NSMutableArray alloc]initWithCapacity:0];
 
    int i=0;
    if ([KoordinatenTabelle count])
@@ -7932,7 +7920,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
  
 
       NSNumber* tempindex=(NSNumber*)[tempZeilenDic objectForKey:@"index"];
-      NSMutableDictionary* neuerZeilenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* neuerZeilenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
       
       // keys vertauschen
       [neuerZeilenDic setObject:tempax forKey:@"bx"];
@@ -7974,7 +7962,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       return;
    }
    int i=0;
-   NSMutableArray* tempKoordinatenArray = [[[NSMutableArray alloc]initWithArray: KoordinatenTabelle]autorelease];
+   NSMutableArray* tempKoordinatenArray = [[NSMutableArray alloc]initWithArray: KoordinatenTabelle];
    
    //maximales x finden
    float maxX=0;
@@ -8038,7 +8026,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSNumber* tempbx=(NSNumber*)[tempZeilenDic objectForKey:@"bx"];
       NSNumber* tempby=(NSNumber*)[tempZeilenDic objectForKey:@"by"];
       NSNumber* tempindex=(NSNumber*)[tempZeilenDic objectForKey:@"index"];
-      NSMutableDictionary* neuerZeilenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* neuerZeilenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
    }
     */
    //NSLog(@"maxX: %2.2f",maxX);
@@ -8072,7 +8060,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    // end von 32
    
    float offset = [AbmessungX intValue];
-   NSMutableArray* OffsetArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* OffsetArray = [[NSMutableArray alloc]initWithCapacity:0];
    
 //   NSArray* tempLinienArray = [CNC LinieVonPunkt:NSMakePoint(0,0) mitLaenge:blockoberkante mitWinkel:90];
    
@@ -8099,7 +8087,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    // von reportStopKnopf
    int i=0;
    int zoomfaktor=1.0;
-   NSMutableArray* OffsetSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* OffsetSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    for (i=0;i<[OffsetArray count]-1;i++)
 	{
@@ -8120,7 +8108,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSString* tempEndPunktBString= NSStringFromPoint(tempEndPunktB);
       
       // Dic zusammenstellen
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       
       [tempDic setObject:tempStartPunktAString forKey:@"startpunkt"];
       [tempDic setObject:tempEndPunktAString forKey:@"endpunkt"];
@@ -8165,7 +8153,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    } // for i
    NSLog(@"OffsetSchnittdatenArray: %@",[OffsetSchnittdatenArray description]);
    // Schnittdaten an CNC schicken
-   NSMutableDictionary* SchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:OffsetSchnittdatenArray forKey:@"schnittdatenarray"];
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
@@ -8186,7 +8174,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       return;
    }
    int i=0;
-   NSMutableArray* tempKoordinatenArray = [[[NSMutableArray alloc]initWithArray: KoordinatenTabelle]autorelease];
+   NSMutableArray* tempKoordinatenArray = [[NSMutableArray alloc]initWithArray: KoordinatenTabelle];
    
    //maximales y finden
    float maxY=0;
@@ -8257,7 +8245,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
     NSNumber* tempbx=(NSNumber*)[tempZeilenDic objectForKey:@"bx"];
     NSNumber* tempby=(NSNumber*)[tempZeilenDic objectForKey:@"by"];
     NSNumber* tempindex=(NSNumber*)[tempZeilenDic objectForKey:@"index"];
-    NSMutableDictionary* neuerZeilenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+    NSMutableDictionary* neuerZeilenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
     }
     */
    //NSLog(@"maxX: %2.2f",maxX);
@@ -8323,7 +8311,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
    NSLog(@"reportAndereSeiteAnfahren blockhoehe: %d blockbreite: %d nowpwm: %d",blockhoehe,blockbreite,nowpwm);
    
-   NSMutableArray* AnfahrtArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    // Startpunkt ist Home. Lage: 0: Einlauf 1: Auslauf
    NSPoint PositionA = NSMakePoint(0, 0);
@@ -8355,7 +8343,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    // von reportStopKnopf
    int i=0;
    int zoomfaktor=1.0;
-   NSMutableArray* AnfahrtSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* AnfahrtSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    for (i=0;i<[AnfahrtArray count]-1;i++)
 	{
@@ -8376,7 +8364,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSString* tempEndPunktBString= NSStringFromPoint(tempEndPunktB);
       
       // Dic zusammenstellen
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       
       [tempDic setObject:tempStartPunktAString forKey:@"startpunkt"];
       [tempDic setObject:tempEndPunktAString forKey:@"endpunkt"];
@@ -8423,7 +8411,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    } // for i
    NSLog(@"AnfahrtSchnittdatenArray: %@",[AnfahrtSchnittdatenArray description]);
    // Schnittdaten an CNC schicken
-   NSMutableDictionary* SchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:AnfahrtSchnittdatenArray forKey:@"schnittdatenarray"];
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    
@@ -8454,7 +8442,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
    NSLog(@"Horizontal bis Anschlag");
    
-   NSMutableArray* AnfahrtArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    // Startpunkt ist aktuelle Position. Lage: 2: Home horizontal
    NSPoint PositionA = NSMakePoint(0, 0);
@@ -8486,7 +8474,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    // von reportOberkanteAnfahren
    int i=0;
    int zoomfaktor=1.0;
-   NSMutableArray* HomeSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    int lastSpeed = [CNC speed];
    [CNC setSpeed:14];
@@ -8511,7 +8499,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSString* tempEndPunktBString= NSStringFromPoint(tempEndPunktB);
       
       // Dic zusammenstellen
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       
       [tempDic setObject:tempStartPunktAString forKey:@"startpunkt"];
       [tempDic setObject:tempEndPunktAString forKey:@"endpunkt"];
@@ -8559,7 +8547,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
    [CNC setSpeed:lastSpeed];
 
-   NSMutableDictionary* HomeSchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    //NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
@@ -8594,7 +8582,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    }
    NSLog(@"Vertikal bis Anschlag");
    //return;
-   NSMutableArray* AnfahrtArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* AnfahrtArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    
    
@@ -8615,7 +8603,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    // von reportOberkanteAnfahren
    int i=0;
    int zoomfaktor=1.0;
-   NSMutableArray* HomeSchnittdatenArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* HomeSchnittdatenArray = [[NSMutableArray alloc]initWithCapacity:0];
    int lastSpeed = [CNC speed];
    [CNC setSpeed:14];
    [CNC setredpwm:[red_pwmFeld floatValue]];
@@ -8639,7 +8627,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSString* tempEndPunktBString= NSStringFromPoint(tempEndPunktB);
       
       // Dic zusammenstellen
-      NSMutableDictionary* tempDic= [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* tempDic= [[NSMutableDictionary alloc]initWithCapacity:0];
       
       [tempDic setObject:tempStartPunktAString forKey:@"startpunkt"];
       [tempDic setObject:tempEndPunktAString forKey:@"endpunkt"];
@@ -8683,7 +8671,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
    [CNC setSpeed:lastSpeed];
    
-   NSMutableDictionary* HomeSchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
    //NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
@@ -8917,7 +8905,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
    if ([DC_PWM intValue] == 0)
    {
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"OK"];
       [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"PWM ist Null"]];
       [Warnung setAlertStyle:NSAlertStyleWarning];
@@ -8929,7 +8917,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
    if ([SpeedFeld intValue] == 0)
    {
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"OK"];
       [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"Speed ist Null"]];
       [Warnung setAlertStyle:NSAlertStyleWarning];
@@ -8965,7 +8953,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       int delayok=0;
       if (![DC_Taste state])
       {
-         NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+         NSAlert *Warnung = [[NSAlert alloc] init];
          [Warnung addButtonWithTitle:@"Einschalten"];
          [Warnung addButtonWithTitle:@"Ignorieren"];
          //   [Warnung addButtonWithTitle:@""];
@@ -9021,7 +9009,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       //NSLog(@"reportUSB_sendArray cncposition: %d \nSchnittdatenArray: %@",cncposition,[[SchnittdatenArray objectAtIndex:0]description]);
       // Array an USB schicken
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-      NSMutableDictionary* SchnittdatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [SchnittdatenDic setObject:[NSNumber numberWithInt:[self pwm]] forKey:@"pwm"];
       
       [SchnittdatenDic setObject:SchnittdatenArray forKey:@"schnittdatenarray"];
@@ -9064,7 +9052,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    else 
    {
       int antwort=0;
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"Einstecken und einschalten"];
       [Warnung addButtonWithTitle:@"Zurück"];
       //   [Warnung addButtonWithTitle:@""];
@@ -9324,19 +9312,17 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSString*titel = [NSString stringWithString:[ProfilNameFeldA stringValue]];
 
   
-   NSTextField* Titelfeld = [[[NSTextField alloc]initWithFrame:Titelrect]retain];
+   NSTextField* Titelfeld = [[NSTextField alloc]initWithFrame:Titelrect];
    NSFont* TitelFont=[NSFont fontWithName:@"Helvetica" size: 14];
    [Titelfeld setFont:TitelFont];
    [Titelfeld setStringValue:@""];
 //   [Druckfeld addSubview:Titelfeld];
-   [Titelfeld release];
    
    NSImageView* Bildfeld;
    NSRect Bildrect = NSMakeRect(230, 80, 60, 60);
    Bildfeld = [[NSImageView alloc]initWithFrame:Bildrect];
    [Bildfeld setImage:[NSImage imageNamed:@"home"]];
 //   [Druckfeld addSubview:Bildfeld];
-   [Bildfeld release];
    
    
    //   [Titelfeld setAllowsEditingTextAttributes:YES];
@@ -9372,7 +9358,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [printOp	runOperationModalForWindow:[self window]
                                      delegate:self
                                didRunSelector:nil
-                                  contextInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"PrintFromAVR",@"task", nil]];
+                                  contextInfo:(__bridge void * _Nullable)([NSDictionary dictionaryWithObjectsAndKeys:@"PrintFromAVR",@"task", nil])];
    NSLog(@"print end");
 
 }
@@ -9512,19 +9498,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (void)dealloc
 {
-   [UndoSet release];
-   [Utils release];
-   [AnschlagDic release];
-   [CNCDatenArray release];
-	[KoordinatenTabelle release];
-	[UndoKoordinatenTabelle release];
-   [BlockKoordinatenTabelle release];
-   [SchnittdatenArray release];
 	GraphEnd=0;
-	[CNC release];
-	[ProfilDatenOA release];
-	[ProfilDatenUA release];
-   [CNC_PList release];
 
 }
 @end

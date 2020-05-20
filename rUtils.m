@@ -17,7 +17,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSArray*)readProfil:(NSString*)profilname
 {
-	NSMutableArray* ProfilArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* ProfilArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSOpenPanel* OpenPanel=[NSOpenPanel openPanel];
 //	[OpenPanel setCanChooseFiles:YES];
 //	[OpenPanel setCanChooseDirectories:NO];
@@ -58,7 +58,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	//NSLog(@"Utils openProfil tempArray count: %d",[tempArray count]);
 	int i=0;
 	
-	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
+	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	[numberFormatter setMaximumFractionDigits:4];
 	[numberFormatter setFormat:@"##0.0000"];
 
@@ -121,7 +121,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSArray*)flipProfil:(NSArray*)profilArray
 {
-   NSMutableArray* flipProfilArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* flipProfilArray = [[NSMutableArray alloc]initWithCapacity:0];
    int i;
    
    for (i=0;i< [profilArray count];i++)
@@ -140,7 +140,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSDictionary*)ProfilDatenAnPfad:(NSString*)profilpfad
 {
-	NSMutableArray* ProfilArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* ProfilArray=[[NSMutableArray alloc]initWithCapacity:0];
    //NSLog(@"ProfilDatenAnPfad: URL: %@",profilpfad);
 	NSError* err=0;
 	NSString* ProfilString=[NSString stringWithContentsOfURL:[NSURL fileURLWithPath:profilpfad] encoding:NSUTF8StringEncoding error:&err]; // String des Speicherpfads
@@ -205,7 +205,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	//NSLog(@"Utils openProfil tempArray count: %d",[tempArray count]);
 	int i=0;
 	
-	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
+	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	[numberFormatter setMaximumFractionDigits:4];
 	[numberFormatter setFormat:@"##0.0000"];
 	
@@ -323,8 +323,8 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 -  (NSDictionary*)readProfilMitName
 {
-	NSMutableArray* ProfilArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-	NSOpenPanel* OpenPanel=[[NSOpenPanel openPanel]retain];
+	NSMutableArray* ProfilArray=[[NSMutableArray alloc]initWithCapacity:0];
+	NSOpenPanel* OpenPanel=[NSOpenPanel openPanel];
 	[OpenPanel setCanChooseFiles:YES];
 	[OpenPanel setCanChooseDirectories:NO];
 	[OpenPanel setAllowsMultipleSelection:NO];
@@ -346,13 +346,13 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    return NULL;
    if (antwort == NSFileHandlingPanelCancelButton)
    {
-      [OpenPanel release];
+     
       return NULL;
       
    }
    
 	NSURL* ProfilPfad=[OpenPanel URL];
-   [OpenPanel release];
+  
 	NSLog(@"readProfilMitName: URL: %@",ProfilPfad);
 	NSError* err=0;
 	NSString* ProfilString=[NSString stringWithContentsOfURL:ProfilPfad encoding:NSUTF8StringEncoding error:&err]; // String des Speicherpfads
@@ -403,7 +403,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	//NSLog(@"Utils openProfil tempArray count: %d",[tempArray count]);
 	int i=0;
 	
-	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
+	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	[numberFormatter setMaximumFractionDigits:4];
 	[numberFormatter setFormat:@"##0.0000"];
 	
@@ -483,7 +483,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 - (NSDictionary*)SplinekoeffizientenVonArray:(NSArray*)dataArray
 {
   // NSLog(@"SplinekoeffizientenVonArray l: %d dataArray: %@",[dataArray count],[dataArray description]);
-   NSMutableDictionary* splineKoeffDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* splineKoeffDic = [[NSMutableDictionary alloc]initWithCapacity:0];
    unsigned long l=[dataArray count];
    double* a=malloc(l*sizeof(double));
    double* b=malloc(l*sizeof(double));
@@ -617,7 +617,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSArray*)wrenchProfil:(NSArray*)profilArray mitWrench:(float)wrench
 {
-   NSMutableArray* wrenchArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* wrenchArray=[[NSMutableArray alloc]initWithCapacity:0];
    int i=0;
    /*
     x2 = x1 * cos(phi) - y1 * sin(phi)
@@ -650,7 +650,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 
 - (NSMutableArray*)wrenchProfilschnittlinie:(NSArray*)linienArray mitWrench:(float)wrench
 {
-   NSMutableArray* wrenchArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* wrenchArray=[[NSMutableArray alloc]initWithCapacity:0];
    int i=0;
    /*
     x2 = x1 * cos(phi) - y1 * sin(phi)
@@ -719,8 +719,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
       
  //     y2 -= offsety;
       
-//      NSMutableDictionary* tempDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-      NSMutableDictionary* tempZeilenDic=[[[NSMutableDictionary alloc]initWithDictionary:[linienArray objectAtIndex:i]]autorelease];
+      NSMutableDictionary* tempZeilenDic=[[NSMutableDictionary alloc]initWithDictionary:[linienArray objectAtIndex:i]];
       [tempZeilenDic setObject:[NSNumber numberWithFloat:x2] forKey:@"bx"];
       [tempZeilenDic setObject:[NSNumber numberWithFloat:y2] forKey:@"by"];
       [wrenchArray addObject: tempZeilenDic];
@@ -743,7 +742,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    [ProfilOpenPanel setAllowedFileTypes:[NSArray arrayWithObjects:@"txt",NULL]];
    */
    NSLog(@"readFigur start");
-   NSOpenPanel *ProfilOpenPanel = [[NSOpenPanel openPanel] retain];
+   NSOpenPanel *ProfilOpenPanel = [NSOpenPanel openPanel];
    NSLog(@"readFigur ProfilOpenPanel: %@",[ProfilOpenPanel description]);
    // Configure your panel the way you want it
    [ProfilOpenPanel setCanChooseFiles:YES];
@@ -784,7 +783,6 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
    {
       int antwort=[ProfilOpenPanel runModal];
       NSLog(@"ProfilOpenPanel antwort: %d",antwort);
-      [ProfilOpenPanel release];
    }
    else{
       NSLog(@"kein Panel");
@@ -839,7 +837,7 @@ NSLog(@"logRect: origin.x %2.2f origin.y %2.2f size.heigt %2.2f size.width %2.2f
 	//NSLog(@"Utils openFigur tempArray count: %d",[tempArray count]);
 	int i=0;
 	
-	NSNumberFormatter *numberFormatter =[[[NSNumberFormatter alloc] init] autorelease];
+	NSNumberFormatter *numberFormatter =[[NSNumberFormatter alloc] init];
 	[numberFormatter setMaximumFractionDigits:4];
 	[numberFormatter setFormat:@"##0.0000"];
    

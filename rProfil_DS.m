@@ -16,7 +16,6 @@
 {
 
 	ProfilTabelle=[[NSMutableArray alloc]initWithCapacity:0];
-	[ProfilTabelle retain];
 	return self;
 }
 
@@ -57,7 +56,7 @@ return ProfilTabelle;
 	for (i=0;i<anz;i++)
 	{
 
-	NSMutableDictionary* tempTagDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempTagDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 	[tempTagDic setObject:[NSNumber numberWithInt:i] forKey:@"stunde"];
 
 	[ProfilTabelle addObject:tempTagDic];

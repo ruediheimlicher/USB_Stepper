@@ -45,7 +45,6 @@ float (^hypotenuse)(float, float) = ^(float x, float y)
 if ((self = [super init]) != nil) 
 {
 	DatenArray = [[NSMutableArray alloc]init];
-	[DatenArray retain];
 	
 	speed=10;
 	steps=48;
@@ -79,8 +78,6 @@ return NULL;
 
 - (void)setDatenArray:(NSArray*)derDatenArray
 {
-	[DatenArray release];
-	[derDatenArray retain];
 	DatenArray = (NSMutableArray*)derDatenArray;
 }
 - (NSArray*)DatenArray
@@ -200,8 +197,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	//EndPunkt.y *=zoomfaktor;
 	//NSLog(@"StartPunkt x: %.2f y: %.2f EndPunkt.x: %.2f y: %.2f",StartPunkt.x,StartPunkt.y,EndPunkt.x, EndPunkt.y);
 	
-	//NSMutableDictionary* tempDatenDic=[[[NSMutableDictionary alloc]initWithDictionary:derDatenDic]autorelease];
-	NSMutableDictionary* tempDatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempDatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [tempDatenDic addEntriesFromDictionary:derDatenDic];
 	float DistanzX= EndPunkt.x - StartPunkt.x;
 	float DistanzAX= EndPunktA.x - StartPunktA.x;
@@ -562,8 +558,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	//EndPunkt.y *=zoomfaktor;
 	//NSLog(@"StartPunkt x: %.2f y: %.2f EndPunkt.x: %.2f y: %.2f",StartPunkt.x,StartPunkt.y,EndPunkt.x, EndPunkt.y);
 	
-	//NSMutableDictionary* tempDatenDic=[[[NSMutableDictionary alloc]initWithDictionary:derDatenDic]autorelease];
-	NSMutableDictionary* tempDatenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* tempDatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [tempDatenDic addEntriesFromDictionary:derDatenDic];
 	float DistanzX= EndPunkt.x - StartPunkt.x;
 	float DistanzY= EndPunkt.y - StartPunkt.y;
@@ -591,7 +586,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    int anzTeile=relevanteSchritte / teilabschnitt; // mindestens 4
    int Rampenstufen=anzTeile/2;                    // symmetrische Rampen, mindestens 2
    int stufe=0;
-   NSMutableArray* tempArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* tempArray=[[NSMutableArray alloc]initWithCapacity:0];
    
    int i=0;
    for (i=0; i<relevanteSchritte; i++)
@@ -664,7 +659,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    }
    //NSLog(@"SchnittdatenVonDic index: %d",[[derDatenDic objectForKey:@"indexl"]intValue]);
    
-	NSMutableArray* tempArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int tempDataL=0;
 	int tempDataH=0;
 	tempDataL=[[derDatenDic objectForKey:@"schrittex"]intValue]& 0xFF;
@@ -793,7 +788,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	//NSLog(@"SchnittdatenVonDic derDatenDic: %@",[derDatenDic description]);
    //NSLog(@"SchnittdatenVonDic index: %d",[[derDatenDic objectForKey:@"indexl"]intValue]);
    
-	NSMutableArray* tempArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempArray=[[NSMutableArray alloc]initWithCapacity:0];
 	int tempDataL=0;
 	int tempDataH=0;
 	tempDataL=[[derDatenDic objectForKey:@"schrittex"]intValue]& 0xFF;
@@ -897,7 +892,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 - (NSArray*)PfeilvonPunkt:(NSPoint) Startpunkt mitLaenge:(int)laenge inRichtung:(int)richtung
 {
    int schritte=laenge*steps;
- 	NSMutableArray* PfeilKoordinatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+ 	NSMutableArray* PfeilKoordinatenArray=[[NSMutableArray alloc]initWithCapacity:0];
    /*
     richtung
     right: 0
@@ -976,7 +971,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 - (NSArray*)LinieVonPunkt:(NSPoint)Anfangspunkt mitLaenge:(float)laenge mitWinkel:(int)winkel
 {
    //Winkel 0 ist Richtung der x-Achse, CCW
-   NSMutableArray* LinienKoordinatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* LinienKoordinatenArray=[[NSMutableArray alloc]initWithCapacity:0];
    float deltaX = laenge * cos(winkel*(M_PI/180));
    float deltaY = laenge * sin(winkel*(M_PI/180));
    
@@ -995,7 +990,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 - (NSArray*)QuadratVonPunkt:(NSPoint)EckeLinksUnten mitSeite:(float)Seite mitLage:(int)Lage
 {
 	NSLog(@"QuadratVonPunkt: EckeLinksUnten x: %2.2f y: %2.2f Seite: %2.2f",EckeLinksUnten.x, EckeLinksUnten.y, Seite);
-	NSMutableArray* tempDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	// waagrecht rechts
 	//NSPoint Startpunkt=NSMakePoint(0,0);
@@ -1006,7 +1001,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 	
 	int anzSchritte =4;
 	
-	NSMutableArray* PolygonpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* PolygonpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
 	/*
 	 Lage: 
 	 0: rechts oben von Startpunkt		|_
@@ -1140,13 +1135,13 @@ PortA=vs[n & 3]; warte10ms(); n++;
 - (NSArray*)QuadratKoordinatenMitSeite:(float)Seite mitWinkel:(float)Winkel
 {
 	NSLog(@"QuadratmitSeite: %2.2f  Winkel: %2.2f", Seite,Winkel);
-	NSMutableArray* tempDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	// waagrecht rechts
 	NSPoint Eckpunkt=NSMakePoint(0,0);
 	
 	int anzSchritte =4;
 	int index=0;
-	NSMutableArray* PolygonpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* PolygonpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
 	/*
     Winkel: Grad, waagrecht nach rechts = 0°	CCW */
 	//      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:KoordinateX, @"x",KoordinateY,@"y" ,[NSNumber numberWithInt:index],@"index", nil];
@@ -1199,7 +1194,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 - (NSArray*)KreisVonPunkt:(NSPoint)Startpunkt mitRadius:(float)Radius mitLage:(int)Lage
 {
-	NSMutableArray* tempDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSPoint Mittelpunkt;
 	/*
 	 Lage: 0: ueber Startpunkt
@@ -1245,7 +1240,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
  	//NSLog(@"Umfang: %2.2f anzSchritte: %d",Umfang, anzSchritte);
 	
-	NSMutableArray* KreispunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* KreispunktArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	int index;
 	for(index=0;index<anzSchritte;index++)
@@ -1299,7 +1294,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 - (NSArray*)KreisKoordinatenMitRadius:(float)Radius mitLage:(int)Lage
 {
-	NSMutableArray* tempDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSPoint Mittelpunkt = NSMakePoint(0, 0);
 	/*
 	 Lage: 0: ueber Startpunkt
@@ -1348,7 +1343,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
  	//NSLog(@"Umfang: %2.2f anzSchritte: %d",Umfang, anzSchritte);
 	
-	NSMutableArray* KreispunktKoordinatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* KreispunktKoordinatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	int index;
 	for(index=0;index<anzSchritte;index++)
@@ -1396,7 +1391,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 - (NSArray*)KreisKoordinatenMitRadius:(float)Radius mitLage:(int)Lage  mitAnzahlPunkten:(int)anzahlPunkte;
 {
-	NSMutableArray* tempDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	NSPoint Mittelpunkt = NSMakePoint(0, 0);
 	/*
 	 Lage: 0: ueber Startpunkt
@@ -1452,7 +1447,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
  	//NSLog(@"Umfang: %2.2f anzSchritte: %d",Umfang, anzSchritte);
 	
-	NSMutableArray* KreispunktKoordinatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* KreispunktKoordinatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	int index;
 	for(index=0;index<anzSchritte;index++)
@@ -1557,7 +1552,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
  	//NSLog(@"Umfang: %2.2f anzSchritte: %d",Umfang, anzSchritte);
 	
-	NSMutableArray* EllipsenpunktKoordinatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* EllipsenpunktKoordinatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	int index;
 	for(index=0;index<anzSchritte;index++)
@@ -1668,7 +1663,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    
  	//NSLog(@"Umfang: %2.2f anzSchritte: %d",Umfang, anzSchritte);
 	
-	NSMutableArray* EllipsenpunktKoordinatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+	NSMutableArray* EllipsenpunktKoordinatenArray=[[NSMutableArray alloc]initWithCapacity:0];
 	
 	int index;
 	for(index=0;index<anzSchritte;index++)
@@ -1716,7 +1711,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
 - (NSArray*)KreisabschnitteVonKreiskoordinaten:(NSArray*)dieKreiskoordiaten  mitRadius:(float)Radius
 {
-   NSMutableArray* tempDatenArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* tempDatenArray=[[NSMutableArray alloc]initWithCapacity:0];
    // Schrittlaenge
 	float Schrittlaenge=1.5;
 	
@@ -1771,9 +1766,9 @@ PortA=vs[n & 3]; warte10ms(); n++;
 	float minX=1.0;	// Startwert fuer Suche nach vordestem Punkt des Profils. Muss nicht 0.0 sein.
 	int minIndex=0;	// Index des vordersten Punktes im Array
 	
-   NSMutableArray* ProfilpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-   NSMutableArray* ProfilOpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-   NSMutableArray* ProfilUpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* ProfilpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* ProfilOpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* ProfilUpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
    
    for (i=0;i<[ProfilArray count];i++)
 	{
@@ -1846,7 +1841,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
 
    
    //NSArray* ProfilArrayA;
-   NSMutableDictionary* HolmpunktDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* HolmpunktDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    
     
    int holmpos = 0; // Position an Unterseite
@@ -1981,7 +1976,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    //NSLog(@"holmposvorn: %d minvornpos: %d steigungvorn ok minvornfehler: %.3f",holmposvorn,minvornpos,minvornfehler);
    //NSLog(@"holmposhinten: %d minhintenpos: %d steigunghinten ok minhintenfehler: %.3f",holmposhinten,minhintenpos,minhintenfehler);
    //NSLog(@"Startpunkt.x: %.3f Startpunkt.y: %.3f",Startpunkt.x,Startpunkt.y);
-   NSMutableArray* HolmpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* HolmpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
    
    //HolmpunktArray fuellen
    
@@ -2183,17 +2178,17 @@ PortA=vs[n & 3]; warte10ms(); n++;
    float maxX=0;	// Startwert fuer Suche nach vordestem Punkt des Profils. Muss nicht 0.0 sein.
 	int minIndex=0;	// Index des vordersten Punktes im Array
 	
-   NSMutableArray* ProfilpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-   NSMutableArray* ProfilOpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-   NSMutableArray* ProfilUpunktArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
-   NSMutableArray* MittellinieArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* ProfilpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* ProfilOpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* ProfilUpunktArray=[[NSMutableArray alloc]initWithCapacity:0];
+   NSMutableArray* MittellinieArray=[[NSMutableArray alloc]initWithCapacity:0];
 
    float oberseiteweg=0;
    float unterseiteweg=0;
    
    float lastX=0;
    float lastY=0;
-   NSMutableDictionary* ProfilpunktDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* ProfilpunktDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 
    for (i=0;i<[ProfilArray count];i++)
 	{
@@ -2301,7 +2296,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    float dicke=0.5; // Schlitzbreite
    float full_pwm = 1;
    //red_pwm = 0.4;
-   NSMutableArray* EinlaufpunkteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* EinlaufpunkteArray=[[NSMutableArray alloc]initWithCapacity:0];
 
    NSPoint Startpunkt = NSMakePoint(0,0);
    NSPoint Endpunkt = NSMakePoint(0,0);
@@ -2343,7 +2338,7 @@ PortA=vs[n & 3]; warte10ms(); n++;
    float full_pwm = 1;
    
 
-   NSMutableArray* AuslaufpunkteArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* AuslaufpunkteArray=[[NSMutableArray alloc]initWithCapacity:0];
 
    NSPoint Endpunkt = NSMakePoint(0,0);
    NSArray* tempEinlaufArray0 = [NSArray arrayWithObjects:[NSNumber numberWithFloat:Endpunkt.x],[NSNumber numberWithFloat:Endpunkt.y], [NSNumber numberWithFloat:full_pwm],nil];

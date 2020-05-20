@@ -89,7 +89,7 @@
     {
     NSLog(@"savePListAktion: PListPfad: %@ ",PListPfad);
     
-    NSMutableDictionary* tempPListDic;//=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+    NSMutableDictionary* tempPListDic;
     NSFileManager *Filemanager=[NSFileManager defaultManager];
     if ([Filemanager fileExistsAtPath:PListPfad])
     {
@@ -195,7 +195,7 @@
 
 - (void)dealloc
 {
-    [super dealloc];
+    //[super dealloc];
 }
 
 @end

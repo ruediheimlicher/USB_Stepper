@@ -184,7 +184,7 @@ private void button4_Click(object sender, EventArgs e)
             if (usbstatus==0)
             {
                /*
-               NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+               NSAlert *Warnung = [[NSAlert alloc] init];
                //[Warnung addButtonWithTitle:@"Einstecken und einschalten"];
                [Warnung addButtonWithTitle:@"Zurück"];
                //	[Warnung addButtonWithTitle:@""];
@@ -262,7 +262,7 @@ private void button4_Click(object sender, EventArgs e)
     */
    if (usbstatus == 0)
    {
-      NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+      NSAlert *Warnung = [[NSAlert alloc] init];
       [Warnung addButtonWithTitle:@"Einstecken und einschalten"];
       [Warnung addButtonWithTitle:@"Zurück"];
       //   [Warnung addButtonWithTitle:@""];
@@ -368,16 +368,15 @@ private void button4_Click(object sender, EventArgs e)
             [readTimer invalidate];
             
          }
-         [readTimer release];
          readTimer = NULL;
          
       }
       
-      readTimer = [[NSTimer scheduledTimerWithTimeInterval:0.005
+      readTimer = [NSTimer scheduledTimerWithTimeInterval:0.005
                     
                                                     target:self 
                                                   selector:@selector(readUSB:) 
-                                                  userInfo:timerDic repeats:YES]retain];
+                                                  userInfo:timerDic repeats:YES];
       
    }
    // Kopfzeile fuer readUSB
@@ -458,7 +457,6 @@ private void button4_Click(object sender, EventArgs e)
                NSLog(@"writeCNCAbschnitt HALT timer inval");
                [readTimer invalidate];
             }
-            [readTimer release];
             readTimer = NULL;
             
          }
@@ -619,7 +617,6 @@ private void button4_Click(object sender, EventArgs e)
             //NSLog(@"writeCNCAbschnitt timer inval");
             [readTimer invalidate];
          }
-         [readTimer release];
          readTimer = NULL;
          
       }
@@ -649,7 +646,6 @@ private void button4_Click(object sender, EventArgs e)
          [readTimer invalidate];
          
       }
-      [readTimer release];
       readTimer = NULL;
       [AVR setBusy:0];
       [AVR DC_ON:0];
@@ -735,7 +731,6 @@ private void button4_Click(object sender, EventArgs e)
          //NSLog(@"i: %d char: %x data: %d",i,(buffer[i] & 0xFF),[[NSNumber numberWithInt:(UInt8)buffer[i]]intValue]);
       }
       
-      //      NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
       
       //NSLog(@"**");
       //NSNumber* curr_num=[NSNumber numberWithInt:(UInt8)buffer[1]];
@@ -750,7 +745,7 @@ private void button4_Click(object sender, EventArgs e)
       //       if (abschnittcode >= 0xA0) // Code fuer Fertig: AD
       {
          // verschoben von oben 
-         NSMutableDictionary* NotificationDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+         NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          
          NSNumber* Abschnittnummer=[NSNumber numberWithInt:(UInt8)buffer[5]];
          //NSLog(@"**readUSB   buffer 5 %d",(UInt8)buffer[5]);
@@ -836,7 +831,6 @@ private void button4_Click(object sender, EventArgs e)
                      
                      [readTimer invalidate];
                   }
-                  [readTimer release];
                   readTimer = NULL;
                   
                }
@@ -1128,10 +1122,10 @@ private void button4_Click(object sender, EventArgs e)
       {
          NSMutableDictionary* timerDic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"home",[NSNumber numberWithInt:1],@"halt", nil];
 
-         readTimer = [[NSTimer scheduledTimerWithTimeInterval:0.05 
+         readTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 
                                                        target:self 
                                                      selector:@selector(readUSB:) 
-                                                     userInfo:timerDic repeats:YES]retain];
+                                                     userInfo:timerDic repeats:YES];
 
          pfeilaktion=1; // in writeCNCAbschnitt wird Datenserie beendet
          NSLog(@"HaltAktion mouseup start");
@@ -1287,7 +1281,7 @@ private void button4_Click(object sender, EventArgs e)
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification 
 { 
-[[self window] makeKeyAndOrderFront:self];
+//[[self window] makeKeyAndOrderFront:self];
 }
 
 @end

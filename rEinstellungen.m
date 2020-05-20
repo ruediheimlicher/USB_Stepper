@@ -18,7 +18,7 @@
    self = [super initWithFrame:frame];
    if (self) 
    {
-      DatenDic=[[[NSArray alloc ]init]autorelease];
+      DatenDic=[[NSArray alloc ]init];
       oldMauspunkt = NSMakePoint(0,0);
       scale = 1;
       mausistdown=0;
@@ -32,7 +32,6 @@
       StartPunkt = Mittelpunkt;
       EndPunkt = Mittelpunkt;
 		Graph=[NSBezierPath bezierPath];
-		[Graph retain];
 		//[Graph moveToPoint:Mittelpunkt];
 		//lastPunkt=Mittelpunkt;
 		GraphFarbe=[NSColor blueColor]; 
@@ -66,9 +65,7 @@
 - (void)setDaten:(NSDictionary*)datenDic
 {
    //NSLog(@"graph setDaten daten: %@",[datenDic description]);
- 	[datenDic retain];
 	DatenDic=datenDic;
-	[DatenDic release];
    //[NSColor clearColor];
    [Graph removeAllPoints];
    
@@ -164,13 +161,13 @@
    self = [super initWithFrame:frame];
    if (self) 
    {
-      DatenDic=[[[NSDictionary alloc ]init]retain];
+      DatenDic=[[NSDictionary alloc ]init];
       oldMauspunkt = NSMakePoint(0,0);
       scale = 1;
       mausistdown=0;
       klickpunkt=-1;
       startklickpunkt=-1;
-      klickset = [[NSMutableIndexSet indexSet]retain];
+      klickset = [NSMutableIndexSet indexSet];
       NSRect Diagrammfeld=frame;
 		//		Diagrammfeld.size.width+=400;
 		[self setFrame:Diagrammfeld];
@@ -178,7 +175,6 @@
       StartPunkt = Mittelpunkt;
       EndPunkt = Mittelpunkt;
 		Graph=[NSBezierPath bezierPath];
-		[Graph retain];
 		//[Graph moveToPoint:Mittelpunkt];
 		//lastPunkt=Mittelpunkt;
 		GraphFarbe=[NSColor blueColor]; 
@@ -212,9 +208,7 @@
 {
    
    //NSLog(@"Libgraph setDaten daten: %@",[datenDic description]);
- 	[datenDic retain];
 	DatenDic=datenDic;
-	[DatenDic release];
    //[NSColor clearColor];
    [Graph removeAllPoints];
    //[ElementArray removeAllObjects];
@@ -430,11 +424,6 @@
    
 }
 
-- (void)dealloc
-{
-   [ElementArray release];
-   [super dealloc];
-}
 
 
 @end
@@ -448,13 +437,13 @@
    self = [super initWithFrame:frame];
    if (self) 
    {
-      DatenDic=[[[NSArray alloc ]init]retain];
+      DatenDic=[[NSArray alloc ]init];
       oldMauspunkt = NSMakePoint(0,0);
       scale = 1;
       mausistdown=0;
       klickpunkt=-1;
       startklickpunkt=-1;
-      klickset = [[NSMutableIndexSet indexSet]retain];
+      klickset = [NSMutableIndexSet indexSet];
       NSRect Diagrammfeld=frame;
 		//		Diagrammfeld.size.width+=400;
 		[self setFrame:Diagrammfeld];
@@ -462,7 +451,6 @@
       StartPunkt = Mittelpunkt;
       EndPunkt = Mittelpunkt;
 		Graph=[NSBezierPath bezierPath];
-		[Graph retain];
 		//[Graph moveToPoint:Mittelpunkt];
 		//lastPunkt=Mittelpunkt;
 		GraphFarbe=[NSColor blueColor]; 
@@ -500,15 +488,13 @@
    float faktor = [self bounds].size.width;
    faktor *= 0.8;
 
- 	[datenDic retain];
 	DatenDic=datenDic;
-	[DatenDic release];
    //[NSColor clearColor];
    [Graph removeAllPoints];
    [ElementArray  removeAllObjects];
    //[Profil1Array  removeAllObjects];
    //[Profil2Array  removeAllObjects];
-  // NSMutableArray* tempElementArray=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+  // NSMutableArray* tempElementArray=[[NSMutableArray alloc]initWithCapacity:0];
 
     if ([DatenDic objectForKey:@"profil1array"])
     {
@@ -722,13 +708,13 @@
    self = [super initWithFrame:frame];
    if (self) 
    {
-      DatenDic=[[[NSDictionary alloc ]init]retain];
+      DatenDic=[[NSDictionary alloc ]init];
       oldMauspunkt = NSMakePoint(0,0);
       scale = 1;
       mausistdown=0;
       klickpunkt=-1;
       startklickpunkt=-1;
-      klickset = [[NSMutableIndexSet indexSet]retain];
+      klickset = [NSMutableIndexSet indexSet];
       NSRect Diagrammfeld=frame;
 		//		Diagrammfeld.size.width+=400;
 		[self setFrame:Diagrammfeld];
@@ -736,12 +722,11 @@
       StartPunkt = Mittelpunkt;
       EndPunkt = Mittelpunkt;
 		Graph=[NSBezierPath bezierPath];
-		[Graph retain];
 		//[Graph moveToPoint:Mittelpunkt];
 		//lastPunkt=Mittelpunkt;
 		GraphFarbe=[NSColor blueColor]; 
 		//NSLog(@"rProfilGitterlinien Diagrammfeldhoehe: %2.2f ",(frame.size.height-15));
-      ElementArray = [[[NSMutableArray alloc]initWithCapacity:0]retain];
+      ElementArray = [[NSMutableArray alloc]initWithCapacity:0];
       
    }
    return self;
@@ -770,9 +755,7 @@
 {
    
    //NSLog(@"Figgraph setDaten daten: %@",[datenDic description]);
- 	[datenDic retain];
 	DatenDic=datenDic;
-	[DatenDic release];
    //[NSColor clearColor];
    [Graph removeAllPoints];
    //[ElementArray removeAllObjects];
@@ -987,11 +970,6 @@
    
 }
 
-- (void)dealloc
-{
-   [ElementArray release];
-   [super dealloc];
-}
 
 
 @end
@@ -1021,7 +999,7 @@
     */
    
    FormNamenArray = [NSArray arrayWithObjects:@"Kreis",@"Ellipse",@"Quadrat",@"Rechteck", nil];
-   PList = [[[NSMutableDictionary alloc]initWithCapacity:0]retain];
+   PList = [[NSMutableDictionary alloc]initWithCapacity:0];
    flipH =0;
    flipV =0;
    reverse =0;
@@ -1034,7 +1012,7 @@
 	//NSLog(@"Einstellungen awake");
 	NSFont* Tablefont;
 	Tablefont=[NSFont fontWithName:@"Helvetica" size: 12];
-   NSNumberFormatter* Eingabeformatter=[[[NSNumberFormatter alloc] init] autorelease];
+   NSNumberFormatter* Eingabeformatter=[[NSNumberFormatter alloc] init];
    [Eingabeformatter setFormat:@"###.0;0.0;(##0.0)"];//#,###.00;0.00;($#,##0.00
    [Eingabeformatter setNumberStyle:NSNumberFormatterDecimalStyle];
 //   [StartpunktX setDelegate:self];
@@ -1097,10 +1075,10 @@
    [LibEndpunktY setFormatter:Eingabeformatter];
    //   ElementLibArray = (NSMutableArray*)[[self readLib]retain];
    //NSLog(@"Einstellungen awake ElementLibArray: %@",[ElementLibArray valueForKey:@"name"]);
-   LibElementName = [[NSString string]retain];
-   LibElementArray = [[[NSMutableArray alloc]initWithCapacity:0]retain];
+   LibElementName = [NSString string];
+   LibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
    
-   FigElementArray = [[[NSMutableArray alloc]initWithCapacity:0]retain];
+   FigElementArray = [[NSMutableArray alloc]initWithCapacity:0];
    
    //NSLog(@"Einstellungen awake end");
    NSArray* MatrixArray=[WinkelMatrix subviews];
@@ -1111,7 +1089,7 @@
       //NSLog(@"i: %d tag: %d",i,[[MatrixArray objectAtIndex:i]tag]);
       [[MatrixArray objectAtIndex:i]setAction:@selector(reportWinkelMatrixknopf:) ] ;
    }
-   Utils = [[[rUtils alloc]init]retain];
+   Utils = [[rUtils alloc]init];
    
    // Profil
    [Profil1Tiefe setDelegate:self];
@@ -1138,10 +1116,10 @@
    [ProfilEndpunktY setDelegate:self];
    [ProfilEndpunktY setAlignment:NSTextAlignmentRight];
    [ProfilEndpunktY setFormatter:Eingabeformatter];
-   Profil1Name = [[NSString string]retain];
-   Profil2Name = [[NSString string]retain];
-   Profil1Array = [[[NSMutableArray alloc]initWithCapacity:0]retain];
-   Profil2Array = [[[NSMutableArray alloc]initWithCapacity:0]retain];
+   Profil1Name = [NSString string];
+   Profil2Name = [NSString string];
+   Profil1Array = [[NSMutableArray alloc]initWithCapacity:0];
+   Profil2Array = [[NSMutableArray alloc]initWithCapacity:0];
    
    [Einlauflaenge  setDelegate:self];
    [Einlauflaenge setAlignment:NSTextAlignmentRight];
@@ -1163,7 +1141,7 @@
    
  
    // Form
-   CNC = [[[rCNC alloc]init]retain];
+   CNC = [[rCNC alloc]init];
  //  [SeiteA1 setDelegate:self];
    [SeiteA1 setAlignment:NSTextAlignmentRight];
    [SeiteA1 setFormatter:Eingabeformatter];
@@ -1499,7 +1477,7 @@
    [self setDeltaX];
    [self setDeltaY];
    
-   ElementLibArray = (NSMutableArray*)[[self readLib]retain];
+   ElementLibArray = (NSMutableArray*)[self readLib];
    [self SetLibElemente:[ElementLibArray valueForKey:@"name"]];
    [self setGraphDaten];
    //NSLog(@"Einstellungen setDaten LibElemente %@ ElementLibArray: %@",[LibElemente description],[[ElementLibArray valueForKey:@"name"]description]);
@@ -1517,7 +1495,7 @@
 - (void)setGraphDaten
 {
    //return;
-   NSMutableDictionary* datenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* datenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
    NSPoint Startpunkt = NSMakePoint([StartpunktX floatValue]*zoom, [StartpunktY floatValue]*zoom);
    NSPoint Endpunkt = NSMakePoint([EndpunktX floatValue]*zoom, [EndpunktY floatValue]*zoom);
    [datenDic setObject:NSStringFromPoint(Startpunkt) forKey:@"startpunkt"];
@@ -2042,7 +2020,7 @@
 	NSLog(@"rEinstellungen windowShouldClose");
    /*	
     NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-    NSMutableDictionary* BeendenDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+    NSMutableDictionary* BeendenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
     
     [nc postNotificationName:@"IOWarriorBeenden" object:self userInfo:BeendenDic];
     
@@ -2072,7 +2050,7 @@
    NSArray* tempElementArray = [NSArray arrayWithObjects:[NSNumber numberWithFloat:endx ], [NSNumber numberWithFloat:endy ], nil];
    NSArray* ElementArray = [NSArray arrayWithObject:tempElementArray];
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* ErgebnisDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* ErgebnisDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ErgebnisDic setObject:StartpunktString forKey:@"startpunkt"];
    [ErgebnisDic setObject:EndpunktString forKey:@"endpunkt"];
 	[ErgebnisDic setObject:ElementArray forKey:@"koordinatentabelle"];
@@ -2140,7 +2118,7 @@
    NSArray* tempElementArray = [NSArray arrayWithObjects:[NSNumber numberWithFloat:(endx+startx) ], [NSNumber numberWithFloat:(endy+starty) ], nil];
    NSArray* ElementArray = [NSArray arrayWithObject:tempElementArray];
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* ErgebnisDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* ErgebnisDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ErgebnisDic setObject:StartpunktString forKey:@"startpunkt"];
    [ErgebnisDic setObject:EndpunktString forKey:@"endpunkt"];
 	[ErgebnisDic setObject:ElementArray forKey:@"koordinatentabelle"];
@@ -2218,7 +2196,7 @@
    NSArray* tempElementArray = [NSArray arrayWithObjects:[NSNumber numberWithFloat:(endx+startx) ], [NSNumber numberWithFloat:(endy+starty) ], nil];
    NSArray* ElementArray = [NSArray arrayWithObject:tempElementArray];
    NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
-	NSMutableDictionary* ErgebnisDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+	NSMutableDictionary* ErgebnisDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ErgebnisDic setObject:StartpunktString forKey:@"startpunkt"];
    [ErgebnisDic setObject:EndpunktString forKey:@"endpunkt"];
 	[ErgebnisDic setObject:ElementArray forKey:@"koordinatentabelle"];
@@ -2307,7 +2285,7 @@
    //NSLog(@"reportProfilEinfuegen");
    if ([Profil1Array count])
    {
-      NSMutableDictionary* ProfilDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [ProfilDic setObject:@"LibProfil"  forKey:@"quelle"];
       //NSLog(@"reportLibElementEinfuegen LibElementArray: %@",[LibElementArray description]);
       [ProfilDic setObject:Profil1Name forKey:@"profilname"];
@@ -2379,7 +2357,7 @@
 #pragma mark Lib
 - (NSArray*)readLib
 {
-   NSMutableArray* tempLibElementArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* tempLibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
 	BOOL LibOK=NO;
 	BOOL istOrdner;
    
@@ -2487,7 +2465,7 @@
 - (IBAction)reportLibElementEinfuegen:(id)sender
 {   
    //NSLog(@"reportLibElementEinfuegen name: %@",LibElementName);
-   NSMutableDictionary* ElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* ElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ElementDic setObject:@"LibElement"  forKey:@"quelle"];
    //NSLog(@"reportLibElementEinfuegen LibElementArray: %@",[LibElementArray description]);
 	[ElementDic setObject:LibElementName forKey:@"elementname"];
@@ -2496,7 +2474,7 @@
    
    // Offset x,y einsetzen
    
-   NSMutableArray* Koordinatentabelle=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
    startx=0;
    starty=0;
    int i=0;
@@ -2527,7 +2505,7 @@
    NSLog(@"LibElementLoeschen index: %d Element: %@",index,[[ElementLibArray objectAtIndex:index]objectForKey:@"name"]);
    NSFileManager *Filemanager = [NSFileManager defaultManager];
    
-   NSAlert *Warnung = [[[NSAlert alloc] init] autorelease];
+   NSAlert *Warnung = [[NSAlert alloc] init];
    [Warnung addButtonWithTitle:@"Entfernen"];
    //[Warnung addButtonWithTitle:@""];
    //[Warnung addButtonWithTitle:@""];
@@ -2593,7 +2571,7 @@
 - (IBAction)reportLibElementSpiegelnHorizontal:(id)sender
 {
    NSLog(@"reportLibElementSpiegelnHorizontal");
-   NSMutableArray* tempElementArray = [[[NSMutableArray alloc]initWithArray: LibElementArray]autorelease];
+   NSMutableArray* tempElementArray = [[NSMutableArray alloc]initWithArray: LibElementArray];
    int i;
    float maxX=0;
    for (i=0;i< [tempElementArray count];i++)
@@ -2614,7 +2592,7 @@
 - (IBAction)reportLibElementSpiegelnVertikal:(id)sender
 {
    NSLog(@"reportLibElementSpiegelnVertikal");
-   NSMutableArray* tempElementArray = [[[NSMutableArray alloc]initWithArray: LibElementArray]autorelease];
+   NSMutableArray* tempElementArray = [[NSMutableArray alloc]initWithArray: LibElementArray];
    int i;
    for (i=0;i< [tempElementArray count];i++)
    {
@@ -2640,7 +2618,7 @@
    float offsetx = [[[LibElementArray objectAtIndex:(anz-1)]objectForKey:@"x"]floatValue];
    float offsety = [[[LibElementArray objectAtIndex:(anz-1)]objectForKey:@"y"]floatValue];
    
-   NSMutableArray* tempElementArray = [[[NSMutableArray alloc]initWithArray: LibElementArray]autorelease];
+   NSMutableArray* tempElementArray = [[NSMutableArray alloc]initWithArray: LibElementArray];
    int i;
    for (i=0;i< [tempElementArray count];i++)
    {
@@ -2697,7 +2675,7 @@
 - (void)setLibGraphDaten
 {
    //return;
-   NSMutableDictionary* datenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* datenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
    NSPoint Startpunkt = NSMakePoint([LibStartpunktX floatValue]*zoom, [LibStartpunktY floatValue]*zoom);
    NSPoint Endpunkt = NSMakePoint([LibEndpunktX floatValue]*zoom, [LibEndpunktY floatValue]*zoom);
    [datenDic setObject:NSStringFromPoint(Startpunkt) forKey:@"startpunkt"];
@@ -2711,7 +2689,7 @@
 
 - (NSArray*)flipProfil:(NSArray*)profilArray
 {
-   NSMutableArray* flipProfilArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* flipProfilArray = [[NSMutableArray alloc]initWithCapacity:0];
    int i;
    
    for (i=0;i< [profilArray count];i++)
@@ -2729,13 +2707,12 @@
 
 - (NSArray*)readProfilLib
 {
-   NSMutableArray* tempLibElementArray = [[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* tempLibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
 	BOOL LibOK=NO;
 	BOOL istOrdner;
    
 	NSFileManager *Filemanager = [NSFileManager defaultManager];
 	ProfilLibPfad=[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@",@"/Documents",@"/CNCDaten",@"/ProfilLib"];
-   [ProfilLibPfad retain];
    //NSURL* LibURL=[NSURL fileURLWithPath:LibPfad];
    LibOK= ([Filemanager fileExistsAtPath:ProfilLibPfad isDirectory:&istOrdner]&&istOrdner);
    //NSLog(@"readProfilLib:    LibPfad: %@ LibOK: %d",ProfilLibPfad, LibOK );	
@@ -2891,7 +2868,7 @@
    //NSLog(@"reportProfilEinfuegen");
    if ([Profil1Array count])
    {
-      NSMutableDictionary* ProfilDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+      NSMutableDictionary* ProfilDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [ProfilDic setObject:@"LibProfil"  forKey:@"quelle"];
       //NSLog(@"reportLibElementEinfuegen LibElementArray: %@",[LibElementArray description]);
       [ProfilDic setObject:Profil1Name forKey:@"profilname"];
@@ -2961,7 +2938,7 @@
    }
 
    NSLog(@"reportProfilSpiegelnHorizontal");
-   //NSMutableArray* tempElementArray = [[[NSMutableArray alloc]initWithArray: Profil1Array]autorelease];
+   //NSMutableArray* tempElementArray = [[NSMutableArray alloc]initWithArray: Profil1Array];
   
    int i;
    flipH = [sender state];
@@ -3027,7 +3004,7 @@
    float offsetx = [[[Profil1Array objectAtIndex:(anz-1)]objectForKey:@"x"]floatValue];
    float offsety = [[[Profil1Array objectAtIndex:(anz-1)]objectForKey:@"y"]floatValue];
    
-   NSMutableArray* tempElementArray = [[[NSMutableArray alloc]initWithArray: Profil1Array]autorelease];
+   NSMutableArray* tempElementArray = [[NSMutableArray alloc]initWithArray: Profil1Array];
    int i;
    for (i=0;i< [tempElementArray count];i++)
    {
@@ -3061,7 +3038,7 @@
 - (void)setProfilGraphDaten
 {
    //NSLog(@"setProfilGraphDaten");
-   NSMutableDictionary* datenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* datenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
    [datenDic setObject:Profil1Array forKey:@"elementarray"];
    //NSLog(@"Profil1Array: %d",[Profil1Array count]);
    if ([Profil1Array count] )
@@ -3082,7 +3059,7 @@
 - (void)clearProfilGraphDaten
 {
    //NSLog(@"clearProfilGraphDaten");
-   NSMutableDictionary* datenDic = [[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* datenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
    //[datenDic setObject:[NSArray array]];
    //NSLog(@"Profil1Array: %d",[Profil1Array count]);
    if ([Profil1Array count] )
@@ -3103,18 +3080,6 @@
 
 
 
-- (void)dealloc
-{
-   [LibElementName release];
-   [LibElementArray release];
-   [FigElementArray release];
-   [Profil1Name release]; 
-   [Profil1Array release];
-   [Profil2Array release];
-   [ProfilLibPfad release];
-   [PList release];
-   [super dealloc];
-}
 
 #pragma mark Form
 - (IBAction)reportForm1Pop:(id)sender
@@ -3288,7 +3253,7 @@
    }
    // switch
 
-   NSMutableDictionary* ElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* ElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ElementDic setObject:@"Form"  forKey:@"quelle"];
    //NSLog(@"reportFormEinfuegen Form1KoordinatenArray count: %d",[Form1KoordinatenArray count]);
    //NSLog(@"reportFormEinfuegen Form2KoordinatenArray count: %d",[Form2KoordinatenArray count]);
@@ -3299,7 +3264,7 @@
    
    // Offset x,y einsetzen
    
-   NSMutableArray* Koordinatentabelle=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
    startx=0;
    starty=0;
    int i=0;
@@ -3350,7 +3315,7 @@
 - (IBAction)reportBlockEinfuegen:(id)sender
 {
    NSLog(@"reportBlockEinfuegen");
-   NSMutableDictionary* BlockDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* BlockDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [BlockDic setObject:[NSNumber numberWithInt:[Blockoberkante intValue]] forKey:@"blockoberkante"];
    [BlockDic setObject:[NSNumber numberWithInt:[Auslaufkote intValue]] forKey:@"auslaufkote"];
    [BlockDic setObject:[NSNumber numberWithInt:[Blockbreite intValue]] forKey:@"blockbreite"];
@@ -3400,7 +3365,7 @@
     */
   // NSArray* FigurArray = [Utils readFigur];
    //NSLog(@"CNC_Eingbe readFigur FigurArray: \n%@",[FigurArray description]);
-   FigElementArray= [[NSMutableArray arrayWithArray:[Utils readFigur]]retain]; // retain ist noetig
+   FigElementArray= [NSMutableArray arrayWithArray:[Utils readFigur]]; // 
    //NSLog(@"CNC_Eingbe readFigur FigElementArray: \n%@",[FigElementArray description]);
    [self setFigGraphDaten];
    //NSLog(@"CNC_Eingbe readFigur A");
@@ -3415,13 +3380,13 @@
 - (IBAction)reportFigElementEinfuegen:(id)sender
 {
    //NSLog(@"reportFigElementEinfuegen name: %@",LibElementName);
-   NSMutableDictionary* ElementDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
+   NSMutableDictionary* ElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ElementDic setObject:@"FigElement"  forKey:@"quelle"];
 	//[ElementDic setObject:FigElementName forKey:@"elementname"];
    //NSLog(@"CNC_EingabereportFigElementEinfuegen FigElementArray: %@",[FigElementArray description]);
 	[ElementDic setObject:FigElementArray forKey:@"elementarray"];
 
-   NSMutableArray* Koordinatentabelle=[[[NSMutableArray alloc]initWithCapacity:0]autorelease];
+   NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
    startx=0;
    starty=0;
    int i=0;
@@ -3482,8 +3447,6 @@
 
 - (void)setPList:(NSDictionary*)plist
 {
-   [plist retain];
-   [PList release];
    PList = (NSMutableDictionary*)plist;
    //NSLog(@"CNC_Eingabe setPList: %@",[PList description]);
  
