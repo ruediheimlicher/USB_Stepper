@@ -376,7 +376,7 @@
 - (void)sendDelayedArrayWithDic:(NSDictionary*) schnittdatendic;
 
 - (IBAction)reportElementSichern:(id)sender;
-
+- (IBAction)reportSaveFigur:(id)sender;
 - (int)mausistdown;
 - (int)PfeiltasteStatus;
 - (IBAction)reportQuadrat:(id)sender;

@@ -45,7 +45,7 @@
                 <outlet property="LibEndpunktX" destination="386" id="435"/>
                 <outlet property="LibEndpunktY" destination="380" id="436"/>
                 <outlet property="LibGraph" destination="360" id="437"/>
-                <outlet property="LibPop" destination="442" id="560"/>
+                <outlet property="LibPop" destination="443" id="trg-mf-lhh"/>
                 <outlet property="LibStartpunktX" destination="374" id="439"/>
                 <outlet property="LibStartpunktY" destination="372" id="440"/>
                 <outlet property="OberseiteCheck" destination="656" id="660"/>

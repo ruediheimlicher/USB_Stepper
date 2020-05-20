@@ -2424,10 +2424,15 @@
    [LibElemente addItemsWithTitles:LibArray];
    return 0;
 }
-
+#pragma mark reportLibPop
 - (IBAction)reportLibPop:(id)sender
 {
-   //NSLog(@"reportLibPop index: %d",[sender indexOfSelectedItem]);
+   NSLog(@"reportLibPop index: %d",[sender indexOfSelectedItem]);
+   NSDictionary* tempdic = [ElementLibArray objectAtIndex:[sender indexOfSelectedItem] -1];
+   NSLog(@"reportLibPop ElementLibArray am index: %@",tempdic);
+   
+   NSArray* keys =  [[[[ElementLibArray objectAtIndex:[sender indexOfSelectedItem] -1] objectForKey:@"elementarray"]objectAtIndex:0]allKeys]; // erstes Item ist Titel
+    
    if ([sender indexOfSelectedItem])
    {
       int index=[sender indexOfSelectedItem]-1; // Item 0 ist Titel
@@ -2440,10 +2445,12 @@
       NSLog(@"LibElementName: %@",LibElementName);
       if ([[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"])// Daten für Element da
       {
+         NSLog(@"elementarray: %@",[[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"]);
          [LibElementArray removeAllObjects];
          [LibElementArray addObjectsFromArray:[[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"]];
          if ([LibElementArray count])
          {
+            
             [LibStartpunktX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
             [LibStartpunktY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
             [LibEndpunktX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
@@ -2464,6 +2471,7 @@
 
 - (IBAction)reportLibElementEinfuegen:(id)sender
 {   
+   NSLog(@"reportLibElementEinfuegen ");
    //NSLog(@"reportLibElementEinfuegen name: %@",LibElementName);
    NSMutableDictionary* ElementDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [ElementDic setObject:@"LibElement"  forKey:@"quelle"];
@@ -2475,15 +2483,47 @@
    // Offset x,y einsetzen
    
    NSMutableArray* Koordinatentabelle=[[NSMutableArray alloc]initWithCapacity:0];
-   startx=0;
-   starty=0;
+   startx=10;
+   starty=10;
    int i=0;
-   for (i=1;i<[LibElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
+   
+   // Einsetzen Koordinaten.
+   // OHNE INDEX. Dieser wird beim Einfuegen in KoordinateTabelle eingesetzt!
+
+   
+   NSArray* keys = [[LibElementArray objectAtIndex:0]allKeys];
+   if ([keys containsObject:@"x"] && [keys containsObject:@"y"])
    {
-      float tempx = [[[LibElementArray objectAtIndex:i]objectForKey:@"x"]floatValue] + startx;
-      float tempy = [[[LibElementArray objectAtIndex:i]objectForKey:@"y"]floatValue] + starty;
-      [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithFloat:tempx],[NSNumber numberWithFloat:tempy], nil]];
+      NSLog(@"tabelle mit x");
+      [ElementDic setObject:@"1" forKey:@"art"];
+      
+      // Einsetzen Koordinaten.
+      // OHNE INDEX. Dieser wird beim Einfuegen in KoordinateTabelle eingesetzt!
+      
+      for (i=1;i<[LibElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
+      {
+         
+         float tempx = [[[LibElementArray objectAtIndex:i]objectForKey:@"x"]floatValue] + startx;
+         float tempy = [[[LibElementArray objectAtIndex:i]objectForKey:@"y"]floatValue] + starty;
+         
+         [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithFloat:tempx],[NSNumber numberWithFloat:tempy], nil]];
+      }
+   
    }
+   else if ([keys containsObject:@"ax"] && [keys containsObject:@"ay"] && [keys containsObject:@"bx"] && [keys containsObject:@"by"])
+   {
+      NSLog(@"tabelle mit ax,ay,bx,by");
+      [ElementDic setObject:@"2" forKey:@"art"];
+      float tempax = [[[LibElementArray objectAtIndex:i]objectForKey:@"ax"]floatValue] + startx;
+      float tempay = [[[LibElementArray objectAtIndex:i]objectForKey:@"ay"]floatValue] + starty;
+
+      float tempbx = [[[LibElementArray objectAtIndex:i]objectForKey:@"bx"]floatValue] + startx;
+      float tempby = [[[LibElementArray objectAtIndex:i]objectForKey:@"by"]floatValue] + starty;
+      
+      [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithFloat:tempax],[NSNumber numberWithFloat:tempay],[NSNumber numberWithFloat:tempbx],[NSNumber numberWithFloat:tempby], nil]];
+   }
+   NSLog(@"Koordinatentabelle: %@",Koordinatentabelle);
+   
 	[ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
    
    
@@ -2680,7 +2720,10 @@
    NSPoint Endpunkt = NSMakePoint([LibEndpunktX floatValue]*zoom, [LibEndpunktY floatValue]*zoom);
    [datenDic setObject:NSStringFromPoint(Startpunkt) forKey:@"startpunkt"];
    [datenDic setObject:NSStringFromPoint(Endpunkt) forKey:@"endpunkt"];
+   
+   // daten einsetzen
    [datenDic setObject:LibElementArray forKey:@"elementarray"];
+   
    [LibGraph setDaten:datenDic];
    [LibGraph setNeedsDisplay:YES];
 }
@@ -3376,7 +3419,7 @@
 
 //- (int)SetFigElemente:(NSArray*)LibArray;
 //- (IBAction)reportLibPop:(id)sender;
-
+#pragma mark reportFigElementEinfuegen
 - (IBAction)reportFigElementEinfuegen:(id)sender
 {
    //NSLog(@"reportFigElementEinfuegen name: %@",LibElementName);

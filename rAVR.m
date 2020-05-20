@@ -4930,7 +4930,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 	return;
   }
 
-- (NSArray*)readFigur
+- (NSArray*)readFigur // verschoben in Utils
 {
    NSMutableArray* FigurArray;
    NSLog(@"readFigur start");
@@ -5060,6 +5060,25 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 	
 	//NSLog(@"Utils openProfil FigurArray: \n%@",[FigurArray description]);
 	return FigurArray;
+}
+
+- (IBAction)reportSaveFigur:(id)sender
+{
+   NSLog(@"saveFigur");
+   NSString* tempKoordinatenString;
+   for (int i=0;i<[KoordinatenTabelle count];i++)
+   {
+      float ax = [[[KoordinatenTabelle objectAtIndex:i] objectForKey:@"ax"]floatValue];
+      float ay = [[[KoordinatenTabelle objectAtIndex:i] objectForKey:@"ay"]floatValue];
+      
+      float bx = [[[KoordinatenTabelle objectAtIndex:i] objectForKey:@"bx"]floatValue];
+      float by = [[[KoordinatenTabelle objectAtIndex:i] objectForKey:@"by"]floatValue];
+      NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f\n",i,ax,ay,bx,by];
+      //NSLog(@"%@",zeilenstring);
+      tempKoordinatenString = [KoordinatenString stringByAppendingString:zeilenstring];
+      
+   }
+   NSLog(@"saveFigur tempKoordinatenString: %@",tempKoordinatenString);
 }
 
 - (IBAction)reportHolm:(id)sender
@@ -5635,12 +5654,14 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    float offsety = [ProfilBOffsetYFeld floatValue];
    
    
+   // Anschluss an bestehende Koordinatentabelle suchen
    NSDictionary* oldPosDic = nil;
    
    float oldax= 0;//MausPunkt.x;
    float olday=0;//MausPunkt.y;
    float oldbx=0;//oldax + offsetx;
    float oldby=0;//olday + offsety;
+   int oldpwm = 0;
    
    if ([KoordinatenTabelle count])
    {
@@ -5649,6 +5670,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       olday = [[[KoordinatenTabelle lastObject]objectForKey:@"ay"]floatValue];
       oldbx = [[[KoordinatenTabelle lastObject]objectForKey:@"bx"]floatValue];
       oldby = [[[KoordinatenTabelle lastObject]objectForKey:@"by"]floatValue];
+      oldpwm = [[[KoordinatenTabelle lastObject]objectForKey:@"pwm"]integerValue];
    }
    else // Startpunkt, nur Offset aus Offsetfeldern
    {
@@ -5660,13 +5682,15 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
   
    int i=0;
    // 31.10.
+   
+   // neue Punkte anfuegen, ausgehend von letztem Punkt oldax olday. pwm uebernehmen
    for (i=0;i<[tempElementKoordinatenArray count];i++) // Data 0 ist letztes Data von Koordinatentabelle 
    {
-      float dx = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:0]floatValue]; 
-      float dy = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:1]floatValue];
+      float dx = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:0]floatValue]; // x
+      float dy = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:1]floatValue]; // y
 
       //NSLog(@"index: %d oldax: %2.2f olday: %2.2f  dx: %2.2f dy: %2.2f",i,oldax,olday,dx,dy);
-      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:oldax+dx],@"ax",[NSNumber numberWithFloat:olday+dy],@"ay",[NSNumber numberWithFloat:oldbx+dx],@"bx",[NSNumber numberWithFloat:oldby+dy],@"by",[NSNumber numberWithInt:i],@"index", nil];
+      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:oldax+dx],@"ax",[NSNumber numberWithFloat:olday+dy],@"ay",[NSNumber numberWithFloat:oldbx+dx],@"bx",[NSNumber numberWithFloat:oldby+dy],@"by",[NSNumber numberWithInt:oldpwm],@"pwm",[NSNumber numberWithInt:i],@"index", nil];
       
       [KoordinatenTabelle addObject: tempDic];
       
@@ -7429,7 +7453,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0,0,200,24)];
    [input setStringValue:defaultValue];
    [alert setAccessoryView:input];
-   //[alert addButtonWithTitle:@"ax"];
+   [alert addButtonWithTitle:@"OK"];
+   [alert addButtonWithTitle:@"Cancel"];
    NSInteger button = [alert runModal];
    
    
@@ -7456,28 +7481,43 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 {
    //NSLog(@"reportElementSichern");
    //NSLog(@"reportElementSichern KoordinatenTabelle: %@",[KoordinatenTabelle description]);
-   float startx=[[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"ax"]floatValue];
-   float starty=[[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"ay"]floatValue];
-   NSDictionary* startDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0],@"ax",[NSNumber numberWithFloat:0],@"ay",[NSNumber numberWithInt:0],@"index", nil];
+   float startax=[[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"ax"]floatValue];
+   float startay=[[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"ay"]floatValue];
+   
+   float startbx=[[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"bx"]floatValue];
+   float startby=[[[KoordinatenTabelle objectAtIndex:0]objectForKey:@"by"]floatValue];
+   
+   
+   NSDictionary* startDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:startax],@"ax",[NSNumber numberWithFloat:startay],@"ay",[NSNumber numberWithFloat:startbx],@"bx",[NSNumber numberWithFloat:startby],@"by",[NSNumber numberWithInt:0],@"index", nil];
 
    int i=0;
    NSMutableArray* ElementArray = [[NSMutableArray alloc]initWithCapacity:0];
    [ElementArray addObject:startDic];
+   
    for (i= 1;i<[KoordinatenTabelle count];i++)
    {
-      float tempx=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
-      tempx -= startx;
-      float tempy=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
-      tempy -= starty;
-      NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempx],@"x",[NSNumber numberWithFloat:tempy],@"y",[NSNumber numberWithInt:i],@"index", nil];
+      
+      float tempax=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
+ //     tempx -= startx;
+      float tempay=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+ //     tempy -= starty;
+      
+      float tempbx=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+
+      float tempby=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+
+      NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax],@"ax",[NSNumber numberWithFloat:tempay],@"ay",[NSNumber numberWithFloat:tempax],@"bx",[NSNumber numberWithFloat:tempay],@"by",[NSNumber numberWithInt:i],@"index", nil];
       [ElementArray addObject:tempDic];
 
    }
+   NSLog(@"reportElementSichern ElementArray: %@",[ElementArray description]);
    
    NSString* neuerName=[self inputNameMitTitel:@"Neues Element" information:@"Name des neuen Elements:" defaultValue:@"Element"];
-   //NSLog(@"reportElementSichern ElementArray: %@",[ElementArray description]);
+   
    
    NSDictionary* neuesElementDic = [NSDictionary dictionaryWithObjectsAndKeys:ElementArray,@"elementarray",neuerName,@"name", nil];
+   
+    NSLog(@"reportElementSichern neuesElementDic: %@",[neuesElementDic description]);
    
    int erfolg=0;
    NSLog(@"ElementSichern");
@@ -7519,13 +7559,14 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    {
        saveElementArray=[[NSMutableArray alloc]initWithCapacity:0];
    }
+   NSLog(@"reportElementSichern neuesElementDic: %@",[neuesElementDic description]);
    //[saveElementDic setObject:@"A" forKey:@"Name"];
    if ([saveElementArray count])
    {
       NSArray* ElementnamenArray = [saveElementArray valueForKey:@"name"];
       //NSLog(@"ElementnamenArray %@",[ElementnamenArray  description]);
-      int dupindex=[ElementnamenArray indexOfObject:neuerName];
-      NSLog(@"dupindex: %d",dupindex);
+      NSInteger dupindex=[ElementnamenArray indexOfObject:neuerName]; // 64bit
+      NSLog(@"dupindex: %ld",dupindex);
      if (dupindex<NSNotFound)
      {
         NSAlert *Warnung = [[NSAlert alloc] init];
