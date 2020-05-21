@@ -37,7 +37,8 @@
    NSPoint     StartPunkt;
    NSPoint     EndPunkt;
    NSPoint     Mittelpunkt;
-   NSBezierPath* Graph;
+   NSBezierPath* GraphA;
+   NSBezierPath* GraphB;
    NSColor*    GraphFarbe;
    NSPoint     oldMauspunkt;
    float         scale; // Massstab fuer die Darstellung. Uebergebene Masse sind in mm
@@ -152,10 +153,17 @@
    // Lib
    IBOutlet id    LibElement;
    IBOutlet id    LibElemente;
-   IBOutlet id    LibStartpunktX;
-   IBOutlet id    LibStartpunktY;
-   IBOutlet id    LibEndpunktX;
-   IBOutlet id    LibEndpunktY;
+   IBOutlet id    LibStartpunktAX;
+   IBOutlet id    LibStartpunktAY;
+   IBOutlet id    LibEndpunktAX;
+   IBOutlet id    LibEndpunktAY;
+
+   IBOutlet id    LibStartpunktBX;
+   IBOutlet id    LibStartpunktBY;
+   IBOutlet id    LibEndpunktBX;
+   IBOutlet id    LibEndpunktBY;
+
+
    IBOutlet id    LibGraph;
    IBOutlet id    LibPop;
    IBOutlet id    libstartx;

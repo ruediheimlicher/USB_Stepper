@@ -153,7 +153,8 @@
 
 
 @implementation rLibGraph
-
+#define new_max(x,y) ((x) >= (y)) ? (x) : (y)
+#define new_min(x,y) ((x) <= (y)) ? (x) : (y)
 - (id)initWithFrame:(NSRect)frame 
 
 {
@@ -174,7 +175,8 @@
       Mittelpunkt = NSMakePoint(frame.size.width/2, frame.size.height/2);
       StartPunkt = Mittelpunkt;
       EndPunkt = Mittelpunkt;
-		Graph=[NSBezierPath bezierPath];
+		GraphA=[NSBezierPath bezierPath];
+      GraphB=[NSBezierPath bezierPath];
 		//[Graph moveToPoint:Mittelpunkt];
 		//lastPunkt=Mittelpunkt;
 		GraphFarbe=[NSColor blueColor]; 
@@ -210,7 +212,8 @@
    //NSLog(@"Libgraph setDaten daten: %@",[datenDic description]);
 	DatenDic=datenDic;
    //[NSColor clearColor];
-   [Graph removeAllPoints];
+   [GraphA removeAllPoints];
+   [GraphB removeAllPoints];
    //[ElementArray removeAllObjects];
    float deltaX=0;
    float deltaY=0;
@@ -309,15 +312,15 @@
 
 - (void)drawRect:(NSRect)rect
 {
-   //NSLog(@"LibGraph drawRect");
+   NSLog(@"LibGraph drawRect");
    [[NSColor whiteColor]set];
    NSRect NetzBoxRahmen=[self bounds];//NSMakeRect(NetzEcke.x,NetzEcke.y,200,100);
-	NetzBoxRahmen.size.height-=2;
-	NetzBoxRahmen.size.width-=2;
-	[[NSColor greenColor]set];
-	[NSBezierPath strokeRect:NetzBoxRahmen];
+   NetzBoxRahmen.size.height-=2;
+   NetzBoxRahmen.size.width-=2;
+   [[NSColor greenColor]set];
+   [NSBezierPath strokeRect:NetzBoxRahmen];
    float maxX=0,  maxY=0, minX=1000, minY=1000;
-   
+   NSLog(@"LibGraph drawRect ElementArray: %@",ElementArray);
    if (ElementArray)//&&[ElementArray count])
    {
       //NSLog(@"LibGraph drawRect 1 ElementArray: %@",[ElementArray description]);
@@ -332,34 +335,92 @@
    {
       //NSLog(@"LibGraph drawRect 1 ElementArray: %@",[ElementArray description]);
       int i;
+      int art=0;
+      NSDictionary* firstdic = [ElementArray objectAtIndex:0];
+      NSArray *keys = [firstdic allKeys];
+      if ([keys containsObject:@"x"] && [keys containsObject:@"y"])
+         
+      {
+         NSLog(@"LibGraph drawRect tabelle mit x");
+         art = 1;
+      }
+      else if ([keys containsObject:@"ax"] && [keys containsObject:@"ay"] && [keys containsObject:@"bx"] && [keys containsObject:@"by"])
+      {
+         NSLog(@"LibGraph drawRect tabelle mit ax,ay,bx,by");
+         art = 2;
+      }
       for(i=0;i<[ElementArray count];i++)
       {
-         float tempX = [[[ElementArray objectAtIndex:i]objectForKey:@"x"]floatValue];
-         float tempY = [[[ElementArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+         float tempX=0;
+         float tempY=0;
          
+         float tempax=0;
+         float tempay=0;
+         float tempbx=0;
+         float tempby=0;
+         
+          if (art == 1)
+         {
+            tempX = [[[ElementArray objectAtIndex:i]objectForKey:@"x"]floatValue];
+            tempY = [[[ElementArray objectAtIndex:i]objectForKey:@"y"]floatValue];
+            if (tempX > maxX)
+            {
+               maxX = tempX;
+            }
+            if (tempY > maxY)
+            {
+               maxY = tempY;
+            }
+            if (tempX < minX)
+            {
+               minX = tempX;
+            }
+            if (tempY < minY)
+            {
+               minY = tempY;
+            }
+
+         }
+         else if (art == 2)
+         {
+ 
+            tempax = [[[ElementArray objectAtIndex:i]objectForKey:@"ax"]floatValue];
+            tempay = [[[ElementArray objectAtIndex:i]objectForKey:@"ay"]floatValue];
+            
+            tempbx = [[[ElementArray objectAtIndex:i]objectForKey:@"bx"]floatValue];
+            tempby = [[[ElementArray objectAtIndex:i]objectForKey:@"by"]floatValue];
+            
+            tempX = new_max(tempax, tempbx);
+            tempY = new_max(tempay, tempby);
+            
+            if (tempX > maxX)
+            {
+               maxX = tempX;
+            }
+            if (tempY > maxY)
+            {
+               maxY = tempY;
+            }
+            if (tempX < minX)
+            {
+               minX = tempX;
+            }
+            if (tempY < minY)
+            {
+               minY = tempY;
+            }
+
+         }
          //NSLog(@"index: %d tempX: %1.1f tempY: %1.1f *** minX: %1.1f maxX: %1.1f minY: %1.1f maxY: %1.1f",i,tempX,tempY,minX, maxY, minY, maxY);
          //NSLog(@"index: %d tempX: %1.1f tempY: %1.1f",i,tempX,tempY);
-         if (tempX > maxX)
-         {
-            maxX = tempX;
-         }
-         if (tempY > maxY)
-         {
-            maxY = tempY;
-         }
-         if (tempX < minX)
-         {
-            minX = tempX;
-         }
-         if (tempY < minY)
-         {
-            minY = tempY;
-         }
          
       }
       
       
-      //NSLog(@"minX: %1.1f maxX: %1.1f minY: %1.1f maxY: %1.1f",minX, maxX, minY, maxY);
+      
+      
+      
+      NSLog(@"minX: %1.1f maxX: %1.1f minY: %1.1f maxY: %1.1f",minX, maxX, minY, maxY);
       float feldbreite = [self bounds].size.width;
       float feldhoehe = [self bounds].size.height;
       float elementbreite=(maxX-minX);
@@ -397,20 +458,54 @@
       //[Graph moveToPoint:scaleStartPunkt];
       for (i=0;i<[ElementArray count];i++)
       {
-         NSPoint tempPunkt= NSMakePoint(([[[ElementArray objectAtIndex:i]objectForKey:@"x"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray objectAtIndex:i]objectForKey:@"y"]floatValue]- offsetY)*scale+feldhoehe/2 );
-         // NSLog(@"index: %d tempPunkt.x: %1.3f tempPunkt.y: %1.3f",i,tempPunkt.x, tempPunkt.y);
-         if (i)
-         {
-            [Graph lineToPoint:tempPunkt];
+         if (art == 1)
+         {   
+            NSPoint tempPunkt= NSMakePoint(([[[ElementArray objectAtIndex:i]objectForKey:@"x"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray objectAtIndex:i]objectForKey:@"y"]floatValue]- offsetY)*scale+feldhoehe/2 );
+             NSLog(@"index: %d tempPunkt.x: %1.3f tempPunkt.y: %1.3f",i,tempPunkt.x, tempPunkt.y);
+            if (i)
+            {
+               [GraphA lineToPoint:tempPunkt];
+            }
+            else
+            {
+               [GraphA moveToPoint:tempPunkt];
+            }
          }
-         else
+         else if (art == 2)
          {
-            [Graph moveToPoint:tempPunkt];
+            NSPoint tempPunktA= NSMakePoint(([[[ElementArray objectAtIndex:i]objectForKey:@"ax"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray objectAtIndex:i]objectForKey:@"ay"]floatValue]- offsetY)*scale+feldhoehe/2 );
+            NSLog(@"index: %d tempPunktA.x: %1.3f tempPunktA.y: %1.3f",i,tempPunktA.x, tempPunktA.y);
+            if (i)
+            {
+               [GraphA lineToPoint:tempPunktA];
+            }
+            else
+            {
+               [GraphA moveToPoint:tempPunktA];
+            }
+
+            NSPoint tempPunktB= NSMakePoint(([[[ElementArray objectAtIndex:i]objectForKey:@"bx"]floatValue]- offsetX)*scale+feldbreite/2 , ([[[ElementArray objectAtIndex:i]objectForKey:@"by"]floatValue]- offsetY)*scale+feldhoehe/2 );
+            NSLog(@"index: %d tempPunktB.x: %1.3f tempPunktB.y: %1.3f",i,tempPunktB.x, tempPunktB.y);
+            if (i)
+            {
+               [GraphB lineToPoint:tempPunktB];
+            }
+            else
+            {
+               [GraphB moveToPoint:tempPunktB];
+            }
+
+
          }
       }
       //[Graph lineToPoint:scaleEndPunkt];
       [[NSColor blueColor]set];
-      [Graph stroke];
+      [GraphA stroke];
+      if (art == 2)
+      {
+         [[NSColor redColor]set];
+         [GraphB stroke];
+      }
       
    }// if count
    
@@ -418,7 +513,8 @@
 
 - (void)clearGraph
 {
-   [Graph removeAllPoints];
+   [GraphA removeAllPoints];
+   [GraphB removeAllPoints];
    [ElementArray removeAllObjects];
    [self setNeedsDisplay:YES];
    
@@ -451,6 +547,7 @@
       StartPunkt = Mittelpunkt;
       EndPunkt = Mittelpunkt;
 		Graph=[NSBezierPath bezierPath];
+     
 		//[Graph moveToPoint:Mittelpunkt];
 		//lastPunkt=Mittelpunkt;
 		GraphFarbe=[NSColor blueColor]; 
@@ -1058,21 +1155,41 @@
    [Graph setNeedsDisplay:YES];
    
    
-   [LibStartpunktX setDelegate:self];
-   [LibStartpunktX setAlignment:NSTextAlignmentRight];
-   [LibStartpunktX setFormatter:Eingabeformatter];
+   [LibStartpunktAX setDelegate:self];
+   [LibStartpunktAX setAlignment:NSTextAlignmentRight];
+   [LibStartpunktAX setFormatter:Eingabeformatter];
    
-   [LibStartpunktY setDelegate:self];
-   [LibStartpunktY setAlignment:NSTextAlignmentRight];
-   [LibStartpunktY setFormatter:Eingabeformatter];
+   [LibStartpunktAY setDelegate:self];
+   [LibStartpunktAY setAlignment:NSTextAlignmentRight];
+   [LibStartpunktAY setFormatter:Eingabeformatter];
+
+   [LibStartpunktBX setDelegate:self];
+   [LibStartpunktBX setAlignment:NSTextAlignmentRight];
+   [LibStartpunktBX setFormatter:Eingabeformatter];
    
-   [LibEndpunktX setDelegate:self];
-   [LibEndpunktX setAlignment:NSTextAlignmentRight];
-   [LibEndpunktX setFormatter:Eingabeformatter];
+   [LibStartpunktBY setDelegate:self];
+   [LibStartpunktBY setAlignment:NSTextAlignmentRight];
+   [LibStartpunktBY setFormatter:Eingabeformatter];
    
-   [LibEndpunktY setDelegate:self];
-   [LibEndpunktY setAlignment:NSTextAlignmentRight];
-   [LibEndpunktY setFormatter:Eingabeformatter];
+   [LibEndpunktAX setDelegate:self];
+   [LibEndpunktAX setAlignment:NSTextAlignmentRight];
+   [LibEndpunktAX setFormatter:Eingabeformatter];
+   
+   [LibEndpunktAY setDelegate:self];
+   [LibEndpunktAY setAlignment:NSTextAlignmentRight];
+   [LibEndpunktAY setFormatter:Eingabeformatter];
+   
+   [LibEndpunktBX setDelegate:self];
+   [LibEndpunktBX setAlignment:NSTextAlignmentRight];
+   [LibEndpunktBX setFormatter:Eingabeformatter];
+   
+   [LibEndpunktBY setDelegate:self];
+   [LibEndpunktBY setAlignment:NSTextAlignmentRight];
+   [LibEndpunktBY setFormatter:Eingabeformatter];
+   
+   
+   
+   
    //   ElementLibArray = (NSMutableArray*)[[self readLib]retain];
    //NSLog(@"Einstellungen awake ElementLibArray: %@",[ElementLibArray valueForKey:@"name"]);
    LibElementName = [NSString string];
@@ -2008,7 +2125,7 @@
 {
 	//NSLog(@"Einstellungen did load: Title: %@",[[self window] title]);
    //NSLog(@"Einstellungen windowDidLoad ElementLibArray: %@",[ElementLibArray valueForKey:@"name"]);
-   //[LibStartpunktX setFloatValue:2.5];
+   //[LibStartpunktAX setFloatValue:2.5];
    //NSLog(@"Einstellungen windowDidLoad LibElemente %@",[LibElemente description]);
    // [self SetLibElemente:[ElementLibArray valueForKey:@"name"]];
    
@@ -2445,19 +2562,20 @@
       NSLog(@"LibElementName: %@",LibElementName);
       if ([[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"])// Daten für Element da
       {
-         NSLog(@"elementarray: %@",[[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"]);
+         //NSLog(@"elementarray: %@",[[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"]);
          [LibElementArray removeAllObjects];
          [LibElementArray addObjectsFromArray:[[ElementLibArray objectAtIndex:index]objectForKey:@"elementarray"]];
          if ([LibElementArray count])
          {
-            
-            [LibStartpunktX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
-            [LibStartpunktY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
-            [LibEndpunktX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
-            [LibEndpunktY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
+            NSLog(@"LibElementArray objectAtIndex:0: %@",[LibElementArray objectAtIndex:0]);
+            [LibStartpunktAX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"ax"]floatValue]];
+            [LibStartpunktAY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"ay"]floatValue]];
+            [LibEndpunktAX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"ax"]floatValue]];
+            [LibEndpunktAY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"ay"]floatValue]];
             
          }
          //NSLog(@"reportLibPop LibElementArray LAST: %@",[[LibElementArray lastObject]description]);
+         NSLog(@"reportLibPop LibElementArray: %@",[LibElementArray description]);
       }
       
    }
@@ -2492,15 +2610,16 @@
 
    
    NSArray* keys = [[LibElementArray objectAtIndex:0]allKeys];
+   
    if ([keys containsObject:@"x"] && [keys containsObject:@"y"])
    {
-      NSLog(@"tabelle mit x");
+      NSLog(@"reportLibElementEinfuegen tabelle mit x");
       [ElementDic setObject:@"1" forKey:@"art"];
       
       // Einsetzen Koordinaten.
       // OHNE INDEX. Dieser wird beim Einfuegen in KoordinateTabelle eingesetzt!
       
-      for (i=1;i<[LibElementArray count];i++) // Erstes Element ist Startpunkt und schon im Array
+      for (i=0;i<[LibElementArray count];i++) // Korr 200521 index ab 0,  streichen: Erstes Element ist Startpunkt und schon im Array
       {
          
          float tempx = [[[LibElementArray objectAtIndex:i]objectForKey:@"x"]floatValue] + startx;
@@ -2514,15 +2633,19 @@
    {
       NSLog(@"tabelle mit ax,ay,bx,by");
       [ElementDic setObject:@"2" forKey:@"art"];
-      float tempax = [[[LibElementArray objectAtIndex:i]objectForKey:@"ax"]floatValue] + startx;
-      float tempay = [[[LibElementArray objectAtIndex:i]objectForKey:@"ay"]floatValue] + starty;
-
-      float tempbx = [[[LibElementArray objectAtIndex:i]objectForKey:@"bx"]floatValue] + startx;
-      float tempby = [[[LibElementArray objectAtIndex:i]objectForKey:@"by"]floatValue] + starty;
-      
-      [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithFloat:tempax],[NSNumber numberWithFloat:tempay],[NSNumber numberWithFloat:tempbx],[NSNumber numberWithFloat:tempby], nil]];
+      for (i=0;i<[LibElementArray count];i++) //  Korr 200521  streichen Erstes Element ist Startpunkt und schon im Array
+      {
+         
+         float tempax = [[[LibElementArray objectAtIndex:i]objectForKey:@"ax"]floatValue] + startx;
+         float tempay = [[[LibElementArray objectAtIndex:i]objectForKey:@"ay"]floatValue] + starty;
+         
+         float tempbx = [[[LibElementArray objectAtIndex:i]objectForKey:@"bx"]floatValue] + startx;
+         float tempby = [[[LibElementArray objectAtIndex:i]objectForKey:@"by"]floatValue] + starty;
+         
+         [Koordinatentabelle addObject:[NSArray arrayWithObjects:[NSNumber numberWithFloat:tempax],[NSNumber numberWithFloat:tempay],[NSNumber numberWithFloat:tempbx],[NSNumber numberWithFloat:tempby], nil]];
+      }
    }
-   NSLog(@"Koordinatentabelle: %@",Koordinatentabelle);
+   NSLog(@"reportLibElementEinfuegen Koordinatentabelle: %@",Koordinatentabelle);
    
 	[ElementDic setObject:Koordinatentabelle forKey:@"koordinatentabelle"];
    
@@ -2620,8 +2743,8 @@
       tempx *= -1;
       [[LibElementArray objectAtIndex:i]setObject:[NSNumber numberWithFloat:tempx]forKey:@"x"];
    }
-   [LibStartpunktX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
-   [LibEndpunktX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
+   [LibStartpunktAX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
+   [LibEndpunktAX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
    
    [self setLibGraphDaten];
    [LibGraph setNeedsDisplay:YES];
@@ -2640,8 +2763,8 @@
       tempy *= -1;
       [[LibElementArray objectAtIndex:i]setObject:[NSNumber numberWithFloat:tempy]forKey:@"y"];
    }
-   [LibStartpunktY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
-   [LibEndpunktY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
+   [LibStartpunktAY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
+   [LibEndpunktAY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
    
    [self setLibGraphDaten];
    [LibGraph setNeedsDisplay:YES];
@@ -2676,10 +2799,10 @@
       //NSLog(@"i: %d Data: %@",i,[[LibElementArray objectAtIndex:i]description]);
    }
    
-   [LibStartpunktX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
-   [LibStartpunktY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
-   [LibEndpunktX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
-   [LibEndpunktY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
+   [LibStartpunktAX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
+   [LibStartpunktAY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
+   [LibEndpunktAX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
+   [LibEndpunktAY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
    
    [self setLibGraphDaten];
    [LibGraph setNeedsDisplay:YES];
@@ -2699,10 +2822,10 @@
       [LibElementArray addObjectsFromArray:[[ElementLibArray objectAtIndex:Elementnummer]objectForKey:@"elementarray"]];
       if ([LibElementArray count])
       {
-         [LibStartpunktX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
-         [LibStartpunktY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
-         [LibEndpunktX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
-         [LibEndpunktY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
+         [LibStartpunktAX setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"x"]floatValue]];
+         [LibStartpunktAY setFloatValue:[[[LibElementArray objectAtIndex:0]objectForKey:@"y"]floatValue]];
+         [LibEndpunktAX setFloatValue:[[[LibElementArray lastObject]objectForKey:@"x"]floatValue]];
+         [LibEndpunktAY setFloatValue:[[[LibElementArray lastObject]objectForKey:@"y"]floatValue]];
          
       }
       NSLog(@"doLibTaskMitElement LibElementArray: %@",[LibElementArray description]);
@@ -2716,8 +2839,8 @@
 {
    //return;
    NSMutableDictionary* datenDic = [[NSMutableDictionary alloc]initWithCapacity:0];
-   NSPoint Startpunkt = NSMakePoint([LibStartpunktX floatValue]*zoom, [LibStartpunktY floatValue]*zoom);
-   NSPoint Endpunkt = NSMakePoint([LibEndpunktX floatValue]*zoom, [LibEndpunktY floatValue]*zoom);
+   NSPoint Startpunkt = NSMakePoint([LibStartpunktAX floatValue]*zoom, [LibStartpunktAY floatValue]*zoom);
+   NSPoint Endpunkt = NSMakePoint([LibEndpunktAX floatValue]*zoom, [LibEndpunktAY floatValue]*zoom);
    [datenDic setObject:NSStringFromPoint(Startpunkt) forKey:@"startpunkt"];
    [datenDic setObject:NSStringFromPoint(Endpunkt) forKey:@"endpunkt"];
    

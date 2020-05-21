@@ -3091,7 +3091,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (IBAction)reportPWMStepper:(id)sender
 {
-   NSLog(@"reportPWMStepper CNCTable numberOfSelectedRows: %d",[CNCTable numberOfSelectedRows]);
+   //NSLog(@"reportPWMStepper CNCTable numberOfSelectedRows: %d",[CNCTable numberOfSelectedRows]);
    if ([CNCTable numberOfSelectedRows]==0) // keine Zeile aktiviert
    {
       return;
@@ -5647,7 +5647,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSArray* tempElementKoordinatenArray = [[note userInfo]objectForKey:@"koordinatentabelle"];
    //NSLog(@"tempElementKoordinatenArray FIRST: %@",[[tempElementKoordinatenArray objectAtIndex:0]description]);
    //NSLog(@"tempElementKoordinatenArray LAST: %@",[[tempElementKoordinatenArray lastObject]description]);
-   //NSLog(@"tempElementKoordinatenArray: %@",[tempElementKoordinatenArray description]);
+   NSLog(@"tempElementKoordinatenArray: %@",[tempElementKoordinatenArray description]);
    
    // neu fuer A,B
    float offsetx = [ProfilBOffsetXFeld floatValue];
@@ -5678,19 +5678,50 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       oldby += offsety;
    }
    // Offset der letzten Punkte von A und B:
-   //NSLog(@"oldax: %2.2f olday: %2.2f",oldax,olday);
+   NSLog(@"oldax: %2.2f olday: %2.2f *** oldbx: %2.2f oldby: %2.2f",oldax,olday,oldbx,oldby);
   
+   if ([KoordinatenTabelle count])
+   {
+      [KoordinatenTabelle removeLastObject];
+   }
+   
+   
+   
    int i=0;
    // 31.10.
+   
+   // Position an index 0 wegzaehlen
+   float offsetax = offsetx - [[[tempElementKoordinatenArray objectAtIndex:0]objectAtIndex:0]floatValue];
+   float offsetay = offsety - [[[tempElementKoordinatenArray objectAtIndex:0]objectAtIndex:1]floatValue];
+
+   float offsetbx = offsetx - [[[tempElementKoordinatenArray objectAtIndex:0]objectAtIndex:0]floatValue];
+   float offsetby = offsety - [[[tempElementKoordinatenArray objectAtIndex:0]objectAtIndex:1]floatValue];
+   
+   
+   if ([[tempElementKoordinatenArray objectAtIndex:0]count]> 2)
+   {
+      offsetbx = offsetx - [[[tempElementKoordinatenArray objectAtIndex:0]objectAtIndex:2]floatValue];
+      offsetby = offsety - [[[tempElementKoordinatenArray objectAtIndex:0]objectAtIndex:3]floatValue];
+   }
    
    // neue Punkte anfuegen, ausgehend von letztem Punkt oldax olday. pwm uebernehmen
    for (i=0;i<[tempElementKoordinatenArray count];i++) // Data 0 ist letztes Data von Koordinatentabelle 
    {
-      float dx = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:0]floatValue]; // x
-      float dy = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:1]floatValue]; // y
-
+      float ax = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:0]floatValue] + offsetax; // ax
+      float ay = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:1]floatValue] + offsetay; // ay
+      
+      float bx = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:0]floatValue] + offsetbx; // ax
+      float by = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:1]floatValue] + offsetby; // ay
+    
+      
+      if ([[tempElementKoordinatenArray objectAtIndex:i]count]> 2)
+      {
+         bx = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:2]floatValue] + offsetbx; // bx
+         by = [[[tempElementKoordinatenArray objectAtIndex:i]objectAtIndex:3]floatValue] + offsetby; // by
+      }
+ 
       //NSLog(@"index: %d oldax: %2.2f olday: %2.2f  dx: %2.2f dy: %2.2f",i,oldax,olday,dx,dy);
-      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:oldax+dx],@"ax",[NSNumber numberWithFloat:olday+dy],@"ay",[NSNumber numberWithFloat:oldbx+dx],@"bx",[NSNumber numberWithFloat:oldby+dy],@"by",[NSNumber numberWithInt:oldpwm],@"pwm",[NSNumber numberWithInt:i],@"index", nil];
+      NSDictionary* tempDic=[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:oldax+ax],@"ax",[NSNumber numberWithFloat:olday+ay],@"ay",[NSNumber numberWithFloat:oldbx+bx],@"bx",[NSNumber numberWithFloat:oldby+by],@"by",[NSNumber numberWithInt:oldpwm],@"pwm",[NSNumber numberWithInt:i],@"index", nil];
       
       [KoordinatenTabelle addObject: tempDic];
       
@@ -7498,19 +7529,19 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    {
       
       float tempax=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ax"]floatValue];
- //     tempx -= startx;
-      float tempay=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue];
+ //      tempax -= startx;
+      float tempay=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"ay"]floatValue] ;
  //     tempy -= starty;
       
-      float tempbx=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue];
+      float tempbx=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"bx"]floatValue] ;
 
-      float tempby=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue];
+      float tempby=[[[KoordinatenTabelle objectAtIndex:i]objectForKey:@"by"]floatValue] ;
 
-      NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax],@"ax",[NSNumber numberWithFloat:tempay],@"ay",[NSNumber numberWithFloat:tempax],@"bx",[NSNumber numberWithFloat:tempay],@"by",[NSNumber numberWithInt:i],@"index", nil];
+      NSDictionary* tempDic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:tempax],@"ax",[NSNumber numberWithFloat:tempay],@"ay",[NSNumber numberWithFloat:tempbx],@"bx",[NSNumber numberWithFloat:tempby],@"by",[NSNumber numberWithInt:i],@"index", nil];
       [ElementArray addObject:tempDic];
 
    }
-   NSLog(@"reportElementSichern ElementArray: %@",[ElementArray description]);
+   //NSLog(@"reportElementSichern ElementArray: %@",[ElementArray description]);
    
    NSString* neuerName=[self inputNameMitTitel:@"Neues Element" information:@"Name des neuen Elements:" defaultValue:@"Element"];
    
