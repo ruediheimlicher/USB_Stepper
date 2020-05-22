@@ -461,7 +461,7 @@ float det(float v0[],float v1[])
 	
    int aktpwm=0;
    NSPoint location = [event locationInWindow];
-   NSLog(@"Pfeiltaste mouseUp location: %2.2f %2.2f",location.x, location.y);
+   //NSLog(@"Pfeiltaste mouseUp location: %2.2f %2.2f",location.x, location.y);
    [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"push"];
    [NotificationDic setObject:[NSNumber numberWithFloat:location.x] forKey:@"locationx"];
    [NotificationDic setObject:[NSNumber numberWithFloat:location.y] forKey:@"locationy"];
@@ -477,7 +477,7 @@ float det(float v0[],float v1[])
    
    richtung=[self tag];
 
-   //NSLog(@"AVR mouseDown: Pfeiltaste richtung: %d",richtung);
+   NSLog(@"AVR mouseDown: Pfeiltaste richtung: %d",richtung);
    [self setState:NSOnState];
 	
    
@@ -3152,33 +3152,35 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       
       //Horizontal bis Anschlag
+      
+   int delta= 0xFF;
      switch (richtung)
       {
          case 1: // right
          {
-            PositionA.x += 500; // sicher ist sicher
-            PositionB.x += 500;
+            PositionA.x += delta; // sicher ist sicher
+            PositionB.x += delta;
 
          }break;
             
          case 2: // up
          {
-            PositionA.y += 500; // sicher ist sicher
-            PositionB.y += 500;
+            PositionA.y += delta; // sicher ist sicher
+            PositionB.y += delta;
 
          }break;
             
          case 3: // left
          {
-            PositionA.x -= 500; // sicher ist sicher
-            PositionB.x -= 500;
+            PositionA.x -= delta; // sicher ist sicher
+            PositionB.x -= delta;
             
          }break;
             
          case 4: // down
          {
-            PositionA.y -= 500; // sicher ist sicher
-            PositionB.y -= 500;
+            PositionA.y -= delta; // sicher ist sicher
+            PositionB.y -= delta;
 
          }break;
             
@@ -3190,6 +3192,9 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       index++;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       //NSLog(@"A");
+      
+      NSLog(@"AVR  manRichtung ManArray count: %d",[ManArray count]);
+      
       // von reportOberkanteAnfahren
       int i=0;
       int zoomfaktor=1.0;
@@ -5760,6 +5765,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [ProfilGraph setDatenArray:KoordinatenTabelle];
 	[ProfilGraph setNeedsDisplay:YES];
    [CNCTable reloadData];
+   [CNC_Starttaste setEnabled:0];
+   [CNC_Stoptaste setEnabled:1];
 
 }
 

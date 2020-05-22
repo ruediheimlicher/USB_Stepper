@@ -372,7 +372,7 @@ private void button4_Click(object sender, EventArgs e)
          
       }
       
-      readTimer = [NSTimer scheduledTimerWithTimeInterval:0.005
+      readTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
                     
                                                     target:self 
                                                   selector:@selector(readUSB:) 
