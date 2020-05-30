@@ -1139,6 +1139,8 @@ return returnInt;
 	
 	[CNC_Starttaste setState:0];
 	[CNC_Stoptaste setState:0];
+   NSRect stoptiprect = [CNC_Stoptaste bounds];
+  // [CNC_Stoptaste  addToolTipRect:stoptiprect owner:self userData:@"Stop"];
 	//[ProfilTiefeFeldA setIntValue:100];
 	//[ProfilBOffsetYFeld setIntValue:0];
    //[ProfilTiefeFeldB setIntValue:90];
@@ -1339,6 +1341,7 @@ return returnInt;
    //   [SpeedStepper setIntValue:12];
    [PWMFeld setDelegate:self];
    int motorstatus=0;
+   /*
    for (i=0;i<4;i++)
    {
       int motor=i;
@@ -1356,14 +1359,14 @@ return returnInt;
       //NSLog(@"i: %d motor: %d aktuellermotor: %d neuermotor: %d motorstatus: %d",i,motor, aktuellermotor,neuermotor,motorstatus);
       
    }
-   
+   */
    [ProfilPop removeAllItems];
    [ProfilPop addItemWithTitle:@"Profil waehlen"];
    NSArray* ProfilnamenArray = [self readProfilLib];
    [ProfilPop addItemsWithTitles:ProfilnamenArray];
    
    
-   motorstatus |= (1<<2);
+   //motorstatus |= (1<<2);
    motorstatus |= STEPEND_A;
    //NSLog(@"motorstatus: %X",motorstatus);
    motorstatus &= ~STEPEND_A;
@@ -2427,11 +2430,12 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (IBAction)reportDC_Stepper:(id)sender
 {
-   //NSLog(@"reportDC_Stepper Wert: %d ",[sender intValue]); 
+   NSLog(@"reportDC_Stepper Wert: %d ",[sender intValue]); 
    
    [DC_PWM setIntValue:[sender intValue]];
-   if (CNC_busy == 0) // Weiterleiten an AVRController nur im Stillstand
+//   if (CNC_busy == 0) // Weiterleiten an AVRController nur im Stillstand
    {
+      NSLog(@"reportDC_Stepper go");
       if ([DC_Taste state])
       {
          [self DC_ON:[sender intValue]];
@@ -5773,7 +5777,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (void)LibProfileingabeAktion:(NSNotification*)note
 {
-   NSLog(@"LibProfileingabeAktion");
+   //NSLog(@"LibProfileingabeAktion");
    //NSLog(@"LibProfileingabeAktion note: %@",[[note userInfo] description]);
 	/*
    Werte fuer "teil":
@@ -5962,7 +5966,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          // distanz zum letzten registrierten Element im Array
          float regdist = hypotf(dx-prevregdx, dy-prevregdy)* MIN(ProfiltiefeA,ProfiltiefeB);
 
-         fprintf(stderr,"i: %d \t %2.2f \t %2.2f \t %2.2f \t %2.2f \t ",i,prevdx,dx,dist,regdist);
+//         fprintf(stderr,"i: %d \t %2.2f \t %2.2f \t %2.2f \t %2.2f \t ",i,prevdx,dx,dist,regdist);
          //NSLog(@"i: %d dx %2.2f",i,dx);
          if (regdist>minabstand)
          {
@@ -5971,11 +5975,11 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             int index =[Profil1Array count];
             //NSLog(@"i: %d index: %d dx %2.2f",i,index,dist);
          
-            fprintf(stderr,"\tindex: %d",index);
+            //fprintf(stderr,"\tindex: %d",index);
          }
          
          // NSLog(@"i: %d dx: %2.2f",i,dx);
-         fprintf(stderr,"\n");
+         //fprintf(stderr,"\n");
       }
    
    float pfeilung = (ProfiltiefeA - ProfiltiefeB)/[Spannweite intValue];
@@ -7101,7 +7105,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       auslaufAY = [[[KoordinatenTabelle lastObject]objectForKey:@"ay"]floatValue];
       auslaufBX = [[[KoordinatenTabelle lastObject]objectForKey:@"bx"]floatValue];
       auslaufBY = [[[KoordinatenTabelle lastObject]objectForKey:@"by"]floatValue];
-      int i;
+      int i=0;
+      // max und min suchen fuer Blockabmessungen
       for (i=0;i<[KoordinatenTabelle count]; i++)
       {
          // y-werte
@@ -7186,7 +7191,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       [OberkantenStepper setIntValue:[Blockoberkante intValue]];
       
       [Blockdicke setIntValue:dicke];
-      [Einlaufrand setIntValue:einlaufrand];
+      [Einlaufrand setIntValue:einlaufrand]; // def in awake
       [Auslaufrand setIntValue:auslaufrand];
       
       [Blockbreite setIntValue:maxx+einlaufrand - minx + auslaufrand];
@@ -7261,7 +7266,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
  */
      
 
-      NSLog(@"Einstich zum Blockrand");
+      NSLog(@"Einstich zum Blockrand"); // A
       
       // Einstich  zum Blockrand
       PositionA.x +=einstichx;       
@@ -7280,7 +7285,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       float deltaAY = einlaufAY - EckeLinksUnten.y;
       float deltaBY = einlaufBY - EckeLinksUnten.y;
       
-      NSLog(@"Anfahrt von unten");
+      NSLog(@"Anfahrt von unten"); // B
       
       PositionA.y +=deltaAY;
       PositionB.y +=deltaBY;
@@ -7288,7 +7293,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm * full_pwm],@"pwm",nil]];
       index++;
     
-      NSLog(@"Rand bei Einlauf");
+      //NSLog(@"Rand bei Einlauf"); // C
       /*
        // Rand bei Einlauf nach links freischneiden
        PositionA.x -=rand;
@@ -7314,7 +7319,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       PositionB.x +=deltaBX;
       PositionB.y +=deltaBY;
       
-      NSLog(@"AAA");
+      //NSLog(@"AAA");
       
       //NSLog(@"nach index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
       
@@ -7330,19 +7335,19 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       // Auslauf
       lage=1;
       
-      NSLog(@"BBB");
+      //NSLog(@"BBB");
       //Letzte Position
       PositionA = NSMakePoint(auslaufAX, auslaufAY);
       PositionB = NSMakePoint(auslaufBX, auslaufBY);
-      //NSLog(@"Auslauf start index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      //NSLog(@"Auslauf start index: %d PositionA.x: %2.2f PositionA.y: %2.2f PositionB.x: %2.2f PositionB.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
       
       // Distanz ist unterschiedlich
       
-      //Schneiden an Blockrand rechts Eventuell Strom red
+      //NSLog(@"Schneiden an Blockrand rechts"); //Eventuell Strom red
       
       PositionA.x = EckeRechtsOben.x;
       PositionB.x = EckeRechtsOben.x;
-      //NSLog(@"Auslauf Rand rechts index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      //NSLog(@"Auslauf Rand rechts index: %d PositionA.x: %2.2f PositionA.y: %2.2f PositionB.x: %2.2f PositionB.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
       
       //[BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm*red_pwm],@"pwm",nil]];
       
@@ -7366,12 +7371,14 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       PositionA.y = EckeRechtsUnten.y;// - einstichy + 3;
       PositionB.y = EckeRechtsUnten.y;// - einstichy + 3;
       
+      //NSLog(@"Auslauf Rand rechts index: %d PositionA.x: %2.2f PositionA.y: %2.2f PositionB.x: %2.2f PositionB.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      
       [BlockKoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:lage],@"lage",[NSNumber numberWithFloat:aktuellepwm*full_pwm],@"pwm",nil]];
       index++;
       
 
       //Schneiden an Blockunterkante links - einstichy
-      NSLog(@"Schneiden zu Blockunterkante links");
+      //NSLog(@"Schneiden zu Blockunterkante links"); // Boden
 
       //PositionA.x = EckeLinksUnten.x - 4;//-einstichx+1; // Nicht bis Anschlag fahren
       PositionA.x = EckeLinksUnten.x - einstichx; // Bis Anschlag fahren
@@ -7392,9 +7399,9 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 - (IBAction)reportBlockanfuegen:(id)sender
 {
    
-   NSLog(@"reportBlockanfuegen ");
+   //NSLog(@"reportBlockanfuegen ");
    [self reportBlockkonfigurieren:NULL];
-   NSLog(@"reportBlockanfuegen nach Blockkonfig");
+   //NSLog(@"reportBlockanfuegen nach Blockkonfig");
    if ([KoordinatenTabelle count])
    {
       if ([BlockKoordinatenTabelle count])
@@ -9037,7 +9044,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          [Warnung addButtonWithTitle:@"Ignorieren"];
          //   [Warnung addButtonWithTitle:@""];
          [Warnung addButtonWithTitle:@"Abbrechen"];
-         [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"reportUSB_sendArray 1: CNC Schnitt starten"]];
+         [Warnung setMessageText:[NSString stringWithFormat:@"%@",@"CNC Schnitt starten"]];
          
          NSString* s1=@"Der Heizdraht ist noch nicht eingeschaltet.";
          NSString* s2=@"Nach dem Einschalten den Vorgang erneut starten.";
@@ -9106,7 +9113,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       }
       
       [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-      NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
+      //NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
       
       //   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       //NSLog(@"reportUSB_SendArray delayok: %d",delayok);
@@ -9178,6 +9185,17 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       }
    }
    
+    if ([[note userInfo]objectForKey:@"intervallh"] && [[note userInfo]objectForKey:@"intervalll"])
+    {
+       uint8_t intervallH = (uint8_t)[[[note userInfo]objectForKey:@"intervallh"]intValue];
+       
+       uint8_t intervallL = (uint8_t)[[[note userInfo]objectForKey:@"intervalll"]intValue];
+      // NSLog(@"USBReadAktion intervallH: %d intervallL: %d",intervallH,intervallL);
+       uint16_t timerintervall =  intervallH << 8 | intervallL;
+      // NSLog(@"USBReadAktion timerintervall: %d",timerintervall);
+       [TimerIntervallFeld setIntValue:timerintervall];
+    }
+       
    if ([[[note userInfo]objectForKey:@"slaveversion"]intValue])
    {
       int slaveversionint =[[[note userInfo]objectForKey:@"slaveversion"]intValue];

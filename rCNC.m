@@ -1327,8 +1327,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
          
       case 4:
       {
-        // Mittelpunkt.x +=  Radius/2;
-        // Mittelpunkt.y +=  Radius/2;
+         Mittelpunkt.x +=  Radius/2;
+         Mittelpunkt.y +=  Radius/2;
       }
 			
 	}// switch Lage
@@ -1353,7 +1353,11 @@ PortA=vs[n & 3]; warte10ms(); n++;
       float phi=2*M_PI/anzSchritte*index;
       switch (Lage)
       {
-         case 3:
+         case 4:
+            tempX=Radius*cos(phi);
+            tempY=Radius*sin(phi);
+            break;
+        case 3:
             tempX=Radius*cos(phi)*-1;
             tempY=Radius*sin(phi);
             break;
@@ -1423,8 +1427,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
 		
       case 4:
       {
-         //Mittelpunkt.x +=  Radius/2;
-        // Mittelpunkt.y +=  Radius/2;
+        // Mittelpunkt.x +=  Radius/2;
+        Mittelpunkt.y -=  Radius/2;
       }break;
 
 	}// switch Lage
@@ -1475,8 +1479,8 @@ PortA=vs[n & 3]; warte10ms(); n++;
             tempY=Radius*cos(phi)*-1;
             break;
          case 4:
-            tempX=Radius/2*sin(phi);
-            tempY=Radius/2*cos(phi)*-1;
+            tempX=Radius*sin(phi);
+            tempY=Radius*cos(phi)*-1-(Radius/2);
 
       }
       tempX += Mittelpunkt.x;

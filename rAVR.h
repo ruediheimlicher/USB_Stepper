@@ -316,6 +316,9 @@
    
    IBOutlet id             Schalendickefeld;
    
+   IBOutlet NSTextField*   TimerIntervallFeld; // TIMERINTERVALL des Teensy
+   
+   
    rProfildruckView*       Profilfeld;
    }
 @property (nonatomic)  int    Kote;
