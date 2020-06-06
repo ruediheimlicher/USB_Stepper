@@ -51,6 +51,7 @@
 @interface rPfeiltaste : NSButton 
 {
    int richtung;
+   int                     mousebusy;
    IBOutlet id Taste;
 }
 - (IBAction)reportPfeiltaste:(id)sender;
@@ -66,6 +67,7 @@
    NSMutableDictionary*		CNC_PList;
    
    IBOutlet id             BoardPop;
+   IBOutlet NSTextField*   BoardFeld;
    
    IBOutlet id					StepperTab;
    IBOutlet	id					ProfilFeld;
@@ -149,6 +151,8 @@
    NSMutableArray*			BlockrahmenArray;
 
    NSPoint						oldMauspunkt;
+   
+   
    rProfilGraph*				ProfilGraph;
    int							GraphEnd;
    IBOutlet	NSTableView*	CNCTable;
@@ -329,6 +333,8 @@
 
 - (IBAction)reportBoardPop:(id)sender;
 - (int)BoardPopIndex;
+- (void)setBoardPop:(int)item;
+- (void)setBoardFeld:(NSString*)dasBoard;
 - (IBAction)reportHorizontalSchieber:(id)sender;
 - (IBAction)reportVertikalSchieber:(id)sender;
 - (IBAction)reportDrehgeber:(id)sender;
@@ -342,6 +348,7 @@
 - (float)mindist2save;
 - (void)setStepperstrom:(int)ein;
 - (void)setBusy:(int)busy;
+- (int)busy;
 - (int)speed;
 - (int)saveSpeed;
 - (int)saveProfileinstellungen;

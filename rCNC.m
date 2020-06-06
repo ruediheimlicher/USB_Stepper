@@ -156,7 +156,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 - (NSDictionary*)SteuerdatenVonDic:(NSDictionary*)derDatenDic
 {
 
-    //NSLog(@"SteuerdatenVonDic: %@",[derDatenDic description]);
+   //NSLog(@"SteuerdatenVonDic: %@",[derDatenDic description]);
 	int  anzSchritte;
    int  anzaxplus=0;
    int  anzaxminus=0;
@@ -728,7 +728,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    }
    
    //NSLog(@"tempArray indexl: %d",[[derDatenDic objectForKey:@"indexl"]intValue]);
-   //NSLog(@"SchnittdatenVonDic tempArray: %@",[tempArray description]);
+ //  NSLog(@"SchnittdatenVonDic tempArray: %@",[tempArray description]);
    //NSLog(@"SchnittdatenVonDic tempArray count: %d",[tempArray count]);
    
    
@@ -855,7 +855,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
       [tempArray addObject:[NSNumber numberWithInt:1]];
    }
    
-   //NSLog(@"SchnittdatenVonDic tempArray: %@",[tempArray description]);
+//   NSLog(@"SchnittdatenVonDic tempArray: %@",[tempArray description]);
    //NSLog(@"SchnittdatenVonDic tempArray count: %d",[tempArray count]);
    
    return tempArray;

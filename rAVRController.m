@@ -487,7 +487,7 @@ private void button4_Click(object sender, EventArgs e)
          //NSLog(@"loop start");
          //NSDate *anfang = [NSDate date];
          //dauer1 = [dateA timeIntervalSinceNow]*1000;
-         fprintf(stderr,"writeCNCAbschnitt\n");
+         fprintf(stderr,"writeCNCAbschnitt pfeilaktion: %d\n",pfeilaktion);
          for (i=0;i<[tempSchnittdatenArray count];i++)
          {
             int tempWert=[[tempSchnittdatenArray objectAtIndex:i]intValue];
@@ -706,7 +706,7 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"dataRead: %@",[dataRead description]);
       [self setLastValueRead:dataRead];
       int abschnittcode=(UInt8)buffer[0];     // code fuer Art des Pakets
-      //fprintf(stderr, "readUSB abschnittcode0: %d\t%02X\n",abschnittcode,abschnittcode);
+     // fprintf(stderr, "readUSB abschnittcode0: %d\thex: \t%02X\n",abschnittcode,abschnittcode);
  /*
       for (int i=0; i<23;i++)
       {
@@ -722,7 +722,7 @@ private void button4_Click(object sender, EventArgs e)
          
          return;
       }
-      fprintf(stderr, "readUSB abschnittcode0: %d\t%02X\n",abschnittcode,abschnittcode);
+      fprintf(stderr, "readUSB abschnittcode0:\t%02X\n",abschnittcode);
       if (abschnittcode==0xBA)
       {
          NSLog(@"readUSB BA");
@@ -969,7 +969,13 @@ private void button4_Click(object sender, EventArgs e)
                [nc postNotificationName:@"usbread" object:self userInfo:NotificationDic];
                return;
             }break;
-               
+  
+            case 0xD1:
+            {
+               NSLog(@"first paket ok");
+               [AVR setBusy:0];
+            }break;
+
             case 0xF2:
             {
                NSLog(@"reset");
@@ -1103,24 +1109,30 @@ private void button4_Click(object sender, EventArgs e)
 - (void)PfeilAktion:(NSNotification*)note
 {
 	//[self reportManDown:NULL];
-	NSLog(@"AVRController PfeilAktion note: %@",[[note userInfo]description]);
+	NSLog(@"\n\n\t************************\nAVRController PfeilAktion note: %@",[[note userInfo]description]);
    
    if ([[note userInfo]objectForKey:@"push"])
    {
       //pwm = [AVR pwm];
       mausistdown=[[[note userInfo]objectForKey:@"push"]intValue];
+      
       if (mausistdown == 1) // mousedown
       {
-         NSLog(@" ********************* AVRController  PfeilAktion mousedown=1  Stepperposition: %d",Stepperposition);
+         NSLog(@" ********************* AVRController  PfeilAktion mousedown=1 ");
+         
+      [AVR setBusy:1];
       }
      
-      if (mausistdown == 0) // mouseup
+      else if (mausistdown == 0) // mouseup
       {
+         int cncbusy = [AVR busy];
+         
+          NSLog(@"PfeilAktion mouseup cncbusy: %d",cncbusy);
          pfeilaktion=1; // in writeCNCAbschnitt wird Datenserie beendet
          NSLog(@" ********************* AVRController PfeilAktion mouseup pwm: %d",pwm);
          char*      sendbuffer;
          sendbuffer=malloc(32);
-         sendbuffer[16]=0xE0;
+         sendbuffer[16]=0xE6;
          sendbuffer[20]=pwm;
          int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
          sendbuffer[16]=0x00;
@@ -1194,7 +1206,7 @@ private void button4_Click(object sender, EventArgs e)
       pwm =[[[note userInfo]objectForKey:@"pwm"]intValue];
       //NSLog(@"AVRController DC_Aktion pwm: %d",pwm);
    }
-   NSLog(@"AVRController DC_Aktion pwm: %d",pwm);
+   //NSLog(@"AVRController DC_Aktion pwm: %d",pwm);
    char*      sendbuffer;
    
    sendbuffer=malloc(32);

@@ -439,19 +439,21 @@ float det(float v0[],float v1[])
    //richtung=1;
 //- (void)setPeriodicDelay:(float)delay interval:(float)interval
    //[self setPeriodicDelay:1 interval:1];
+   mousebusy = 0;
 }
 
 - (void)mouseUp:(NSEvent *)event
 {
    NSLog(@"AVR mouseup");
+  
    richtung=[self tag];
-   NSLog(@"AVR mouseUp Pfeiltaste richtung: %d",richtung);
+   NSLog(@"rPfeiltaste mouseUp Pfeiltaste richtung: %d",richtung);
    /*
     richtung:
-    right: 1
-    up: 2
-    left: 3
-    down: 4
+    right:  1
+    up:     2
+    left:   3
+    down:   4
     */
    
    [self setState:NSOffState];
@@ -477,7 +479,7 @@ float det(float v0[],float v1[])
    
    richtung=[self tag];
 
-   NSLog(@"AVR mouseDown: Pfeiltaste richtung: %d",richtung);
+   NSLog(@"rPfeiltaste mouseDown: Pfeiltaste richtung: %d",richtung);
    [self setState:NSOnState];
 	
    
@@ -487,7 +489,7 @@ float det(float v0[],float v1[])
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"Pfeil" object:self userInfo:NotificationDic];
    [super mouseDown:theEvent];
-   
+   mousebusy = 1;
    [self mouseUp:theEvent];
 
 }
@@ -1405,7 +1407,18 @@ return returnInt;
 {
    return [BoardPop indexOfSelectedItem];
 }
+- (void)setBoardPop:(int)zeile
+{
+   NSLog(@"setBoardPop zeile: %d",zeile);
+   [BoardPop  selectItemAtIndex:zeile];
+}
 
+- (void)setBoardFeld:(NSString*)dasBoard;
+{
+   NSLog(@"setBoardFeld Board: %@",dasBoard);
+   [BoardFeld setStringValue:dasBoard];
+   [Cmd setStringValue:dasBoard];
+}
 - (NSArray*)readProfilLib
 {
    NSMutableArray* tempLibElementArray = [[NSMutableArray alloc]initWithCapacity:0];
@@ -1656,19 +1669,27 @@ return returnInt;
 
 - (void)setUSBDaten:(NSDictionary*)datendic
 {
+   NSLog(@"setUSBDaten datendic: %@",[datendic description]);
    if ([datendic objectForKey:@"prod"] && [[datendic objectForKey:@"prod"]length])
    {
    [ProductFeld setStringValue:[datendic objectForKey:@"prod"]];
    }
    else 
    {
+      
       //NSLog(@"kein prod");
-      [ProductFeld setStringValue:@"-"];
+      //[ProductFeld setStringValue:[datendic objectForKey:@"boardstring"]];
    }
    if ([datendic objectForKey:@"manu"] && [[datendic objectForKey:@"manu"]length])
    {
       [ManufactorerFeld setStringValue:[datendic objectForKey:@"manu"]];
    }
+   if ([datendic objectForKey:@"boardstring"] && [[datendic objectForKey:@"boardstring"]length])
+   {
+      NSLog(@"setUSBDaten datendic: %@",[datendic objectForKey:@"boardstring"]);
+      [BoardFeld setStringValue:[datendic objectForKey:@"boardstring"]];
+   }
+   [ProductFeld setStringValue:[datendic objectForKey:@"boardstring"]];
 }
 
 - (IBAction)reportHorizontalSchieber:(id)sender
@@ -3274,11 +3295,11 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-      //NSLog(@"reportManLeft SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+//      NSLog(@"**********        reportManRichtung SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
-      
+      CNC_busy = 1;
       
    }
 
@@ -3565,7 +3586,6 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          //NSLog(@"reportManUp i: %d \ntempDic: %@",i,[tempDic description]);
       }
 		[PfeilSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
-      
    }
    
    NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -3586,7 +3606,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
     left:   3
     down:   4
     */
-   [self ManRichtung:4];
+//   [self ManRichtung:4];
    return;
 
    if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
@@ -4419,12 +4439,12 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
                }break;
                case MANLEFT:
                {
-                  //NSLog(@"AVR PfeilAktion manleft");
+                  NSLog(@"AVR PfeilAktion manleft");
                   [self reportManLeft:NULL];
                }break;
                case MANRIGHT:
                {
-                  //NSLog(@"AVR PfeilAktion manright");
+                  NSLog(@"AVR PfeilAktion manright");
                   [self reportManRight:NULL];
                }break;
                   
@@ -7038,7 +7058,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
    // Zurueck zu Blockoberkante
    PositionA.y += (blockoberkante/2 - durchmesserA/2); // Oberkante Rumpfrohr
-   PositionB.y -= (blockoberkante/2 - durchmesserB/2);
+   PositionB.y += (blockoberkante/2 - durchmesserB/2);
    [KoordinatenTabelle addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",[NSNumber numberWithFloat:aktuellepwm*red_pwm],@"pwm",nil]];
 
    

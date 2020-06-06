@@ -206,7 +206,8 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
    int boardindex = [AVR BoardPopIndex];
    //NSLog(@"USBOpen: boardindex: %d",boardindex);
    int  r=0;
-  
+   NSString* boardString = [NSString string];
+  /*
    switch (boardindex)
    {
    case 0: // Teensy3.2
@@ -219,7 +220,20 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
       }break;
       
    }// switch
-      
+   */ 
+    r =  rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200); // Teensy3.2
+   
+   if (r <=0)
+   {
+       r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);// Teensy2++
+      [AVR setBoardFeld:@"Teensy 2++"];
+      boardString  = @"Teensy 2++";
+   }
+   else{
+      [AVR setBoardFeld:@"Teensy 3.2"];
+      boardString  = @"Teensy 3.2";
+   }
+   
  // r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);// Teensy2++
  //  r =  rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200); // Teensy3.2
 //   r = rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200);
@@ -240,9 +254,9 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
       const char* prod = get_prod();
       prod="1234\0";
       //fprintf(stderr,"prod: %s\n",prod);
-      NSString* Prod = [NSString stringWithUTF8String:prod];
-      //NSLog(@"Manu: %@ Prod: %@",Manu, Prod);
-      NSDictionary* USBDatenDic = [NSDictionary dictionaryWithObjectsAndKeys:Prod,@"prod",Manu,@"manu", nil];
+      NSString* Prod = [[NSString alloc] initWithCString:prod encoding:NSUTF8StringEncoding];
+      NSLog(@"USBopen Manu: %@ Prod: %@",Manu, Prod);
+      NSDictionary* USBDatenDic = [NSDictionary dictionaryWithObjectsAndKeys:Prod,@"prod",Manu,@"manu", boardString, @"boardstring", nil];
       [AVR setUSBDaten:USBDatenDic];
     //  NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];
       
@@ -641,16 +655,20 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
    //fprintf(stderr,"manu: %s\n",manu);
    NSString* Manu = [NSString stringWithUTF8String:manu];
    
-   const char* prod = get_prod();
+   char* prod = get_prod();
    //fprintf(stderr,"prod: %s\n",prod);
    NSString* Prod= @"";
    if (prod)
    {
-      NSString* Prod = [NSString stringWithUTF8String:prod];
+      fprintf(stderr,"awake prod %4slX\n",prod);
+      int l = strlen(prod);
+      prod[l+1] = '\0';
+      NSString* Prod = [[NSString alloc] initWithCString:prod encoding:NSUTF8StringEncoding];
+      
       NSLog(@"Manu: %@ Prod: %@",Manu, Prod);
    }
    NSDictionary* USBDatenDic = [NSDictionary dictionaryWithObjectsAndKeys:Prod,@"prod",Manu,@"manu", nil];
-   [AVR setUSBDaten:USBDatenDic];
+ //  [AVR setUSBDaten:USBDatenDic];
 
    
    //
