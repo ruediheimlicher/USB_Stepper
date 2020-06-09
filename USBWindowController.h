@@ -89,7 +89,7 @@
    int               HALTStatus;
     int              USBStatus;
    int               pwm;
-   int               halt;
+   int               halt_status;
     NSMutableIndexSet* HomeAnschlagSet;
    char*      newsendbuffer;
   

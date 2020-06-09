@@ -1670,6 +1670,7 @@ return returnInt;
 - (void)setUSBDaten:(NSDictionary*)datendic
 {
    NSLog(@"setUSBDaten datendic: %@",[datendic description]);
+   
    if ([datendic objectForKey:@"prod"] && [[datendic objectForKey:@"prod"]length])
    {
    [ProductFeld setStringValue:[datendic objectForKey:@"prod"]];
@@ -2348,7 +2349,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    //anzaxminus,anzayminus ,anzbxminus, anzbyminus;
    //anzaxplus,anzayplus ,anzbxplus, anzbyplus;
    
-   // code am Anfang und Schluss einfuegen
+   // position am Anfang und Schluss einfuegen
    int lastposition = 0;
    lastposition |= (1<<LAST_BIT);
    
@@ -3175,7 +3176,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSPoint PositionB = NSMakePoint(0, 0);
       int index=0;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
-      
+      NSLog(@"AVR  manRichtung ManArray count: %d",[ManArray count]);
+
       //Horizontal bis Anschlag
       
    int delta= 0xFF;
@@ -3295,7 +3297,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-//      NSLog(@"**********        reportManRichtung SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+      NSLog(@"**********        reportManRichtung SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
@@ -3503,7 +3505,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSMutableDictionary* SchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [SchnittdatenDic setObject:PfeilSchnittdatenArray forKey:@"schnittdatenarray"];
    [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
-   
+   NSLog(@"ManRight SchnittdatenDic: %@",SchnittdatenDic);
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
 }
@@ -7821,9 +7823,9 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [PositionFeld setStringValue:@""];
    
    
-	//[haltInfoDic setObject:[NSNumber numberWithInt:[CNC_Halttaste state]] forKey:@"halt"];
+	//[haltInfoDic setObject:[NSNumber numberWithInt:[CNC_Halttaste state]] forKey:@"halt_status"];
    NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
-	[NotificationDic setObject:[NSNumber numberWithInt:[CNC_Halttaste state]] forKey:@"halt"];
+	[NotificationDic setObject:[NSNumber numberWithInt:[CNC_Halttaste state]] forKey:@"halt_status"];
 	[NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"push"];
    
 	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -8817,7 +8819,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
 }
 
-- (int)halt
+- (int)halt_status
 {
 	return [CNC_Halttaste state];
 }
@@ -9133,7 +9135,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       }
       
       [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-      //NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
+      NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
       
       //   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       //NSLog(@"reportUSB_SendArray delayok: %d",delayok);

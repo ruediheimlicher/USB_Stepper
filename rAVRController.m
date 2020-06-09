@@ -442,9 +442,9 @@ private void button4_Click(object sender, EventArgs e)
       NSDate* dateA=[NSDate date];
       //dauer1 = [dateA timeIntervalSinceNow]*1000;
       // HALT
-      //if ([AVR halt])
+      //if ([AVR halt_status])
       
-      if (halt)
+      if (halt_status)
       {
          NSLog(@"writeCNCAbschnitt HALT");
          [AVR setBusy:0];
@@ -1120,7 +1120,7 @@ private void button4_Click(object sender, EventArgs e)
       {
          NSLog(@" ********************* AVRController  PfeilAktion mousedown=1 ");
          
-      [AVR setBusy:1];
+   //   [AVR setBusy:1];
       }
      
       else if (mausistdown == 0) // mouseup
@@ -1132,7 +1132,8 @@ private void button4_Click(object sender, EventArgs e)
          NSLog(@" ********************* AVRController PfeilAktion mouseup pwm: %d",pwm);
          char*      sendbuffer;
          sendbuffer=malloc(32);
-         sendbuffer[16]=0xE6;
+         sendbuffer[16]=0xE6; // Stop fuer Pfeiltasten
+   //      sendbuffer[16]=0xE0;// vorher, HALT
          sendbuffer[20]=pwm;
          int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
          sendbuffer[16]=0x00;
@@ -1157,7 +1158,7 @@ private void button4_Click(object sender, EventArgs e)
       mausistdown=[[[note userInfo]objectForKey:@"push"]intValue];
       if (mausistdown == 0) // mouseup
       {
-         NSMutableDictionary* timerDic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"home",[NSNumber numberWithInt:1],@"halt", nil];
+         NSMutableDictionary* timerDic =[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"home",[NSNumber numberWithInt:1],@"halt_status", nil];
 
          readTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 
                                                        target:self 

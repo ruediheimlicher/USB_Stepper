@@ -250,7 +250,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
       const char* manu = get_manu();
       //fprintf(stderr,"manu: %s\n",manu);
       NSString* Manu = [NSString stringWithUTF8String:manu];
-      
+     
       const char* prod = get_prod();
       prod="1234\0";
       //fprintf(stderr,"prod: %s\n",prod);
@@ -271,7 +271,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 
 - (void)setHalt:(int)haltstatus
 {
-   halt = haltstatus;
+   halt_status = haltstatus;
 }
 
 /*" Invoked when the nib file including the window has been loaded. "*/
@@ -413,7 +413,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
 	[logTable setTarget:self];
 	[logTable setDoubleAction:@selector(logTableDoubleClicked)];
    
-   halt=0;
+   halt_status=0;
 	
 	NSNotificationCenter * nc;
 	nc=[NSNotificationCenter defaultCenter];
