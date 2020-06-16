@@ -1669,7 +1669,7 @@ return returnInt;
 
 - (void)setUSBDaten:(NSDictionary*)datendic
 {
-   NSLog(@"setUSBDaten datendic: %@",[datendic description]);
+  // NSLog(@"setUSBDaten datendic: %@",[datendic description]);
    
    if ([datendic objectForKey:@"prod"] && [[datendic objectForKey:@"prod"]length])
    {
@@ -1687,7 +1687,7 @@ return returnInt;
    }
    if ([datendic objectForKey:@"boardstring"] && [[datendic objectForKey:@"boardstring"]length])
    {
-      NSLog(@"setUSBDaten datendic: %@",[datendic objectForKey:@"boardstring"]);
+ //     NSLog(@"setUSBDaten datendic: %@",[datendic objectForKey:@"boardstring"]);
       [BoardFeld setStringValue:[datendic objectForKey:@"boardstring"]];
    }
    [ProductFeld setStringValue:[datendic objectForKey:@"boardstring"]];
@@ -2438,7 +2438,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    //NSLog(@"reportStopKnopf KoordinatenTabelle count: %d",[KoordinatenTabelle count]);
 //   NSLog(@"reportStopKnopf KoordinatenTabelle neu: %@",[KoordinatenTabelle description]);
    int anzDaten=[KoordinatenTabelle count]-1;
-   NSLog(@"reportStopKnopf anzDaten: %d",anzDaten);
+//   NSLog(@"reportStopKnopf anzDaten: %d",anzDaten);
    //[PositionFeld setIntValue:[KoordinatenTabelle count]-1];
    [IndexFeld setIntValue:anzDaten];
    [IndexStepper setIntValue:anzDaten];
@@ -9137,7 +9137,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       }
       
       [SchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-      NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
+  //    NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[SchnittdatenDic description]);
       
       //   [nc postNotificationName:@"usbschnittdaten" object:self userInfo:SchnittdatenDic];
       //NSLog(@"reportUSB_SendArray delayok: %d",delayok);
@@ -9198,7 +9198,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    {
       if ([[[note userInfo]objectForKey:@"outposition"]intValue] > [PositionFeld intValue])
       {
-         NSLog(@"AVR  USBReadAktion outposition: %d",[[[note userInfo]objectForKey:@"outposition"]intValue]);
+         
+         NSLog(@"AVR  USBReadAktion code: %02X outposition: %d",[[[note userInfo]objectForKey:@"abschnittcode"]intValue],[[[note userInfo]objectForKey:@"outposition"]intValue]);
          [PositionFeld setIntValue:[[[note userInfo]objectForKey:@"outposition"]intValue]];
          [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"outposition"]intValue]];
          //[ProfilGraph setNeedsDisplay:YES];

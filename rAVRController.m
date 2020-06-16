@@ -531,7 +531,7 @@ private void button4_Click(object sender, EventArgs e)
          //double delta = [anfang timeIntervalSinceNow]*1000;
          //NSLog(@"delta: %f ms",delta);
          
-         fprintf(stderr,"\n");
+  //       fprintf(stderr,"\n");
          
          //sendbuffer[20] = pwm;
          //NSLog(@"writeCNCAbschnitt ********   code: %d  position: %d",sendbuffer[16],sendbuffer[17]);
@@ -650,7 +650,7 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"dataRead: %@",[dataRead description]);
       [self setLastValueRead:dataRead];
       int abschnittcode=(UInt8)buffer[0];     // code fuer Art des Pakets
-     NSLog(@"readUSB abschnittcode0: %d\thex: \t%02X\n",abschnittcode,abschnittcode);
+//     NSLog(@"readUSB abschnittcode0: %d\thex: \t%02X\n",abschnittcode,abschnittcode);
  /*
       for (int i=0; i<23;i++)
       {
@@ -666,7 +666,7 @@ private void button4_Click(object sender, EventArgs e)
          
          return;
       }
-  //   fprintf(stderr, "readUSB abschnittcode0:\t%02X\n",abschnittcode);
+//     fprintf(stderr, "\n         *********readUSB abschnittcode0:\t%02X\n",abschnittcode);
       if (abschnittcode==0xBA)
       {
          NSLog(@"readUSB BA");
@@ -712,15 +712,16 @@ private void button4_Click(object sender, EventArgs e)
          NSNumber* Abschnittnummer=[NSNumber numberWithInt:abschnittnummer];
          
          
-         NSLog(@"**readUSB abschnittnummer  buffer 4,5 inposition: %d",abschnittnummer);
+   //      NSLog(@"**readUSB  buffer 4,5 abschnittnummer  inposition: %d",abschnittnummer);
          
          [NotificationDic setObject:Abschnittnummer forKey:@"inposition"];
+         [NotificationDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"abschnittcode"];
          
          int ladeposition = (buffer[6] << 8) |  buffer[7];
          
          NSNumber* ladePosition=[NSNumber numberWithInt:ladeposition];
          //NSLog(@"**   ladePosition NSNumber: %d",[ladePosition intValue]);
-         NSLog(@"**readUSB   buffer 6 outposition: %d",ladeposition);
+  //       NSLog(@"**readUSB   buffer 6,7 ladeposition outposition: %d",ladeposition);
          [NotificationDic setObject:ladePosition forKey:@"outposition"];
          
          
