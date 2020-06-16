@@ -712,9 +712,9 @@ private void button4_Click(object sender, EventArgs e)
          
          [NotificationDic setObject:Abschnittnummer forKey:@"inposition"];
          
-         NSNumber* ladePosition=[NSNumber numberWithInt:(UInt8)buffer[6]];
+         NSNumber* ladePosition=[NSNumber numberWithInt:(UInt8)buffer[8]];
          //NSLog(@"**   ladePosition NSNumber: %d",[ladePosition intValue]);
-         NSLog(@"**readUSB   buffer 6 outposition: %d",(UInt8)buffer[6]);
+         NSLog(@"**readUSB   buffer 6 outposition: %d",(UInt8)buffer[8]);
          [NotificationDic setObject:ladePosition forKey:@"outposition"];
          
          
@@ -723,21 +723,7 @@ private void button4_Click(object sender, EventArgs e)
          uint8_t intervallL = (UInt8)buffer[15];
          [NotificationDic setObject:[NSNumber numberWithInt:intervallL] forKey:@"intervalll"];
          
-         //NSNumber* Abschnittnummer=[NSNumber numberWithInt:(UInt8)buffer[7]];
-         
-         
-         
-         //NSLog(@"**readUSB   buffer 8 %X",(UInt8)buffer[8]);
-         //NSNumber* slaveversionl=[NSNumber numberWithInt:(UInt8)buffer[8]];
-         //NSLog(@"**readUSB   buffer 9 %X",(UInt8)buffer[9]);
-         //NSNumber* slaveversionh=[NSNumber numberWithInt:(UInt8)buffer[9]];
-         int slaveversionint = (UInt8)buffer[9];
-         slaveversionint <<= 8;
-         slaveversionint += (UInt8)buffer[8];
-         //NSLog(@"**readUSB  slaveversionint: %d",slaveversionint);
-         
-         [NotificationDic setObject:[NSNumber numberWithInt:slaveversionint] forKey:@"slaveversion"];
-         
+             
          [NotificationDic setObject:[NSNumber numberWithInt:Stepperposition] forKey:@"stepperposition"];
          
          // cncstatus abfragen
@@ -1185,9 +1171,7 @@ private void button4_Click(object sender, EventArgs e)
    sendbuffer[0]=0x00;
    sendbuffer[20]=0;
    
- //  sendbuffer[16]=0x00;
- //  sendbuffer[8]=0;
-   Stepperposition=1;
+    Stepperposition=1;
    free(sendbuffer);
    
 }
@@ -1208,7 +1192,7 @@ private void button4_Click(object sender, EventArgs e)
    {
       sendbuffer[i] = 0;
    }
-   sendbuffer[8]=ein; // STROM ON
+   sendbuffer[22]=ein; // STROM ON
    sendbuffer[20]=0; // PWM
    
    // code fuer Task angeben:
@@ -1216,7 +1200,7 @@ private void button4_Click(object sender, EventArgs e)
    
    int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
    sendbuffer[16]=0x00;
-   sendbuffer[8]=0;
+   sendbuffer[22]=0;
    Stepperposition=1;
    free(sendbuffer);
     
@@ -1246,11 +1230,11 @@ private void button4_Click(object sender, EventArgs e)
     }
 
     */
-   sendbuffer[8]=ein;
+   sendbuffer[22]=ein;
    sendbuffer[16]=0xE4; // code fuer Stepperstrom 
    int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
    sendbuffer[16]=0x00;
-   sendbuffer[8]=0;
+   sendbuffer[22]=0;
    Stepperposition=1;
    free(sendbuffer);
    
