@@ -707,14 +707,20 @@ private void button4_Click(object sender, EventArgs e)
          // verschoben von oben 
          NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          
-         NSNumber* Abschnittnummer=[NSNumber numberWithInt:(UInt8)buffer[5]];
-         NSLog(@"**readUSB   buffer 5 inposition: %d",(UInt8)buffer[5]);
+         int abschnittnummer = (buffer[4] << 8) |  buffer[5];
+         
+         NSNumber* Abschnittnummer=[NSNumber numberWithInt:abschnittnummer];
+         
+         
+         NSLog(@"**readUSB abschnittnummer  buffer 4,5 inposition: %d",abschnittnummer);
          
          [NotificationDic setObject:Abschnittnummer forKey:@"inposition"];
          
-         NSNumber* ladePosition=[NSNumber numberWithInt:(UInt8)buffer[8]];
+         int ladeposition = (buffer[6] << 8) |  buffer[7];
+         
+         NSNumber* ladePosition=[NSNumber numberWithInt:ladeposition];
          //NSLog(@"**   ladePosition NSNumber: %d",[ladePosition intValue]);
-         NSLog(@"**readUSB   buffer 6 outposition: %d",(UInt8)buffer[8]);
+         NSLog(@"**readUSB   buffer 6 outposition: %d",ladeposition);
          [NotificationDic setObject:ladePosition forKey:@"outposition"];
          
          
