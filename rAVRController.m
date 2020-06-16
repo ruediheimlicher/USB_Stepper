@@ -487,11 +487,10 @@ private void button4_Click(object sender, EventArgs e)
          //NSLog(@"loop start");
          //NSDate *anfang = [NSDate date];
          //dauer1 = [dateA timeIntervalSinceNow]*1000;
-         fprintf(stderr,"writeCNCAbschnitt pfeilaktion: %d\n",pfeilaktion);
          for (i=0;i<[tempSchnittdatenArray count];i++)
          {
             int tempWert=[[tempSchnittdatenArray objectAtIndex:i]intValue];
-                       fprintf(stderr,"%d\t",tempWert);
+            //fprintf(stderr,"%d\t",tempWert);
             NSString*  tempHexString=[NSString stringWithFormat:@"%x",tempWert];
             theScanner = [NSScanner scannerWithString:tempHexString];
             if ([theScanner scanHexInt:&value])
@@ -537,62 +536,7 @@ private void button4_Click(object sender, EventArgs e)
          //sendbuffer[20] = pwm;
          //NSLog(@"writeCNCAbschnitt ********   code: %d  position: %d",sendbuffer[16],sendbuffer[17]);
          
-         /*
-          fprintf(stderr,"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
-          sendbuffer[0],(sendbuffer[1]& 0x80),sendbuffer[2],(sendbuffer[3]&0x80),
-          sendbuffer[4],sendbuffer[5],sendbuffer[6],sendbuffer[7],
-          sendbuffer[8],sendbuffer[9],sendbuffer[10],sendbuffer[11],
-          sendbuffer[12],sendbuffer[13],sendbuffer[14],sendbuffer[15],
-          sendbuffer[16],sendbuffer[17],sendbuffer[18],sendbuffer[19],
-          sendbuffer[20],sendbuffer[21],sendbuffer[22],sendbuffer[23]);
-          */
-         
-         /*
-          int schritteax = sendbuffer[1];
-          int negativ=1;
-          if (schritteax & 0x80)
-          {
-          negativ = -1;
-          }
-          schritteax &= 0x7F;
-          schritteax <<= 8;
-          schritteax += (sendbuffer[0] & 0xFF);
-          schritteax *= negativ;         
-          negativ = 1;
-          int schritteay = sendbuffer[3];
-          if (schritteay & 0x80)
-          {
-          negativ = -1;
-          }
-          schritteay &= 0x7F;
-          schritteay <<= 8;
-          schritteay += sendbuffer[2] & 0xFF;
-          schritteay *= negativ;
-          
-          int delayax = sendbuffer[5];
-          delayax &= 0x7F;
-          delayax <<= 8;
-          delayax += (sendbuffer[4] & 0xFF);
-          
-          int delayay = sendbuffer[7];
-          delayay &= 0x7F;
-          delayay <<= 8;
-          delayay += (sendbuffer[6] & 0xFF);
-          
-          
-          fprintf(stderr,"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
-          Stepperposition,schritteax,schritteay,delayax,delayay,sendbuffer[20],
-          sendbuffer[6],sendbuffer[7],
-          sendbuffer[8],sendbuffer[9],sendbuffer[10],sendbuffer[11],
-          sendbuffer[12],sendbuffer[13],sendbuffer[14],sendbuffer[15],
-          sendbuffer[16],sendbuffer[17],sendbuffer[18],sendbuffer[19]);
-          */
-         
-         
-         //NSLog(@"writeCNCAbschnitt  Stepperposition: %d  pwm: %d",Stepperposition,sendbuffer[20]);         
-         //dauer3 = [dateA timeIntervalSinceNow]*1000;
-         
-         
+         //NSLog(@"writeCNCAbschnitt  Stepperposition: %d  pwm: %d",Stepperposition,sendbuffer[20]);                 
          int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
          
          
@@ -605,7 +549,7 @@ private void button4_Click(object sender, EventArgs e)
          Stepperposition++;
          
          free (sendbuffer);
-      }
+      } // else
    }
    else
    {
@@ -706,7 +650,7 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"dataRead: %@",[dataRead description]);
       [self setLastValueRead:dataRead];
       int abschnittcode=(UInt8)buffer[0];     // code fuer Art des Pakets
-     // fprintf(stderr, "readUSB abschnittcode0: %d\thex: \t%02X\n",abschnittcode,abschnittcode);
+     NSLog(@"readUSB abschnittcode0: %d\thex: \t%02X\n",abschnittcode,abschnittcode);
  /*
       for (int i=0; i<23;i++)
       {
@@ -722,7 +666,7 @@ private void button4_Click(object sender, EventArgs e)
          
          return;
       }
-      fprintf(stderr, "readUSB abschnittcode0:\t%02X\n",abschnittcode);
+  //   fprintf(stderr, "readUSB abschnittcode0:\t%02X\n",abschnittcode);
       if (abschnittcode==0xBA)
       {
          NSLog(@"readUSB BA");
@@ -764,18 +708,19 @@ private void button4_Click(object sender, EventArgs e)
          NSMutableDictionary* NotificationDic=[[NSMutableDictionary alloc]initWithCapacity:0];
          
          NSNumber* Abschnittnummer=[NSNumber numberWithInt:(UInt8)buffer[5]];
-         //NSLog(@"**readUSB   buffer 5 %d",(UInt8)buffer[5]);
+         NSLog(@"**readUSB   buffer 5 inposition: %d",(UInt8)buffer[5]);
          
          [NotificationDic setObject:Abschnittnummer forKey:@"inposition"];
          
          NSNumber* ladePosition=[NSNumber numberWithInt:(UInt8)buffer[6]];
          //NSLog(@"**   ladePosition NSNumber: %d",[ladePosition intValue]);
-         //NSLog(@"**readUSB   buffer 6 %d",(UInt8)buffer[6]);
+         NSLog(@"**readUSB   buffer 6 outposition: %d",(UInt8)buffer[6]);
          [NotificationDic setObject:ladePosition forKey:@"outposition"];
          
-         uint8_t intervallH = (UInt8)buffer[8];
+         
+         uint8_t intervallH = (UInt8)buffer[14];
          [NotificationDic setObject:[NSNumber numberWithInt:intervallH] forKey:@"intervallh"];
-         uint8_t intervallL = (UInt8)buffer[9];
+         uint8_t intervallL = (UInt8)buffer[15];
          [NotificationDic setObject:[NSNumber numberWithInt:intervallL] forKey:@"intervalll"];
          
          //NSNumber* Abschnittnummer=[NSNumber numberWithInt:(UInt8)buffer[7]];
@@ -827,6 +772,10 @@ private void button4_Click(object sender, EventArgs e)
           17   position // first, last, ...
           18   indexh
           19   indexl
+          
+          20   pwm
+          
+          21   motorstatus: relevanter Motor fuer Abschnitt
           
           */
          NSMutableIndexSet* AnschlagSet = [NSMutableIndexSet indexSet]; // Index fuer zu loeschende Daten im Schnittdatenarray
@@ -1077,7 +1026,12 @@ private void button4_Click(object sender, EventArgs e)
                //NSLog(@"readUSB dauer vor writeCNCAbschnitt: %f ms", dauer);
                
                //NSLog(@"writeCNCAbschnitt abschnittcode: %X",abschnittcode);
+           //    NSLog(@"readUSB writeCNCAbschnitt");
+               
+               
                [self writeCNCAbschnitt];
+               
+               
                //dauer5 = [dateA timeIntervalSinceNow]*1000;
                //NSLog(@"readUSB dauer nach writeCNCAbschnitt: %f ms", dauer);
                

@@ -654,7 +654,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
    const char* manu = get_manu();
    //fprintf(stderr,"manu: %s\n",manu);
    NSString* Manu = [NSString stringWithUTF8String:manu];
-   
+   /*
    char* prod = get_prod();
    //fprintf(stderr,"prod: %s\n",prod);
    NSString* Prod= @"";
@@ -667,6 +667,8 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
       
       NSLog(@"Manu: %@ Prod: %@",Manu, Prod);
    }
+    */
+   NSString* Prod= @"***";
    NSDictionary* USBDatenDic = [NSDictionary dictionaryWithObjectsAndKeys:Prod,@"prod",Manu,@"manu", nil];
  //  [AVR setUSBDaten:USBDatenDic];
 

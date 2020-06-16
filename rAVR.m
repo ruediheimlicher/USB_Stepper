@@ -9042,7 +9042,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       int anzabschnitte = [SchnittdatenArray count];
       int l = [[SchnittdatenArray objectAtIndex:0]count];
       
-      if (([[[SchnittdatenArray objectAtIndex:0]objectAtIndex:1]intValue] <= 0x7F) || ([[[SchnittdatenArray objectAtIndex:0]objectAtIndex:9]intValue] <= 0x7F))
+      // Richtung feststellen
+      if (([[[SchnittdatenArray objectAtIndex:0]objectAtIndex:1]intValue] <= 0x7F) || ([[[SchnittdatenArray objectAtIndex:0]objectAtIndex:9]intValue] <= 0x7F)) // vorwaerts
       {
          [AnschlagLinksIndikator setTransparent:YES];
       }
@@ -9054,6 +9055,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
       //  [tempSchnittdatenArray replaceObjectAtIndex:20 withObject:[NSNumber numberWithInt:[AVR pwm]]];
       
+      // anzabschnitte in SchnuttdatenArray-objekt 0 anfuegen
       [[SchnittdatenArray objectAtIndex:0]addObject:[NSNumber numberWithInt:[SchnittdatenArray count]]];
       // von 32
       
@@ -9191,10 +9193,12 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 - (void)USBReadAktion:(NSNotification*)note
 {
    //NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
+  
    if ([[note userInfo]objectForKey:@"inposition"])
    {
       if ([[[note userInfo]objectForKey:@"outposition"]intValue] > [PositionFeld intValue])
       {
+         NSLog(@"AVR  USBReadAktion outposition: %d",[[[note userInfo]objectForKey:@"outposition"]intValue]);
          [PositionFeld setIntValue:[[[note userInfo]objectForKey:@"outposition"]intValue]];
          [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"outposition"]intValue]];
          //[ProfilGraph setNeedsDisplay:YES];
