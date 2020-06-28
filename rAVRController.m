@@ -562,7 +562,7 @@ private void button4_Click(object sender, EventArgs e)
       {
          if ([readTimer isValid])
          {
-            //NSLog(@"writeCNCAbschnitt timer inval");
+            NSLog(@"writeCNCAbschnitt timer inval");
             [readTimer invalidate];
          }
          readTimer = NULL;
@@ -650,7 +650,8 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"dataRead: %@",[dataRead description]);
       [self setLastValueRead:dataRead];
       int abschnittcode=(UInt8)buffer[0];     // code fuer Art des Pakets
-//     NSLog(@"readUSB abschnittcode0: %d\thex: \t%02X\n",abschnittcode,abschnittcode);
+
+      //     NSLog(@"readUSB abschnittcode0: %d\thex: \t%02X\n",abschnittcode,abschnittcode);
  /*
       for (int i=0; i<23;i++)
       {
