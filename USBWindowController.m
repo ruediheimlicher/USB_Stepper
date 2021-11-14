@@ -23,9 +23,6 @@ static NSString *	SystemVersion();
 int			SystemNummer;
 
 
-
-
-
 // LinkedList
 
 
