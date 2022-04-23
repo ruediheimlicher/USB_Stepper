@@ -192,14 +192,14 @@ const char* get_prod()
       
       CFTypeRef prod= IOHIDDeviceGetProperty(cnc->ref,CFSTR(kIOHIDProductKey));
       //CFStringRef manu = (CFStringRef)prop;
-      fprintf(stderr,"prod: %04lX\n",prod);
+      //fprintf(stderr,"prod: %04lX\n",prod);
       char prodstr[32];
-      printf("CFTypeRef type is: %s\n",CFStringGetCStringPtr(CFCopyTypeIDDescription(CFGetTypeID(prod)),kCFStringEncodingUTF8));
+      //printf("CFTypeRef type is: %s\n",CFStringGetCStringPtr(CFCopyTypeIDDescription(CFGetTypeID(prod)),kCFStringEncodingUTF8));
 
       //itoa(prod,prodstr,16);
      // const char* prodstr = CFStringGetCNumPtr(prod, kCFStringEncodingMacRoman);
       
-      fprintf(stderr,"prodstr: %s\n",prodstr);
+      //fprintf(stderr,"prodstr: %s\n",prodstr);
       
       return  prodstr; 
    }

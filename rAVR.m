@@ -2442,6 +2442,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [IndexStepper setIntValue:anzDaten];
    //NSLog(@"reportStopKnopf KoordinatenTabelle count: %d",[KoordinatenTabelle count]);
 }
+
 - (IBAction)reportStopKnopf:(id)sender
 {
    
@@ -3130,7 +3131,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (IBAction)reportSpeedStepper:(id)sender
 {
-   NSLog(@"reportSpeedStepper state: %d ",[sender intValue]); 
+   //NSLog(@"reportSpeedStepper state: %d ",[sender intValue]); 
    [SpeedFeld setIntValue:[sender intValue]];
    [CNC setSpeed:[sender intValue]];
    //[self saveSpeed];

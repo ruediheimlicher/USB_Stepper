@@ -344,7 +344,7 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"USB_SchnittdatenAktion Object 0 aus SchnittDatenArray aus note: %@",[[[[note userInfo]objectForKey:@"schnittdatenarray"]objectAtIndex:0] description]);
       
       [SchnittDatenArray setArray:[[note userInfo]objectForKey:@"schnittdatenarray"]];
-      NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
+      //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
       //[SchnittDatenArray removeLastObject];
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray %@",[[SchnittDatenArray objectAtIndex:0] description]);
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
@@ -476,7 +476,7 @@ private void button4_Click(object sender, EventArgs e)
          
        //  if (Stepperposition > 34)
          {
-         NSLog(@"Stepper 20 writeCNCAbschnitt tempSchnittdatenArray: %@",[tempSchnittdatenArray description]);
+         //NSLog(@"Stepper 20 writeCNCAbschnitt tempSchnittdatenArray: %@",[tempSchnittdatenArray description]);
          }
          
          [tempSchnittdatenArray replaceObjectAtIndex:20 withObject:[NSNumber numberWithInt:[AVR pwm]]];
@@ -488,7 +488,7 @@ private void button4_Click(object sender, EventArgs e)
          //NSLog(@"loop start");
          //NSDate *anfang = [NSDate date];
          //dauer1 = [dateA timeIntervalSinceNow]*1000;
-         fprintf(stderr,"\nStepper20\n");
+         fprintf(stderr,"Step %d: \t",Stepperposition);
          for (i=0;i<[tempSchnittdatenArray count];i++)
          {
             int tempWert=[[tempSchnittdatenArray objectAtIndex:i]intValue];
@@ -910,8 +910,8 @@ private void button4_Click(object sender, EventArgs e)
                
             case 0xD0:
             {
-               NSLog(@"letzter Abschnitt");
-            [NotificationDic setObject:[NSNumber numberWithInt:0x12] forKey:@"abschnittcode"];
+               //NSLog(@"letzter Abschnitt");
+               [NotificationDic setObject:[NSNumber numberWithInt:0x12] forKey:@"abschnittcode"];
                [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"last"];
                NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
                [nc postNotificationName:@"usbread" object:self userInfo:NotificationDic];
@@ -920,7 +920,7 @@ private void button4_Click(object sender, EventArgs e)
                
             case 0xAD: // end letzter Abschnitt
             {
-               NSLog(@"letzter Abschnitt fertig");
+               //NSLog(@"letzter Abschnitt fertig");
                [NotificationDic setObject:[NSNumber numberWithInt:0x16] forKey:@"abschnittcode"];
                [NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"last"];
                NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];

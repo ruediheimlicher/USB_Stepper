@@ -729,7 +729,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    
    //NSLog(@"tempArray indexl: %d",[[derDatenDic objectForKey:@"indexl"]intValue]);
  //  NSLog(@"SchnittdatenVonDic tempArray: %@",[tempArray description]);
-   //NSLog(@"SchnittdatenVonDic tempArray count: %d",[tempArray count]);
+ //  NSLog(@"20 SchnittdatenVonDic tempArray count: %d",[tempArray count]);
    
    
    return tempArray;
