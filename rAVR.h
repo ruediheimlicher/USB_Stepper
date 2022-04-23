@@ -340,6 +340,7 @@
 - (IBAction)reportDrehgeber:(id)sender;
 - (IBAction)reportStartKnopf:(id)sender;
 - (IBAction)reportStopKnopf:(id)sender;
+- (void)setLastStepperposition;
 
 - (NSDictionary*)RahmenDic;
 - (void)DC_ON:(int)pwm;

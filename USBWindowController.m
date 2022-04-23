@@ -17,7 +17,7 @@ static NSString *SystemVersion ()
 return systemVersion;
 }
 
-@implementation IOWarriorWindowController
+@implementation USBWindowController
 
 static NSString *	SystemVersion();
 int			SystemNummer;
@@ -242,7 +242,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
    }
    else
    {
-      NSLog(@"USBOpen: found rawhid device %d",usbstatus);
+      //NSLog(@"USBOpen: found rawhid device %d",usbstatus);
       [AVR setUSB_Device_Status:1];
       const char* manu = get_manu();
       //fprintf(stderr,"manu: %s\n",manu);
@@ -252,7 +252,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
       prod="1234\0";
       //fprintf(stderr,"prod: %s\n",prod);
       NSString* Prod = [[NSString alloc] initWithCString:prod encoding:NSUTF8StringEncoding];
-      NSLog(@"USBopen Manu: %@ Prod: %@",Manu, Prod);
+      //NSLog(@"USBopen Manu: %@ Prod: %@",Manu, Prod);
       NSDictionary* USBDatenDic = [NSDictionary dictionaryWithObjectsAndKeys:Prod,@"prod",Manu,@"manu", boardString, @"boardstring", nil];
       [AVR setUSBDaten:USBDatenDic];
     //  NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];

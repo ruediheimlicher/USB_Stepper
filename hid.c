@@ -285,6 +285,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    CFRunLoopSourceRef      runLoopSource;
    
    
+   
    //Create a master port for communication with the I/O Kit
    result = IOMasterPort(MACH_PORT_NULL, &masterPort);
    if (result || !masterPort)
@@ -296,8 +297,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    //add its run loop event source to the programs run loop
    gNotifyPort = IONotificationPortCreate(masterPort);
    runLoopSource = IONotificationPortGetRunLoopSource(gNotifyPort);
-   CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource,
-                      kCFRunLoopDefaultMode);
+   CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopDefaultMode);
    // ***
   /* 
    IOServiceAddMatchingNotification(
@@ -314,64 +314,97 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    CFMutableDictionaryRef dict;
    CFNumberRef num;
    IOReturn ret;
-	hid_t *p;
-	int count=0;
+   hid_t *p;
+   int count=0;
    //fprintf(stderr,"fprintf rawhid_open\n");
-	if (first_hid) free_all_hid();
-	//printf("rawhid_open, max=%d\n", max);
+   if (first_hid) free_all_hid();
+   //printf("rawhid_open, max=%d\n", max);
    //fflush (stdout); 
-	if (max < 1) return 0;
+   if (max < 1) return 0;
    // Start the HID Manager
+   if (hid_manager) 
+   {
+      CFRelease(hid_manager);
+      hid_manager = NULL;
+   }
+   
    // http://developer.apple.com/technotes/tn2007/tn2187.html
-	if (!hid_manager) {
+   if (!hid_manager) {
       hid_manager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
-      if (hid_manager == NULL || CFGetTypeID(hid_manager) != IOHIDManagerGetTypeID()) {
-         if (hid_manager) CFRelease(hid_manager);
+      
+      if (hid_manager == NULL || CFGetTypeID(hid_manager) != IOHIDManagerGetTypeID()) 
+      {
+         if (hid_manager) 
+         {
+            CFRelease(hid_manager);
+            hid_manager = NULL;
+         }
          return 0;
       }
-	}
-	if (vid > 0 || pid > 0 || usage_page > 0 || usage > 0) {
-		// Tell the HID Manager what type of devices we want
+   }
+   if (vid > 0 || pid > 0 || usage_page > 0 || usage > 0) 
+   {
+      // Tell the HID Manager what type of devices we want
       dict = CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
                                        &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
       if (!dict) return 0;
-		if (vid > 0) 
+      if (vid > 0) 
       {
-			num = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &vid);
-			CFDictionarySetValue(dict, CFSTR(kIOHIDVendorIDKey), num);
-			CFRelease(num);
-		}
-		if (pid > 0) 
+         num = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &vid);
+         CFDictionarySetValue(dict, CFSTR(kIOHIDVendorIDKey), num);
+         //printf("vid > 0\n");
+         //CFShow(num);
+         CFRelease(num);
+         
+      }
+      if (pid > 0) 
       {
-			num = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &pid);
-			CFDictionarySetValue(dict, CFSTR(kIOHIDProductIDKey), num);
-			CFRelease(num);
-		}
-		if (usage_page > 0) 
+         num = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &pid);
+         CFDictionarySetValue(dict, CFSTR(kIOHIDProductIDKey), num);
+         
+         //printf("pid > 0 ");
+         //CFShow(num);
+         CFRelease(num);
+         
+      }
+      if (usage_page > 0) 
       {
-			num = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &usage_page);
-			CFDictionarySetValue(dict, CFSTR(kIOHIDPrimaryUsagePageKey), num);
-			CFRelease(num);
-		}
-		if (usage > 0) 
+         num = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &usage_page);
+         CFDictionarySetValue(dict, CFSTR(kIOHIDPrimaryUsagePageKey), num);
+         //printf("usage_page > 0\n");
+         //CFShow(num);
+         CFRelease(num);
+      }
+      if (usage > 0) 
       {
-			num = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &usage);
-			CFDictionarySetValue(dict, CFSTR(kIOHIDPrimaryUsageKey), num);
-			CFRelease(num);
-		}
+         num = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &usage);
+         CFDictionarySetValue(dict, CFSTR(kIOHIDPrimaryUsageKey), num);
+         //printf("usage > 0\n");
+          //  CFShow(num);
+         CFRelease(num);
+      }
       IOHIDManagerSetDeviceMatching(hid_manager, dict);
+      
       CFRelease(dict);
-	} 
+   
+   
+   
+   } 
    else 
    {
       IOHIDManagerSetDeviceMatching(hid_manager, NULL);
-	}
-	// set up a callbacks for device attach & detach
-   IOHIDManagerScheduleWithRunLoop(hid_manager, CFRunLoopGetCurrent(),
-                                   kCFRunLoopDefaultMode);
+   }
+   
+   // set up a callbacks for device attach & detach
+   
+   CFRunLoopRef rl = CFRunLoopGetCurrent();
+ 
+   
+   IOHIDManagerScheduleWithRunLoop(hid_manager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
    IOHIDManagerRegisterDeviceMatchingCallback(hid_manager, attach_callback, NULL);
-	IOHIDManagerRegisterDeviceRemovalCallback(hid_manager, detach_callback, NULL);
+   IOHIDManagerRegisterDeviceRemovalCallback(hid_manager, detach_callback, NULL);
    ret = IOHIDManagerOpen(hid_manager, kIOHIDOptionsTypeNone);
+   printf("ret %d\n",ret);
    if (ret != kIOReturnSuccess) 
    {
       IOHIDManagerUnscheduleFromRunLoop(hid_manager,
@@ -379,14 +412,20 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
       CFRelease(hid_manager);
       return 0;
    }
-//	printf("run loop\n");
-	// let it do the callback for all devices
-	while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) == kCFRunLoopRunHandledSource) ;
-	// count up how many were added by the callback
-	for (p = first_hid; p; p = p->next) count++;
+//   printf("run loop\n");
+   // let it do the callback for all devices
+   while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true) == kCFRunLoopRunHandledSource) ;
+   // count up how many were added by the callback
+   for (p = first_hid; p; p = p->next) count++;
    
    usbstatus=count;
-	return count;
+   if (count == 0)
+       {
+        //  if (!hid || !hid->open || !hid->ref) return;
+          free_all_hid();
+  //    CFRelease(hid_manager);
+   }
+   return count;
 }
 
 

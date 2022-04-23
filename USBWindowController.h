@@ -36,7 +36,7 @@
 // int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
 // extern int rawhid_recv( );
 
-@interface IOWarriorWindowController : NSObject
+@interface USBWindowController : NSObject
 {
     BOOL									isReading;
 	BOOL									isTracking;
@@ -92,10 +92,7 @@
    int               halt_status;
     NSMutableIndexSet* HomeAnschlagSet;
    char*      newsendbuffer;
-  
 }
-
-
 
 - (void)keyDown:(NSEvent*)derEvent;
 - (IBAction)showADWandler:(id)sender;
@@ -108,16 +105,14 @@
 @end
 
 
-@interface IOWarriorWindowController(rADWandlerController)
+@interface USBWindowController(rADWandlerController)
 //- (id)initWithFrame:(NSRect)frame;
 - (IBAction)showADWandler:(id)sender;
 - (IBAction)saveMehrkanalDaten:(id)sender;
 @end
 
-
-
 #pragma mark AVRController
-@interface IOWarriorWindowController(rAVRController)
+@interface USBWindowController(rAVRController)
 - (IBAction)showAVR:(id)sender;
 - (IBAction)openProfil:(id)sender;
 //- (int)USBOpen;

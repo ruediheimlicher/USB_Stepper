@@ -1006,8 +1006,7 @@ return returnInt;
 
 	CNCdataPfad=[NSHomeDirectory() stringByAppendingPathComponent:@"documents/CNCData"];
 	//NSLog(@"CNCdataPfad: %@",CNCdataPfad);
-   //CNC_PList = [[NSMutableDictionary alloc]initWithCapacity:0];
-   
+    
    
 	n=0;
 	aktuellerTag=0;
@@ -1094,8 +1093,7 @@ return returnInt;
 	[tempArray addObject:tempDic];
 	
 	CNC_PList = [[NSMutableDictionary alloc]initWithDictionary:[self readCNC_PList]];
-   //CNC_PList = [self readCNC_PList];
-   
+    
    NSRect RaumViewFeld;
    RaumViewFeld=[ProfilFeld  frame]; 
    
@@ -2410,7 +2408,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 	//NSLog(@"reportStopKnopf SchnittdatenArray: %@",[SchnittdatenArray description]);
    //NSLog(@"reportStopKnopf KoordinatenTabelle: %@",[KoordinatenTabelle description]);
    
-   NSLog(@"reportStopKnopf KoordinatenString: \n%@",KoordinatenString );
+//   NSLog(@"reportStopKnopf KoordinatenString: \n%@",KoordinatenString );
 //   NSLog(@"KoordinatenStringArray: \n%@",KoordinatenStringArray);
 	[CNCPositionFeld setIntValue:0];
    [PositionFeld setStringValue:@""];
@@ -3159,6 +3157,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       
       if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
       {
+         NSLog(@"AVR  manRichtung retour");
          return;
       }
       
@@ -3177,10 +3176,10 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       int index=0;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       NSLog(@"AVR  manRichtung ManArray count: %d",[ManArray count]);
-
+      NSLog(@"AVR  manRichtung ManArray %@",ManArray);
       //Horizontal bis Anschlag
       
-   int delta= 0xFF;
+      int delta= 0xFF;
      switch (richtung)
       {
          case 1: // right
@@ -3215,7 +3214,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
      
       
       
- //     NSLog(@"index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      NSLog(@"vor index++ index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
       index++;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       //NSLog(@"A");
@@ -3292,7 +3291,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
-      //NSLog(@"AVR  reportManLeft HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+      NSLog(@"AVR  ManRichtung HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
       
@@ -3318,7 +3317,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
     down:   4
     */
    {
-      NSLog(@"AVR  reportManLeft tag: %d",[sender tag]);
+      //NSLog(@"AVR  reportManLeft tag: %d",[sender tag]);
       
       [self ManRichtung:3];
       return;
@@ -5514,12 +5513,6 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
        CNC_Eingabe =[[rEinstellungen alloc]init];
    }
 //   [CNC_Eingabe setPList:[self readCNC_PList]];
-   /*
-   NSArray* LibElementArray=[self readLib];
-   NSArray* LibElementnamenArray=[LibElementArray valueForKey:@"name"];
-   
-   NSLog(@"LibArray: %@",[LibElementnamenArray description]);
-    */
    //NSLog(@"reportNeueLinie CNC_Eingabe: %@",[[CNC_Eingabe window]title]);
    NSMutableDictionary* datenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
 
@@ -8676,7 +8669,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 //	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
- 
+   
    
 }
 
@@ -9001,6 +8994,11 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
 }
 
+- (void)setLastStepperposition
+{
+[ProfilGraph setStepperposition:[SchnittdatenArray count]];
+[ProfilGraph setNeedsDisplay:YES];
+}
 
 #pragma mark USB_Aktion
 - (IBAction)reportUSB_sendArray:(id)sender
@@ -9115,7 +9113,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       [CNC_Stoptaste setState:0];
       [PositionFeld setIntValue:0];
       [ProfilGraph setStepperposition:0];
-      
+      [ProfilGraph setNeedsDisplay:YES];
       //NSLog(@"reportUSB_sendArray cncposition: %d \nSchnittdatenArray: %@",cncposition,[[SchnittdatenArray objectAtIndex:0]description]);
       // Array an USB schicken
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
@@ -9192,25 +9190,54 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 - (void)USBReadAktion:(NSNotification*)note
 {
-   //NSLog(@"AVR  USBReadAktion note: %@",[[note userInfo]description]);
+//   NSLog(@"***********  AVR  USBReadAktion note: %@",[[note userInfo]description]);
   
    if ([[note userInfo]objectForKey:@"inposition"])
    {
       if ([[[note userInfo]objectForKey:@"outposition"]intValue] > [PositionFeld intValue])
       {
          
-         NSLog(@"AVR  USBReadAktion code: %02X outposition: %d",[[[note userInfo]objectForKey:@"abschnittcode"]intValue],[[[note userInfo]objectForKey:@"outposition"]intValue]);
+ //        NSLog(@"AVR  USBReadAktion code: %02X outposition: %d",[[[note userInfo]objectForKey:@"abschnittcode"]intValue],[[[note userInfo]objectForKey:@"outposition"]intValue]);
+         
          [PositionFeld setIntValue:[[[note userInfo]objectForKey:@"outposition"]intValue]];
-         [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"outposition"]intValue]];
-         //[ProfilGraph setNeedsDisplay:YES];
+         //[ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"outposition"]intValue]];
+        // [ProfilGraph setNeedsDisplay:YES];
+      
       }
+      
+      uint16_t anzsteps = [SchnittdatenArray count];
+//      NSLog(@"AVR  USBReadAktion cncpositionsfeld: %d anzsteps: %d",[CNCPositionFeld intValue],anzsteps);
+      uint16_t stepperposition = [[[note userInfo]objectForKey:@"stepperposition"]intValue]-1;
+      [CNCPositionFeld setIntValue:stepperposition];
       if ([[[note userInfo]objectForKey:@"stepperposition"]intValue] > [CNCPositionFeld intValue])
       {
-         [CNCPositionFeld setIntValue:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
-         //[ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"stepperposition"]intValue]];
-         //[ProfilGraph setNeedsDisplay:YES];
+//         NSLog(@"AVR  USBReadAktion stepperposition > cncpos: %d ",stepperposition);
+         [CNCPositionFeld setIntValue:[[[note userInfo]objectForKey:@"stepperposition"]intValue]-1];
+         [ProfilGraph setStepperposition:[[[note userInfo]objectForKey:@"stepperposition"]intValue]-1];
+  //       [ProfilGraph setNeedsDisplay:YES];
       }
+       
    }
+   
+   if ([[note userInfo]objectForKey:@"abschnittcode"])
+   {
+      uint8_t abschnittcode = [[[note userInfo]objectForKey:@"abschnittcode"]intValue];
+  //    NSLog(@"AVR  USBReadAktion abschnittcode: %02X",abschnittcode);
+      uint16_t anzsteps = [SchnittdatenArray count];
+      uint16_t stepperposition = [[[note userInfo]objectForKey:@"stepperposition"]intValue];
+      switch (abschnittcode)
+      {
+      case 0xAD:
+         {
+   //         NSLog(@"AVR  USBReadAktion abschnittcode AD anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
+            [ProfilGraph setStepperposition:stepperposition];
+            [ProfilGraph setNeedsDisplay:YES];
+
+         }break;
+      }// switch abschnittcode
+      
+   }
+   
    
     if ([[note userInfo]objectForKey:@"intervallh"] && [[note userInfo]objectForKey:@"intervalll"])
     {
@@ -9260,7 +9287,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             
          case 0xAD:
          {
-            //  NSLog(@"AVR End Abschnitt von D");
+              NSLog(@"AVR End Abschnitt von D");
          }break;
             
          case 0xB5:
