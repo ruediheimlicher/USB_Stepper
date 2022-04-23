@@ -344,8 +344,8 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"USB_SchnittdatenAktion Object 0 aus SchnittDatenArray aus note: %@",[[[[note userInfo]objectForKey:@"schnittdatenarray"]objectAtIndex:0] description]);
       
       [SchnittDatenArray setArray:[[note userInfo]objectForKey:@"schnittdatenarray"]];
-      //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
-      
+      NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
+      //[SchnittDatenArray removeLastObject];
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray %@",[[SchnittDatenArray objectAtIndex:0] description]);
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
       
@@ -473,9 +473,10 @@ private void button4_Click(object sender, EventArgs e)
          
          // sendbuffer mit Daten von Schnittdatenarray an pos Stepperposition fuellen
          NSMutableArray* tempSchnittdatenArray=(NSMutableArray*)[SchnittDatenArray objectAtIndex:Stepperposition];
-         if (Stepperposition > 34)
+         
+       //  if (Stepperposition > 34)
          {
-         //NSLog(@"writeCNCAbschnitt tempSchnittdatenArray: %@",[tempSchnittdatenArray description]);
+         NSLog(@"Stepper 20 writeCNCAbschnitt tempSchnittdatenArray: %@",[tempSchnittdatenArray description]);
          }
          
          [tempSchnittdatenArray replaceObjectAtIndex:20 withObject:[NSNumber numberWithInt:[AVR pwm]]];
@@ -487,15 +488,17 @@ private void button4_Click(object sender, EventArgs e)
          //NSLog(@"loop start");
          //NSDate *anfang = [NSDate date];
          //dauer1 = [dateA timeIntervalSinceNow]*1000;
+         fprintf(stderr,"\nStepper20\n");
          for (i=0;i<[tempSchnittdatenArray count];i++)
          {
             int tempWert=[[tempSchnittdatenArray objectAtIndex:i]intValue];
-            //fprintf(stderr,"%d\t",tempWert);
+            fprintf(stderr,"%d\t",tempWert);
             NSString*  tempHexString=[NSString stringWithFormat:@"%x",tempWert];
             theScanner = [NSScanner scannerWithString:tempHexString];
             if ([theScanner scanHexInt:&value])
             {
                sendbuffer[i] = (char)value;
+               
             }
             else
             {
@@ -526,6 +529,7 @@ private void button4_Click(object sender, EventArgs e)
             
             //sendbuffer[i]=(char)[[tempSchnittdatenArray objectAtIndex:i]UTF8String];
          }
+                 fprintf(stderr,"\n");
          
          //dauer2 = [dateA timeIntervalSinceNow]*1000;
          //double delta = [anfang timeIntervalSinceNow]*1000;

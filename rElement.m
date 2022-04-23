@@ -57,68 +57,7 @@
       
    }
 
-   /*
-    {
-    BOOL ElementDa=NO;
-    BOOL istOrdner;
-    NSFileManager *Filemanager = [NSFileManager defaultManager];
-    NSString* USBPfad=[[NSHomeDirectory() stringByAppendingFormat:@"%@%@",@"/Documents",@"/CNCDaten"]retain];
-    ElementDa= ([Filemanager fileExistsAtPath:USBPfad isDirectory:&istOrdner]&&istOrdner);
-    NSLog(@"mountedVolume:    USBPfad: %@",USBPfad );	
-    if (ElementDa)
-    {
-    ;
-    }
-    else
-    {
-    BOOL OrdnerOK=[Filemanager createDirectoryAtPath:USBPfad attributes:NULL];
-    //Datenordner ist noch leer
-    
-    }
-    //	NSLog(@"savePListAktion: PListDic: %@",[PListDic description]);
-    //	NSLog(@"savePListAktion: PListDic: Testarray:  %@",[[PListDic objectForKey:@"testarray"]description]);
-    NSString* PListName=@"CNC.plist";
-    
-    NSString* PListPfad;
-    //NSLog(@"\n\n");
-    //NSLog(@"savePListAktion: SndCalcPfad: %@ ",SndCalcPfad);
-    PListPfad=[USBPfad stringByAppendingPathComponent:PListName];
-    //	NSLog(@"savePListAktion: PListPfad: %@ ",PListPfad);
-    
-    if (PListPfad)
-    {
-    NSLog(@"savePListAktion: PListPfad: %@ ",PListPfad);
-    
-    NSMutableDictionary* tempPListDic;
-    NSFileManager *Filemanager=[NSFileManager defaultManager];
-    if ([Filemanager fileExistsAtPath:PListPfad])
-    {
-    tempPListDic=[NSMutableDictionary dictionaryWithContentsOfFile:PListPfad];
-    //NSLog(@"savePListAktion: vorhandener PListDic: %@",[tempPListDic description]);
-    }
-    
-    else
-    {
-    tempPListDic=[[[NSMutableDictionary alloc]initWithCapacity:0]autorelease];
-    NSLog(@"savePListAktion: neuer PListDic");
-    }
-    //[tempPListDic setObject:[NSNumber numberWithInt:AnzahlAufgaben] forKey:@"anzahlaufgaben"];
-    //[tempPListDic setObject:[NSNumber numberWithInt:MaximalZeit] forKey:@"zeit"];
-    
-    if ([[AVR KoordinatenTabelle]count])
-    {
-    [tempPListDic setObject:[AVR KoordinatenTabelle] forKey:@"koordinatentabelle"];
-    }
-    //NSLog(@"savePListAktion: gesicherter PListDic: %@",[tempPListDic description]);
-    
-    BOOL PListOK=[tempPListDic writeToFile:PListPfad atomically:YES];
-    
-    }
-    //	NSLog(@"PListOK: %d",PListOK);
-    
-    //[tempUserInfo release];
-    }
-    */
+
    return erfolg;
 }
 

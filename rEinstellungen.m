@@ -1088,12 +1088,6 @@
    
 	
    zoom=1;
-   /*  
-    ElementLibArray = [[self readLib]retain];
-    NSLog(@"Einstellungen init ElementLibArray: %@",[ElementLibArray valueForKey:@"name"]);
-    LibElementName = [[NSString string]retain];
-    LibElementArray = [[[NSMutableArray alloc]initWithCapacity:0]retain];
-    */
    
    FormNamenArray = [NSArray arrayWithObjects:@"Kreis",@"Ellipse",@"Quadrat",@"Rechteck", nil];
    PList = [[NSMutableDictionary alloc]initWithCapacity:0];
@@ -1190,7 +1184,6 @@
    
    
    
-   //   ElementLibArray = (NSMutableArray*)[[self readLib]retain];
    //NSLog(@"Einstellungen awake ElementLibArray: %@",[ElementLibArray valueForKey:@"name"]);
    LibElementName = [NSString string];
    LibElementArray = [[NSMutableArray alloc]initWithCapacity:0];

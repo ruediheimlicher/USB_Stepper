@@ -25,7 +25,7 @@
 
 #define CNC_STOP              1
 
-#define VERSIONSLAVE "SLAVE.12.502"
+#define VERSIONSLAVE "SLAVE.20.2204"
 //#define VERSIONSLAVE "USB.405"
 /*
 @interface rPfeiltasteCell : NSButtonCell 
@@ -62,7 +62,7 @@
 
 
 
-@interface rAVR : NSWindowController <NSTableViewDataSource,NSTableViewDelegate>
+@interface rAVR : NSWindowController <NSTableViewDataSource,NSTableViewDelegate, NSSoundDelegate>
 {
    NSMutableDictionary*		CNC_PList;
    
@@ -324,6 +324,8 @@
    
    
    rProfildruckView*       Profilfeld;
+   
+   NSSound *tickPlayer;
    }
 @property (nonatomic)  int    Kote;
 - (NSMutableDictionary*)readCNC_PList;
