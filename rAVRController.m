@@ -421,7 +421,7 @@ private void button4_Click(object sender, EventArgs e)
 
 - (void)writeCNCAbschnitt
 {
-   //NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittDatenArray count]);
+   NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittDatenArray count]);
    //NSLog(@"writeCNCAbschnitt SchnittDatenArray anz: %d\n SchnittDatenArray: %@",[SchnittDatenArray count],[SchnittDatenArray description]);
    
    /*
@@ -488,7 +488,8 @@ private void button4_Click(object sender, EventArgs e)
          //NSLog(@"loop start");
          //NSDate *anfang = [NSDate date];
          //dauer1 = [dateA timeIntervalSinceNow]*1000;
-         fprintf(stderr,"Step %d: \t",Stepperposition);
+         fprintf(stderr,"\nStepper20\n");
+         fprintf(stderr,"writeCNCAbschnitt Stepperposition %d: *\t\t",Stepperposition);
          for (i=0;i<[tempSchnittdatenArray count];i++)
          {
             int tempWert=[[tempSchnittdatenArray objectAtIndex:i]intValue];
@@ -529,7 +530,7 @@ private void button4_Click(object sender, EventArgs e)
             
             //sendbuffer[i]=(char)[[tempSchnittdatenArray objectAtIndex:i]UTF8String];
          }
-                 fprintf(stderr,"\n");
+         fprintf(stderr,"\n");
          
          //dauer2 = [dateA timeIntervalSinceNow]*1000;
          //double delta = [anfang timeIntervalSinceNow]*1000;
@@ -547,7 +548,7 @@ private void button4_Click(object sender, EventArgs e)
          //dauer4 = [dateA timeIntervalSinceNow]*1000;
          //         int senderfolg= rawhid_send(0, newsendbuffer, 32, 50);
          
-         //NSLog(@"writeCNCAbschnitt senderfolg: %X Stepperposition: %d  ",senderfolg,Stepperposition);
+         NSLog(@"writeCNCAbschnitt senderfolg: %X Stepperposition: %d  ",senderfolg,Stepperposition);
          //NSLog(@"writeCNCAbschnitt End Stepperposition: %d ",Stepperposition);
          
          Stepperposition++;
@@ -1082,7 +1083,7 @@ private void button4_Click(object sender, EventArgs e)
       
       if (mausistdown == 1) // mousedown
       {
-         NSLog(@" ********************* AVRController  PfeilAktion mousedown=1 ");
+         NSLog(@" ********************* AVRController  PfeilAktion mousedown=1  Stepperposition: %d",Stepperposition);
          
    //   [AVR setBusy:1];
       }
@@ -1091,7 +1092,7 @@ private void button4_Click(object sender, EventArgs e)
       {
          int cncbusy = [AVR busy];
          
-          NSLog(@"PfeilAktion mouseup cncbusy: %d",cncbusy);
+          //NSLog(@"PfeilAktion mouseup cncbusy: %d",cncbusy);
          pfeilaktion=1; // in writeCNCAbschnitt wird Datenserie beendet
          NSLog(@" ********************* AVRController PfeilAktion mouseup pwm: %d",pwm);
          char*      sendbuffer;

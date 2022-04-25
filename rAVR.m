@@ -444,7 +444,7 @@ float det(float v0[],float v1[])
 
 - (void)mouseUp:(NSEvent *)event
 {
-   NSLog(@"AVR mouseup");
+   NSLog(@"Pfeiltaste mouseup");
   
    richtung=[self tag];
    NSLog(@"rPfeiltaste mouseUp Pfeiltaste richtung: %d",richtung);
@@ -3811,7 +3811,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       {
          aktpwm = [DC_PWM intValue];
       }
-      NSLog(@"AVR  manRichtung aktpwm: %d",aktpwm);
+      //NSLog(@"AVR  manRichtung aktpwm: %d",aktpwm);
       [self setStepperstrom:aktpwm];
       NSMutableArray* ManArray = [[NSMutableArray alloc]initWithCapacity:0];
       
@@ -3820,7 +3820,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSPoint PositionB = NSMakePoint(0, 0);
       int index=0;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
-      NSLog(@"AVR  manRichtung ManArray count: %d",[ManArray count]);
+      //NSLog(@"AVR  manRichtung ManArray count: %d",[ManArray count]);
       NSLog(@"AVR  manRichtung ManArray %@",ManArray);
       //Horizontal bis Anschlag
       
@@ -3864,7 +3864,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       //NSLog(@"A");
       
-      NSLog(@"AVR  manRichtung ManArray count: %d",[ManArray count]);
+      //NSLog(@"AVR  manRichtung ManArray count: %d",[ManArray count]);
       
       // von reportOberkanteAnfahren
       int i=0;
@@ -3897,11 +3897,13 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          // AB
          if ([CNC_Seite1Check state])
          {
+            NSLog(@"CNC_Seite1Check");
             [tempDic setObject:tempStartPunktAString forKey:@"startpunkta"];
             [tempDic setObject:tempEndPunktAString forKey:@"endpunkta"];
          }
          if ([CNC_Seite2Check state])
          {
+            NSLog(@"CNC_Seite2Check");
             [tempDic setObject:tempStartPunktBString forKey:@"startpunktb"];         
             [tempDic setObject:tempEndPunktBString forKey:@"endpunktb"];
          }
@@ -3936,12 +3938,12 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
       [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
-      NSLog(@"AVR  ManRichtung HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+      //NSLog(@"AVR  ManRichtung HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"home"]; // 
       
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-      NSLog(@"**********        reportManRichtung SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+      //NSLog(@"**********        reportManRichtung %d SchnittdatenDic: \n%@",richtung,[HomeSchnittdatenDic description]);
       
       NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
       [nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
@@ -4252,7 +4254,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
     left:   3
     down:   4
     */
-//   [self ManRichtung:4];
+   [self ManRichtung:4];
    return;
 
    if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
@@ -5070,6 +5072,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    if ([[note userInfo]objectForKey:@"richtung"]&&[[[note userInfo]objectForKey:@"richtung"]intValue])
    {
       quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
+      NSLog(@"AVR PfeilAktion start note: %d",quelle);
       if ([[note userInfo]objectForKey:@"push"])
       {
          mausistdown = [[[note userInfo]objectForKey:@"push"]intValue];
@@ -5080,12 +5083,12 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             {
                case MANDOWN:
                {
-                  //NSLog(@"AVR PfeilAktion mandown");
+                  NSLog(@"AVR PfeilAktion mandown");
                   [self reportManDown:NULL];
                }break;
                case MANUP:
                {
-                  //NSLog(@"AVR PfeilAktion manup");
+                  NSLog(@"AVR PfeilAktion manup");
                   [self reportManUp:NULL];
                }break;
                case MANLEFT:
