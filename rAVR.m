@@ -9664,6 +9664,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 #pragma mark USB_Aktion
 - (IBAction)reportUSB_sendArray:(id)sender
 {
+   
    if ([SchnittdatenArray count]==0)
    {
       NSLog(@"reportUSB_sendArray SchnittdatenArray leer");
@@ -9929,10 +9930,10 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       homeanschlagCount = [[[note userInfo]objectForKey:@"homeanschlagset"]count];
    }
    
-   if([[note userInfo]objectForKey:@"abschnittfertig"])
+   if([[note userInfo]objectForKey:@"abschnittcode"])
    {
-      int abschnittfertig=[[[note userInfo]objectForKey:@"abschnittfertig"]intValue];
-      switch (abschnittfertig)
+      int abschnittcode=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];
+      switch (abschnittcode)
       {
          case 0xAA:
          {
@@ -9957,7 +9958,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             
          case 0xB5:
          {
-            NSLog(@"AVR Anschlag A0 home first");
+            NSLog(@"AVR B5 Anschlag A0 home first");
          }break;
             
          case 0xB6:
@@ -9977,8 +9978,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             
          case 0xA5:   
          {
-            NSLog(@"AVR Anschlag A0");
-            [AnschlagDic setObject:[NSNumber numberWithInt:abschnittfertig] forKey:@"anschlaga0"];
+            NSLog(@"AVR A5 Anschlag A0");
+            [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlaga0"];
             [AnschlagLinksIndikator setTransparent:NO];
             [CNC_Lefttaste setEnabled:NO];
          }break;
@@ -9986,7 +9987,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          case 0xA6:   
          {
             NSLog(@"AVR Anschlag B0");
-            [AnschlagDic setObject:[NSNumber numberWithInt:abschnittfertig] forKey:@"anschlagb0"];
+            [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlagb0"];
             [AnschlagUntenIndikator setTransparent:NO];
             [CNC_Downtaste setEnabled:NO];
             
@@ -9995,7 +9996,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          case 0xA7:   
          {
             NSLog(@"AVR Anschlag C0");
-            [AnschlagDic setObject:[NSNumber numberWithInt:abschnittfertig] forKey:@"anschlagc0"];
+            [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlagc0"];
             [AnschlagLinksIndikator setTransparent:NO];
             [CNC_Lefttaste setEnabled:NO];
             
@@ -10004,7 +10005,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          case 0xA8:   
          {
             NSLog(@"AVR Anschlag D0");
-            [AnschlagDic setObject:[NSNumber numberWithInt:abschnittfertig] forKey:@"anschlagd0"];
+            [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlagd0"];
             [AnschlagUntenIndikator setTransparent:NO];
             [CNC_Downtaste setEnabled:NO];
             
