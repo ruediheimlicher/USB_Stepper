@@ -372,7 +372,7 @@ private void button4_Click(object sender, EventArgs e)
          
       }
       
-      readTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
+      readTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                     
                                                     target:self 
                                                   selector:@selector(readUSB:) 
@@ -797,6 +797,7 @@ private void button4_Click(object sender, EventArgs e)
             case 0xEA: // home
             {
                NSLog(@"readUSB EA home gemeldet");
+               
             }break;
                
                // Anschlag first
@@ -812,30 +813,34 @@ private void button4_Click(object sender, EventArgs e)
                
             case 0xA6:   
             {
-               NSLog(@"Anschlag B0");
+               NSLog(@"AVRController A6 Anschlag B0 AnschlagSet vor: %@",AnschlagSet);
                [AnschlagSet addIndex:2];// schritteay lb
                [AnschlagSet addIndex:3];// schritteay hb
                [AnschlagSet addIndex:6];// delayay lb
                [AnschlagSet addIndex:7];// delayay hb
-               
+               NSLog(@"AVRController A6 Anschlag B0 AnschlagSet nach: %@",AnschlagSet);
             }break;
                
             case 0xA7:   
             {
-               NSLog(@"Anschlag C0");
+               NSLog(@"AVRController A7 Anschlag C0 AnschlagSet vor: %@",AnschlagSet);
                [AnschlagSet addIndex:8];// schrittebx lb
                [AnschlagSet addIndex:9];// schrittebx hb
                [AnschlagSet addIndex:12];// delaybx lb
                [AnschlagSet addIndex:13];// delaybx hb
+               NSLog(@"AVRController A7 Anschlag C0 AnschlagSet nach: %@",AnschlagSet);
+
             }break;
                
             case 0xA8:   
             {
-               NSLog(@"Anschlag D0");
+               NSLog(@"AVRController A8 Anschlag D0 AnschlagSet vor: %@",AnschlagSet);
                [AnschlagSet addIndex:10];// schritteby lb
                [AnschlagSet addIndex:11];// schritteby hb
                [AnschlagSet addIndex:14];// delayby lb
                [AnschlagSet addIndex:15];// delayby hb
+               NSLog(@"AVRController A8 Anschlag D0 AnschlagSet nach: %@",AnschlagSet);
+
             }break;
                
                
@@ -919,11 +924,19 @@ private void button4_Click(object sender, EventArgs e)
                [AVR setBusy:0];
             }break;
 
+            case 0xF0:
+            {
+               NSLog(@"antwort gohome");
+               
+            }break;
             case 0xF2:
             {
                NSLog(@"reset");
             }break;
-               
+            case 0xEB:
+            {
+               NSLog(@"blink");
+            }break;
                
          }// switch abschnittcode
          
@@ -935,7 +948,7 @@ private void button4_Click(object sender, EventArgs e)
             for(i=Stepperposition-1;i<[SchnittDatenArray count];i++)
             {
                NSMutableArray* tempZeilenArray = [SchnittDatenArray objectAtIndex:i];
-               //NSLog(@"i: %d tempZeilenArray : %@",i,[tempZeilenArray description]);
+               NSLog(@"AnschlagSet count) > 0 i: %d tempZeilenArray : %@",i,[tempZeilenArray description]);
                int k=0;
                
                for (k=0;k<[tempZeilenArray count];k++)
@@ -1059,7 +1072,7 @@ private void button4_Click(object sender, EventArgs e)
 - (void)PfeilAktion:(NSNotification*)note
 {
 	//[self reportManDown:NULL];
-	NSLog(@"\n\n\t************************\nAVRController PfeilAktion note: %@",[[note userInfo]description]);
+	//NSLog(@"\n\n************************\nAVRController PfeilAktion note: %@",[[note userInfo]description]);
    
    if ([[note userInfo]objectForKey:@"push"])
    {
@@ -1068,7 +1081,7 @@ private void button4_Click(object sender, EventArgs e)
       
       if (mausistdown == 1) // mousedown
       {
-         NSLog(@" ********************* AVRController  PfeilAktion mousedown=1  Stepperposition: %d",Stepperposition);
+         //NSLog(@" ********************* AVRController  PfeilAktion mousedown=1  Stepperposition: %d",Stepperposition);
          
    //   [AVR setBusy:1];
       }
@@ -1079,7 +1092,7 @@ private void button4_Click(object sender, EventArgs e)
          
           //NSLog(@"PfeilAktion mouseup cncbusy: %d",cncbusy);
          pfeilaktion=1; // in writeCNCAbschnitt wird Datenserie beendet
-         NSLog(@" ********************* AVRController PfeilAktion mouseup pwm: %d",pwm);
+         //NSLog(@" ********************* AVRController PfeilAktion mouseup pwm: %d",pwm);
          char*      sendbuffer;
          sendbuffer=malloc(32);
          sendbuffer[16]=0xE6; // Stop fuer Pfeiltasten

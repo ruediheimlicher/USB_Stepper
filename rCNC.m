@@ -180,12 +180,14 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
         {
            code = [[derDatenDic objectForKey:@"code"]intValue];
         }
-   
+   NSLog(@"SteuerdatenVonDic code: %.3f",code);
 	float zoomfaktor = [[derDatenDic objectForKey:@"zoomfaktor"]floatValue];
 	//NSLog(@"zoomfaktor: %.3f",zoomfaktor);
 	zoomfaktor=1;
 	NSPoint StartPunkt= NSPointFromString([derDatenDic objectForKey:@"startpunkt"]);
+   
 	NSPoint StartPunktA= NSPointFromString([derDatenDic objectForKey:@"startpunkta"]);
+   
 	NSPoint StartPunktB= NSPointFromString([derDatenDic objectForKey:@"startpunktb"]);
 	//StartPunkt.x *=zoomfaktor;
 	//StartPunkt.y *=zoomfaktor;
@@ -213,7 +215,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    [tempDatenDic setObject:[NSNumber numberWithFloat:DistanzBY] forKey: @"distanzby"];
 
    
-	float Distanz= sqrt(pow(DistanzX,2)+ pow(DistanzY,2));	// effektive Distanz
+//	float Distanz= sqrt(pow(DistanzX,2)+ pow(DistanzY,2));	// effektive Distanz
 	float DistanzA= hypotf(DistanzAX,DistanzAY);	// effektive Distanz A
 	float DistanzB= hypotf(DistanzBX,DistanzBY);	// effektive Distanz B
 
@@ -225,9 +227,17 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    //   NSLog(@"i:  DistanzA: %2.2f DistanzB: %2.2f",DistanzA,DistanzB);
    }
 	
-   float Zeit = Distanz/speed;												//	Schnittzeit für Distanz
+   if (speed == 0)
+   {
+      NSLog(@"\t\t\t\tspeed ist null");
+      speed = 10;
+   }
+//   float Zeit = Distanz/speed;												//	Schnittzeit für Distanz
    float ZeitA = DistanzA/speed;												//	Schnittzeit für Distanz A
-   float ZeitB = DistanzB/speed;												//	Schnittzeit für Distanz B
+   float ZeitB = DistanzB/speed;                                  //   Schnittzeit für Distanz B
+   
+   //NSLog(@"i: speed: %d DistanzA: %2.2f ZeitA:  %2.2f DistanzB: %2.2f ZeitB: %2.2f",speed,DistanzA,DistanzB,ZeitA,ZeitB);
+   										
    int relevanteSeite=0; // seite A
    float relevanteZeit = 0;
    
@@ -266,75 +276,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
    //NSLog(@"motorstatus: DistanzAX:\t%2.2f\t DistanzAY:\t%2.2f\t DistanzBX:\t%2.2f\t DistanzBY:\t%2.2f\tmotorstatus: %d",DistanzAX,DistanzAY,DistanzBX,DistanzBY,motorstatus);
 
    //NSLog(@"SteuerdatenVonDic motorstatus: %d",motorstatus);
-   /*
-    Routine aus CNCSlave fuer Feststellung des rel Motors
-    if (StepCounterA > StepCounterB) 
-    {
-    if (StepCounterA > StepCounterC)
-    {
-    if (StepCounterA > StepCounterD) // A max
-    {
-    motorstatus |= (1<<COUNT_A);
-    //lcd_putc('A');
-    }
-    else //A>B A>C D>A
-    {
-    motorstatus |= (1<<COUNT_D);
-    //lcd_putc('D');
-    }
-    
-    }//A>C
-    else // A>B A<C: A weg, B weg
-    {
-    if (StepCounterC > StepCounterD)
-    {
-    motorstatus |= (1<<COUNT_C);
-    //lcd_putc('C');
-    }
-    else // A>B A<C D>C B weg, 
-    {
-    motorstatus |= (1<<COUNT_D);
-    //lcd_putc('D');
-    }
-    
-    
-    }
-    }// A>B
-    
-    else // B>A A weg
-    {
-    if (StepCounterB > StepCounterC) // C weg
-    {
-    if (StepCounterB > StepCounterD) // D weg
-    {
-    motorstatus |= (1<<COUNT_B);
-    //lcd_putc('B');
-    }
-    else
-    {
-    motorstatus |= (1<<COUNT_D);
-    //lcd_putc('D');
-    }
-    }
-    else // B<C B weg
-    {  
-    if (StepCounterC > StepCounterD) // D weg
-    {
-    motorstatus |= (1<<COUNT_C);
-    //lcd_putc('C');
-    }
-    else // D>C C weg
-    {
-    motorstatus |= (1<<COUNT_D);
-    //lcd_putc('D');
-    }
-    
-    }
-    }
-    // end relevanter Motor
 
-    
-    */
    
    float relZeit= fmaxf(ZeitA,ZeitB);                             // relevante Zeit: grössere Zeit gibt korrekte max Schnittgeschwindigkeit 
    
@@ -357,19 +299,19 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
     int  anzbyminus=0;
  
     */
-
+   //NSLog(@"SchritteX raw %d, float: %2.2f",SchritteAX,(float)SchritteAX);
    [tempDatenDic setObject:[NSNumber numberWithInt:motorstatus] forKey: @"motorstatus"];
    
    [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteX] forKey: @"schrittex"];
    [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteAX] forKey: @"schritteax"];
    [tempDatenDic setObject:[NSNumber numberWithFloat:(float)SchritteBX] forKey: @"schrittebx"];
 
-	//NSLog(@"SchritteX raw %d",SchritteX);
+	
 	
 	int SchritteY=steps*DistanzY;	//	Schritte in Y-Richtung
 	int SchritteAY=steps*DistanzAY;	//	Schritte in Y-Richtung A
 	int SchritteBY=steps*DistanzBY;	//	Schritte in Y-Richtung B
-   
+   //NSLog(@"SchritteX raw %d",SchritteX);
     
    if (DistanzA< 0.5 || DistanzB < 0.5)
    {
@@ -481,17 +423,34 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 
    
 	
-	float delayX= ((relZeit/(SchritteX & 0x7FFF))*100000)/10;							// Zeit fuer einen Schritt in 100us-Einheit
-	float delayAX= ((relZeit/(SchritteAX & 0x7FFF))*100000)/10;							// Zeit fuer einen Schritt AX in 100us-Einheit
-	float delayBX= ((relZeit/(SchritteBX & 0x7FFF))*100000)/10;							// Zeit fuer einen Schritt BX in 100us-Einheit
-	
+//	float delayX= ((relZeit/(SchritteX & 0x7FFF))*100000)/10;	
+   // Zeit fuer einen Schritt in 100us-Einheit
+   float delayAX = 0;
+   if (SchritteAX > 0)
+   {
+	delayAX = ((relZeit/(SchritteAX & 0x7FFF))*100000)/10;	
+   }
+   // Zeit fuer einen Schritt AX in 100us-Einheit
+   float delayBX = 0;
+   if (SchritteBX > 0)
+   {
+	 delayBX = ((relZeit/(SchritteBX & 0x7FFF))*100000)/10;							// Zeit fuer einen Schritt BX in 100us-Einheit
+   }
       
-   float delayY= ((relZeit/(SchritteY & 0x7FFF))*100000)/10;
-   float delayAY= ((relZeit/(SchritteAY & 0x7FFF))*100000)/10;
-   float delayBY= ((relZeit/(SchritteBY & 0x7FFF))*100000)/10;
+//   float delayY= ((relZeit/(SchritteY & 0x7FFF))*100000)/10;
+   float delayAY = 0;
+   if (SchritteAY > 0)
+   {
+    delayAY = ((relZeit/(SchritteAY & 0x7FFF))*100000)/10;
+   }
+   float delayBY = 0;
+   if (SchritteBY > 0)
+   {
+    delayBY = ((relZeit/(SchritteBY & 0x7FFF))*100000)/10;
+   }
 	
 	//NSLog(@"DistanzX: \t%.2f \tDistanzY: \t%.2f \tDistanz: \t%.2f \tZeit: \t%.3f  \tdelayX: \t%.1f\t  delayY: \t%.1f \tSchritteX: \t%d \tSchritteY: \t%d",DistanzX,DistanzY,Distanz, Zeit, delayX, delayY, SchritteX,SchritteY);
-	
+  // NSLog(@"DistanzX: \t%.2f \tDistanzY: \t%.2f \t%.3f  \tdelayX: \t%.1f\t  delayY: \t%.1f \tSchritteX: \t%d \tSchritteY: \t%d",DistanzX,DistanzY,delayX, delayY, SchritteX,SchritteY);	
 	
 	
 
@@ -673,6 +632,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
 	[tempArray addObject:[derDatenDic objectForKey:@"schritteayl"]];
 	[tempArray addObject:[derDatenDic objectForKey:@"schritteayh"]];
    
+  // NSLog(@"SchnittdatenVonDic delayaxl: %@ delayayl: %@",[derDatenDic objectForKey:@"delayaxl"], [derDatenDic objectForKey:@"delayayl"]);
    
    [tempArray addObject:[derDatenDic objectForKey:@"delayaxl"]];
 	[tempArray addObject:[derDatenDic objectForKey:@"delayaxh"]];

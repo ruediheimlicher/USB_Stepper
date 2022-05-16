@@ -447,7 +447,7 @@ float det(float v0[],float v1[])
    NSLog(@"Pfeiltaste mouseup");
   
    richtung=[self tag];
-   NSLog(@"rPfeiltaste mouseUp Pfeiltaste richtung: %d",richtung);
+   //NSLog(@"rPfeiltaste mouseUp Pfeiltaste richtung: %d",richtung);
    /*
     richtung:
     right:  1
@@ -462,6 +462,8 @@ float det(float v0[],float v1[])
 	[NotificationDic setObject:[NSNumber numberWithInt:richtung] forKey:@"richtung"];
 	
    int aktpwm=0;
+   
+   
    NSPoint location = [event locationInWindow];
    //NSLog(@"Pfeiltaste mouseUp location: %2.2f %2.2f",location.x, location.y);
    [NotificationDic setObject:[NSNumber numberWithInt:0] forKey:@"push"];
@@ -479,7 +481,7 @@ float det(float v0[],float v1[])
    
    richtung=[self tag];
 
-   NSLog(@"rPfeiltaste mouseDown: Pfeiltaste richtung: %d",richtung);
+   //NSLog(@"rPfeiltaste mouseDown: Pfeiltaste richtung: %d",richtung);
    [self setState:NSOnState];
 	
    
@@ -3811,6 +3813,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       {
          aktpwm = [DC_PWM intValue];
       }
+      [CNC setSpeed:10];
       //NSLog(@"AVR  manRichtung aktpwm: %d",aktpwm);
       [self setStepperstrom:aktpwm];
       NSMutableArray* ManArray = [[NSMutableArray alloc]initWithCapacity:0];
@@ -3821,10 +3824,10 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       int index=0;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       //NSLog(@"AVR  manRichtung ManArray count: %d",[ManArray count]);
-      NSLog(@"AVR  manRichtung ManArray %@",ManArray);
+      //NSLog(@"AVR  manRichtung ManArray %@",ManArray);
       //Horizontal bis Anschlag
       
-      int delta= 0xFF;
+      int delta= 0xAF;
      switch (richtung)
       {
          case 1: // right
@@ -3859,7 +3862,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
      
       
       
-      NSLog(@"vor index++ index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
+      //NSLog(@"vor index++ index: %d A.x: %2.2f A.y: %2.2f B.x: %2.2f B.y: %2.2f",index,PositionA.x,PositionA.y,PositionB.x,PositionB.y);
       index++;
       [ManArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:PositionA.x],@"ax",[NSNumber numberWithFloat:PositionA.y],@"ay",[NSNumber numberWithFloat:PositionB.x],@"bx", [NSNumber numberWithFloat:PositionB.y],@"by",[NSNumber numberWithInt:index],@"index",[NSNumber numberWithInt:0],@"lage",nil]];
       //NSLog(@"A");
@@ -3897,13 +3900,13 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          // AB
          if ([CNC_Seite1Check state])
          {
-            NSLog(@"CNC_Seite1Check");
+            //NSLog(@"CNC_Seite1Check");
             [tempDic setObject:tempStartPunktAString forKey:@"startpunkta"];
             [tempDic setObject:tempEndPunktAString forKey:@"endpunkta"];
          }
          if ([CNC_Seite2Check state])
          {
-            NSLog(@"CNC_Seite2Check");
+            //NSLog(@"CNC_Seite2Check");
             [tempDic setObject:tempStartPunktBString forKey:@"startpunktb"];         
             [tempDic setObject:tempEndPunktBString forKey:@"endpunktb"];
          }
@@ -3928,11 +3931,24 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             position |= (1<<LAST_BIT);
          }
          [tempDic setObject:[NSNumber numberWithInt:position] forKey:@"position"];
-         
+         //NSLog(@"i: %d tempDic: %@",i,tempDic);
          NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
-         //NSLog(@"D i: %d",i);
+         //NSLog(@"i: %d tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
+         if ([[tempSteuerdatenDic objectForKey:@"delayaxl"]intValue] == 0)
+         {
+          //  NSLog(@"\t\tdelayaxl=0 i: %d tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
+
+         }
+         if ([[tempSteuerdatenDic objectForKey:@"delayayl"]intValue] == 0)
+         {
+          //  NSLog(@"\t\tdelayayl=0 i: %d tempSteuerdatenDic: %@",i,tempSteuerdatenDic);
+
+         }
+
          [HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
-         //NSLog(@"E i: %d",i);
+         
+         //HomeSchnittdatenArray[0][4] = [NSNumber numberWithInt:20];
+         //NSLog(@"ManRichtung data 4: %@",HomeSchnittdatenArray[0][4]);
       } // for i
       
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
@@ -4055,6 +4071,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       } // for i
       
       NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
+      NSLog(@"reportManleft HomeSchnittdatenArray: %@",HomeSchnittdatenArray);
       [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
       [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
       //NSLog(@"AVR  reportManLeft HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
@@ -4083,7 +4100,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    [self ManRichtung:1];
    [CNC_Lefttaste setEnabled:YES];
    [AnschlagLinksIndikator setTransparent:YES];
-   NSLog(@"reportManRight");
+   //NSLog(@"reportManRight");
    if ((cncstatus)|| !([CNC_Seite1Check state] || [CNC_Seite2Check state]))
    {
       return;
@@ -5066,13 +5083,13 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 - (void)PfeilAktion:(NSNotification*)note
 {
 	//[self reportManDown:NULL];
-	NSLog(@"AVR PfeilAktion start note: %@",[[note userInfo]description]);
+	//NSLog(@"AVR PfeilAktion start note: %@",[[note userInfo]description]);
    
    // Richtung >0: Pfeiltaste
    if ([[note userInfo]objectForKey:@"richtung"]&&[[[note userInfo]objectForKey:@"richtung"]intValue])
    {
       quelle=[[[note userInfo]objectForKey:@"richtung"]intValue];
-      NSLog(@"AVR PfeilAktion start note: %d",quelle);
+      //NSLog(@"AVR PfeilAktion start note quelle: %d",quelle);
       if ([[note userInfo]objectForKey:@"push"])
       {
          mausistdown = [[[note userInfo]objectForKey:@"push"]intValue];
@@ -9184,7 +9201,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
 
 
-
+#pragma mark reportHome
 - (IBAction)reportHome:(id)sender
 {
    NSLog(@"AVR  reportHome");
@@ -9279,7 +9296,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
 
       // home      
       int code=0xF0; // zeigt home an
-      
+      code = 0; // 220522>  F0 zeigt endmarkierung nicht an(???)
       [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"code"];
       
       [tempDic setObject:[NSNumber numberWithInt:code] forKey:@"codea"];
@@ -9300,7 +9317,6 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
     
       NSDictionary* tempSteuerdatenDic=[CNC SteuerdatenVonDic:tempDic];
       //NSLog(@"AVR  reportHome tempSteuerdatenDic: %@",[tempSteuerdatenDic description]);
-     
             
 		[HomeSchnittdatenArray addObject:[CNC SchnittdatenVonDic:tempSteuerdatenDic]];
       
@@ -9311,7 +9327,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
-   //NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+   NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
 
    if ([HomeTaste state])
    {
@@ -9325,9 +9341,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    }
    
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-   //NSLog(@"reportUSB_SendArray SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+   NSLog(@"reporthome SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
 
-//	NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
 	[nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
    
    
@@ -9898,7 +9913,8 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             //beep();
             //NSSound.beep()
             [tickPlayer play];
-           NSBeep();
+            NSBeep();
+            
          }break;
       }// switch abschnittcode
       
@@ -9930,9 +9946,14 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       homeanschlagCount = [[[note userInfo]objectForKey:@"homeanschlagset"]count];
    }
    
+   
    if([[note userInfo]objectForKey:@"abschnittcode"])
    {
       int abschnittcode=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];
+      if (abschnittcode >= 0xA0)
+      {
+         [CNC_busySpinner stopAnimation:NULL];
+      }
       switch (abschnittcode)
       {
          case 0xAA:
@@ -9979,9 +10000,13 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
          case 0xA5:   
          {
             NSLog(@"AVR A5 Anschlag A0");
+            
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlaga0"];
             [AnschlagLinksIndikator setTransparent:NO];
+            [CNC_busySpinner stopAnimation:NULL];
+
             [CNC_Lefttaste setEnabled:NO];
+            NSBeep();
          }break;
             
          case 0xA6:   
@@ -9989,18 +10014,18 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             NSLog(@"AVR Anschlag B0");
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlagb0"];
             [AnschlagUntenIndikator setTransparent:NO];
+            [CNC_busySpinner stopAnimation:NULL];
+
             [CNC_Downtaste setEnabled:NO];
-            
+            NSBeep();
          }break;
             
          case 0xA7:   
          {
             NSLog(@"AVR Anschlag C0");
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlagc0"];
-            [AnschlagLinksIndikator setTransparent:NO];
-            [CNC_Lefttaste setEnabled:NO];
+         }
             
-         }break;
             
          case 0xA8:   
          {
@@ -10008,7 +10033,9 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlagd0"];
             [AnschlagUntenIndikator setTransparent:NO];
             [CNC_Downtaste setEnabled:NO];
-            
+            [CNC_busySpinner stopAnimation:NULL];
+
+            NSBeep();
          }break;
             
             
