@@ -410,7 +410,7 @@ private void button4_Click(object sender, EventArgs e)
                                                userInfo:timerDic repeats:YES]retain];
 */
    sendbuffer[16] = 0xF1;
-   sendbuffer[20] = 0x00;
+   sendbuffer[20] = 0x00; // PWM
 //   int senderfolg= rawhid_send(0, sendbuffer, 32, 50);
 
    free(sendbuffer);
@@ -803,7 +803,7 @@ private void button4_Click(object sender, EventArgs e)
                // Anschlag first
             case 0xA5:   
             {
-               NSLog(@"AVRController A5 Anschlag A0 AnschlagSet vor: %@",AnschlagSet);
+               //NSLog(@"AVRController A5 Anschlag A0 AnschlagSet vor: %@",AnschlagSet);
                [AnschlagSet addIndex:0];// schritteax lb
                [AnschlagSet addIndex:1];// schritteax hb
                [AnschlagSet addIndex:4];// delayax lb
@@ -813,7 +813,7 @@ private void button4_Click(object sender, EventArgs e)
                
             case 0xA6:   
             {
-               NSLog(@"AVRController A6 Anschlag B0 AnschlagSet vor: %@",AnschlagSet);
+               //NSLog(@"AVRController A6 Anschlag B0 AnschlagSet vor: %@",AnschlagSet);
                [AnschlagSet addIndex:2];// schritteay lb
                [AnschlagSet addIndex:3];// schritteay hb
                [AnschlagSet addIndex:6];// delayay lb
@@ -948,7 +948,7 @@ private void button4_Click(object sender, EventArgs e)
             for(i=Stepperposition-1;i<[SchnittDatenArray count];i++)
             {
                NSMutableArray* tempZeilenArray = [SchnittDatenArray objectAtIndex:i];
-               NSLog(@"AnschlagSet count) > 0 i: %d tempZeilenArray : %@",i,[tempZeilenArray description]);
+               NSLog(@"AnschlagSet count > 0 i: %d tempZeilenArray : %@",i,tempZeilenArray );
                int k=0;
                
                for (k=0;k<[tempZeilenArray count];k++)
@@ -1095,7 +1095,7 @@ private void button4_Click(object sender, EventArgs e)
          //NSLog(@" ********************* AVRController PfeilAktion mouseup pwm: %d",pwm);
          char*      sendbuffer;
          sendbuffer=malloc(32);
-         sendbuffer[16]=0xE6; // Stop fuer Pfeiltasten
+         sendbuffer[16]=0xE6; // code Stop fuer Pfeiltasten
    //      sendbuffer[16]=0xE0;// vorher, HALT
          sendbuffer[20]=pwm;
          int senderfolg= rawhid_send(0, sendbuffer, 32, 50);

@@ -9327,7 +9327,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    NSMutableDictionary* HomeSchnittdatenDic=[[NSMutableDictionary alloc]initWithCapacity:0];
    [HomeSchnittdatenDic setObject:HomeSchnittdatenArray forKey:@"schnittdatenarray"];
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"cncposition"];
-   NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+   //NSLog(@"AVR  reportHome HomeSchnittdatenDic: %@",[HomeSchnittdatenDic description]);
 
    if ([HomeTaste state])
    {
@@ -9341,7 +9341,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    }
    
    [HomeSchnittdatenDic setObject:[NSNumber numberWithInt:0] forKey:@"art"]; // 
-   NSLog(@"reporthome SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
+   //NSLog(@"reporthome SchnittdatenDic: %@",[HomeSchnittdatenDic description]);
 
 	[nc postNotificationName:@"usbschnittdaten" object:self userInfo:HomeSchnittdatenDic];
    
@@ -9895,7 +9895,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       }
        
    }
-   
+   /*
    if ([[note userInfo]objectForKey:@"abschnittcode"])
    {
       uint8_t abschnittcode = [[[note userInfo]objectForKey:@"abschnittcode"]intValue];
@@ -9906,7 +9906,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       {
       case 0xAD:
          {
-   //         NSLog(@"AVR  USBReadAktion abschnittcode AD anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
+            NSLog(@"AVR  USBReadAktion abschnittcode AD anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
             [ProfilGraph setStepperposition:stepperposition];
             [ProfilGraph setNeedsDisplay:YES];
             [self setBusy:NO];
@@ -9919,7 +9919,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       }// switch abschnittcode
       
    }
-   
+   */
    
     if ([[note userInfo]objectForKey:@"intervallh"] && [[note userInfo]objectForKey:@"intervalll"])
     {
@@ -9946,60 +9946,77 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
       homeanschlagCount = [[[note userInfo]objectForKey:@"homeanschlagset"]count];
    }
    
-   
-   if([[note userInfo]objectForKey:@"abschnittcode"])
+   // zweite Abfrage
+   if([[note userInfo]objectForKey:@"abschnittcode"]) // buffer[0],
    {
-      int abschnittcode=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];
+      int abschnittcode=[[[note userInfo]objectForKey:@"abschnittcode"]intValue];  
+      uint16_t stepperposition = [[[note userInfo]objectForKey:@"stepperposition"]intValue];
+
+      
       if (abschnittcode >= 0xA0)
       {
          [CNC_busySpinner stopAnimation:NULL];
       }
       switch (abschnittcode)
       {
+         case 0xBD: // Abschnitt fertig
+            {
+               NSLog(@"AVR  USBReadAktion abschnittcode BD anzsteps: %d stepperposition: %d",anzsteps, stepperposition);
+               [ProfilGraph setStepperposition:stepperposition];
+               [ProfilGraph setNeedsDisplay:YES];
+               [self setBusy:NO];
+               //beep();
+               //NSSound.beep()
+               [tickPlayer play];
+               NSBeep();
+               
+            }break;
+
+         // Anschlagmeldungen
          case 0xAA:
          {
-            //  NSLog(@"AVR End Abschnitt von A");
+            //  NSLog(@"AVR AA End Abschnitt von A");
             
          }break;
             
          case 0xAB:
          {
-            //  NSLog(@"AVR End Abschnitt von B");
+            //  NSLog(@"AVR AB End Abschnitt von B");
          }break;
             
          case 0xAC:
          {
-            //  NSLog(@"AVR End Abschnitt von C");
+            //  NSLog(@"AVR AC End Abschnitt von C");
          }break;
             
          case 0xAD:
          {
-              NSLog(@"AVR End Abschnitt von D");
+              NSLog(@"AVR AD End Abschnitt von D");
          }break;
             
          case 0xB5:
          {
-            NSLog(@"AVR B5 Anschlag A0 home first");
+            NSLog(@"AVR Anschlag B5 home first");
          }break;
             
          case 0xB6:
          {
-            NSLog(@"AVR Anschlag B0 home first");
+            NSLog(@"AVR Anschlag B6 home first");
          }break;
             
          case 0xB7:
          {
-            NSLog(@"AVR Anschlag C0 home first");
+            NSLog(@"AVR Anschlag B7 home first");
          }break;
             
          case 0xB8:
          {
-            NSLog(@"AVR Anschlag D0 home first");
+            NSLog(@"AVR Anschlag B8 home first");
          }break;
             
          case 0xA5:   
          {
-            NSLog(@"AVR A5 Anschlag A0");
+            NSLog(@"AVR A5 Anschlag A5");
             
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlaga0"];
             [AnschlagLinksIndikator setTransparent:NO];
@@ -10011,7 +10028,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             
          case 0xA6:   
          {
-            NSLog(@"AVR Anschlag B0");
+            NSLog(@"AVR Anschlag A6");
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlagb0"];
             [AnschlagUntenIndikator setTransparent:NO];
             [CNC_busySpinner stopAnimation:NULL];
@@ -10022,7 +10039,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
             
          case 0xA7:   
          {
-            NSLog(@"AVR Anschlag C0");
+            NSLog(@"AVR Anschlag A7");
             [AnschlagDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"anschlagc0"];
          }
             
@@ -10045,7 +10062,7 @@ NSString* zeilenstring = [NSString stringWithFormat:@"%d\t%.2f\t%.2f\t%.2f\t%.2f
    
    if([[note userInfo]objectForKey:@"home"])
    {
-      //NSLog(@"AVR  USBReadAktion home: %d",[[[note userInfo]objectForKey:@"home"]intValue]);
+      NSLog(@"AVR  USBReadAktion home: %d",[[[note userInfo]objectForKey:@"home"]intValue]);
       int home=0;
       if ([[note userInfo]objectForKey:@"home"])
       {
