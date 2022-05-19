@@ -180,7 +180,7 @@ delayx, delayy:	Zeit fuer einen Schritt in x/y-Richtung, Einheit 100us
         {
            code = [[derDatenDic objectForKey:@"code"]intValue];
         }
-   NSLog(@"SteuerdatenVonDic code: %.3f",code);
+   //NSLog(@"SteuerdatenVonDic code: %.3f",code);
 	float zoomfaktor = [[derDatenDic objectForKey:@"zoomfaktor"]floatValue];
 	//NSLog(@"zoomfaktor: %.3f",zoomfaktor);
 	zoomfaktor=1;

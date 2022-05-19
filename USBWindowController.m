@@ -218,6 +218,17 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
       
    }// switch
    */ 
+   
+   
+   
+   if (rawhid_status() > 0)
+   {
+      NSLog(@"USBOpen: device schon da");
+      
+      [AVR setUSB_Device_Status:1];
+      return 1;
+   }
+   
     r =  rawhid_open(1, 0x16C0, 0x0486, 0xFFAB, 0x0200); // Teensy3.2
    
    if (r <=0)
@@ -242,8 +253,9 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
    }
    else
    {
-      //NSLog(@"USBOpen: found rawhid device %d",usbstatus);
+      NSLog(@"USBOpen: found rawhid device %d",usbstatus);
       [AVR setUSB_Device_Status:1];
+      
       const char* manu = get_manu();
       //fprintf(stderr,"manu: %s\n",manu);
       NSString* Manu = [NSString stringWithUTF8String:manu];
@@ -255,6 +267,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
       //NSLog(@"USBopen Manu: %@ Prod: %@",Manu, Prod);
       NSDictionary* USBDatenDic = [NSDictionary dictionaryWithObjectsAndKeys:Prod,@"prod",Manu,@"manu", boardString, @"boardstring", nil];
       [AVR setUSBDaten:USBDatenDic];
+      [AVR setUSB_Device_Status:1];
     //  NSNotificationCenter *nc=[NSNotificationCenter defaultCenter];
       
     //  [nc postNotificationName:@"usbopen" object:NULL userInfo:NotDic];
@@ -614,6 +627,7 @@ void DeviceRemoved(void *refCon, io_iterator_t iterator)
          case NSAlertFirstButtonReturn: // Einschalten
          {
             [self USBOpen];
+            
          }break;
             
          case NSAlertSecondButtonReturn: // Ignorieren

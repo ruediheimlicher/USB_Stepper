@@ -404,7 +404,7 @@ int rawhid_open(int max, int vid, int pid, int usage_page, int usage)
    IOHIDManagerRegisterDeviceMatchingCallback(hid_manager, attach_callback, NULL);
    IOHIDManagerRegisterDeviceRemovalCallback(hid_manager, detach_callback, NULL);
    ret = IOHIDManagerOpen(hid_manager, kIOHIDOptionsTypeNone);
-   printf("ret %d\n",ret);
+   //printf("ret %d\n",ret);
    if (ret != kIOReturnSuccess) 
    {
       IOHIDManagerUnscheduleFromRunLoop(hid_manager,

@@ -163,7 +163,7 @@ private void button4_Click(object sender, EventArgs e)
 
 - (void)USBAktion:(NSNotification*)note
 {
-   //NSLog(@"USBAktion usbstatus: %d",usbstatus);
+   NSLog(@"USBAktion usbstatus: %d",usbstatus);
    if ([[note userInfo]objectForKey:@"usb"])
    {
       switch ([[[note userInfo]objectForKey:@"usb"]intValue]) 
@@ -173,14 +173,13 @@ private void button4_Click(object sender, EventArgs e)
          {
             //NSLog(@"wait USB");
             [self performSelector:@selector (USBOpen) withObject:NULL afterDelay:2];
-
          }break;
          case ANDERESEITEANFAHREN:
          case OBERKANTEANFAHREN:
-         case HOMETASTE:
+      //   case HOMETASTE:
             
          {
-            [self USBOpen];
+            //[self USBOpen];
             if (usbstatus==0)
             {
                /*
@@ -200,13 +199,30 @@ private void button4_Click(object sender, EventArgs e)
                int antwort=[Warnung runModal];
                 */
             }
+            
          }  break;
+            
+         case HOMETASTE:
+         {
+            
+         }break;
          case USBREMOVED:
          {
             NSLog(@"USB removed");
             [AVR setUSB_Device_Status:0];
 
          }break;
+         case USBATTACHED:
+         {
+            NSLog(@"USB added");
+            if ([self USBOpen] == 1)
+            {
+            [AVR setUSB_Device_Status:1];
+            }
+            
+
+         }break;
+ 
          default:
             break;
       }
@@ -286,25 +302,7 @@ private void button4_Click(object sender, EventArgs e)
          case NSAlertFirstButtonReturn: // Einschalten
          {
             [self USBOpen];
-            /*
-             int  r;
-             
-             r = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);
-             if (r <= 0) 
-             {
-             NSLog(@"USBAktion: no rawhid device found");
-             [AVR setUSB_Device_Status:0];
-             return;
-             }
-             else
-             {
-             
-             NSLog(@"USBAktion: found rawhid device %d",usbstatus);
-             [AVR setUSB_Device_Status:1];
-             }
-             usbstatus=r;
-             */
-         }break;
+           }break;
             
          case NSAlertSecondButtonReturn: // Ignorieren
          {
@@ -344,10 +342,13 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"USB_SchnittdatenAktion Object 0 aus SchnittDatenArray aus note: %@",[[[[note userInfo]objectForKey:@"schnittdatenarray"]objectAtIndex:0] description]);
       
       [SchnittDatenArray setArray:[[note userInfo]objectForKey:@"schnittdatenarray"]];
+      
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
       //[SchnittDatenArray removeLastObject];
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray %@",[[SchnittDatenArray objectAtIndex:0] description]);
       //NSLog(@"USB_SchnittdatenAktion SchnittDatenArray: %@",[SchnittDatenArray description]);
+
+      
       
       Stepperposition=0; // Startposition im Schnittdatenarray
       [AVR setBusy:1];
@@ -364,7 +365,7 @@ private void button4_Click(object sender, EventArgs e)
       {
          if ([readTimer isValid])
          {
-            NSLog(@"USB_SchnittdatenAktion: laufenden timer abstellen");
+            //NSLog(@"USB_SchnittdatenAktion: laufenden timer abstellen");
             [readTimer invalidate];
             
          }
@@ -421,7 +422,7 @@ private void button4_Click(object sender, EventArgs e)
 
 - (void)writeCNCAbschnitt
 {
-   //NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittDatenArray count]);
+   NSLog(@"writeCNCAbschnitt Start Stepperposition: %d count: %d",Stepperposition,[SchnittDatenArray count]);
    //NSLog(@"writeCNCAbschnitt SchnittDatenArray anz: %d\n SchnittDatenArray: %@",[SchnittDatenArray count],[SchnittDatenArray description]);
    
    /*
@@ -548,7 +549,7 @@ private void button4_Click(object sender, EventArgs e)
          //dauer4 = [dateA timeIntervalSinceNow]*1000;
          //         int senderfolg= rawhid_send(0, newsendbuffer, 32, 50);
          
-        // NSLog(@"writeCNCAbschnitt senderfolg: %X Stepperposition: %d  ",senderfolg,Stepperposition);
+        NSLog(@"writeCNCAbschnitt senderfolg: %d  ",senderfolg);
          //NSLog(@"writeCNCAbschnitt End Stepperposition: %d ",Stepperposition);
          
          Stepperposition++;
@@ -627,6 +628,8 @@ private void button4_Click(object sender, EventArgs e)
     double dauer8 = 0;
     */
    
+   
+   
    if (Stepperposition ==0)//< [SchnittDatenArray count])
    {
       NSLog(@"readUSB Stepperposition = 0");
@@ -655,8 +658,6 @@ private void button4_Click(object sender, EventArgs e)
       //NSLog(@"dataRead: %@",[dataRead description]);
       [self setLastValueRead:dataRead];
       int abschnittcode=(UInt8)buffer[0];     // code fuer Art des Pakets
-
-      //     NSLog(@"readUSB abschnittcode0: %d\thex: \t%02X\n",abschnittcode,abschnittcode);
  /*
       for (int i=0; i<23;i++)
       {
@@ -668,10 +669,21 @@ private void button4_Click(object sender, EventArgs e)
   */
       if (abschnittcode==0)
       {
-         //NSLog(@"readUSB abschnittcode = 0");
-         
+         /*
+         for (int i=0; i<32;i++)
+         {
+            //fprintf(stderr, "i: %d  %d ",i,(buffer[i] & 0xFF));
+            fprintf(stderr,"%u\t",(UInt8)buffer[i]);
+            //NSLog(@"i: %d char: %x data: %d",i,(buffer[i] & 0xFF),[[NSNumber numberWithInt:(UInt8)buffer[i]]intValue]);
+         }
+         fprintf(stderr,"\n");
+         NSLog(@"readUSB abschnittcode = 0");
+         */
          return;
       }
+      fprintf(stderr,"\n");
+      NSLog(@"\t\t\t\t readUSB abschnittcode: %02X\n",abschnittcode);
+
      //fprintf(stderr, "\n         *********readUSB abschnittcode0:\t%02X\n",abschnittcode);
       if (abschnittcode==0xBA)
       {
@@ -685,7 +697,7 @@ private void button4_Click(object sender, EventArgs e)
          if([[inTimer userInfo]objectForKey:@"home"])
          {
             home = [[[inTimer userInfo]objectForKey:@"home"] intValue];
-            //NSLog(@"readUSB                home aus timer: %d",home);
+            NSLog(@"readUSB                home aus timer: %d",home);
          }
       }
       
@@ -709,7 +721,7 @@ private void button4_Click(object sender, EventArgs e)
          NSNumber* Abschnittcode=[NSNumber numberWithInt:abschnittcode];
          
    //      NSLog(@"**readUSB  buffer 4,5 abschnittnummer  inposition: %d",abschnittnummer);
-         
+         NSLog(@"**readUSB  buffer 22 cncstatus: %d",buffer[22]);
          [NotificationDic setObject:Abschnittnummer forKey:@"inposition"];
          [NotificationDic setObject:[NSNumber numberWithInt:abschnittcode] forKey:@"abschnittcode"];
          
@@ -731,6 +743,8 @@ private void button4_Click(object sender, EventArgs e)
          
          // cncstatus abfragen
          //NSNumber* cncstatus=[NSNumber numberWithInt:(UInt8)buffer[8]];
+         NSNumber* cncstatus=[NSNumber numberWithInt:(UInt8)buffer[22]];
+         
          [NotificationDic setObject:[NSNumber numberWithInt:mausistdown] forKey:@"mausistdown"];
          // end verschieben
          
@@ -769,6 +783,7 @@ private void button4_Click(object sender, EventArgs e)
           */
          NSMutableIndexSet* AnschlagSet = [NSMutableIndexSet indexSet]; // Index fuer zu loeschende Daten im Schnittdatenarray
          // Index fuer zu loeschende Daten im Schnittdatenarray
+         
          switch (abschnittcode)
          {
                /*
@@ -793,14 +808,17 @@ private void button4_Click(object sender, EventArgs e)
                }
                Stepperposition=0;
             }break;
-               
+ 
+               /*
             case 0xEA: // home
             {
                NSLog(@"readUSB EA home gemeldet");
                
             }break;
+              */
                
                // Anschlag first
+#pragma mark A5
             case 0xA5:   
             {
                //NSLog(@"AVRController A5 Anschlag A0 AnschlagSet vor: %@",AnschlagSet);
@@ -808,7 +826,8 @@ private void button4_Click(object sender, EventArgs e)
                [AnschlagSet addIndex:1];// schritteax hb
                [AnschlagSet addIndex:4];// delayax lb
                [AnschlagSet addIndex:5];// delayax hb
-               NSLog(@"AVRController A5 Anschlag A0 AnschlagSet nach: %@",AnschlagSet);
+               uint8_t cncstatus = buffer[22];
+               NSLog(@"AVRController A5 Anschlag A0 AnschlagSet nach: %@",AnschlagSet,cncstatus);
             }break;
                
             case 0xA6:   
@@ -818,17 +837,19 @@ private void button4_Click(object sender, EventArgs e)
                [AnschlagSet addIndex:3];// schritteay hb
                [AnschlagSet addIndex:6];// delayay lb
                [AnschlagSet addIndex:7];// delayay hb
-               NSLog(@"AVRController A6 Anschlag B0 AnschlagSet nach: %@",AnschlagSet);
+               uint8_t cncstatus = buffer[22];
+               NSLog(@"AVRController A6 Anschlag B0 AnschlagSet nach: %@",AnschlagSet,cncstatus);
             }break;
-               
+#pragma mark A7              
             case 0xA7:   
             {
-               NSLog(@"AVRController A7 Anschlag C0 AnschlagSet vor: %@",AnschlagSet);
+               //NSLog(@"AVRController A7 Anschlag C0 AnschlagSet vor: %@",AnschlagSet);
                [AnschlagSet addIndex:8];// schrittebx lb
                [AnschlagSet addIndex:9];// schrittebx hb
                [AnschlagSet addIndex:12];// delaybx lb
                [AnschlagSet addIndex:13];// delaybx hb
-               NSLog(@"AVRController A7 Anschlag C0 AnschlagSet nach: %@",AnschlagSet);
+               uint8_t cncstatus = buffer[22];
+               NSLog(@"AVRController A7 Anschlag C0 AnschlagSet nach: %@",AnschlagSet,cncstatus);
 
             }break;
                
@@ -839,35 +860,76 @@ private void button4_Click(object sender, EventArgs e)
                [AnschlagSet addIndex:11];// schritteby hb
                [AnschlagSet addIndex:14];// delayby lb
                [AnschlagSet addIndex:15];// delayby hb
-               NSLog(@"AVRController A8 Anschlag D0 AnschlagSet nach: %@",AnschlagSet);
+               uint8_t cncstatus = buffer[22];
+               NSLog(@"AVRController A8 Anschlag D0 AnschlagSet nach: %@",AnschlagSet,cncstatus);
 
             }break;
                
                
                // Anschlag home first
-               
+#pragma mark B5              
             case 0xB5:
             {
-               NSLog(@"Anschlag A home first");
+               NSLog(@"B5 Anschlag A home first  Horizontal Stepperport 1");
                [HomeAnschlagSet addIndex:0xB5];
+               /*
+                sendbuffer[23] = (StepCounterA & 0xFF0)>>8;
+                sendbuffer[24] = StepCounterA & 0x00FF;
+                sendbuffer[25] = (StepCounterB & 0xFF0)>>8;
+                sendbuffer[26] = StepCounterB & 0x00FF;
+                sendbuffer[27] = (StepCounterC & 0xFF0)>>8;
+                sendbuffer[28] = StepCounterC & 0x00FF;
+                sendbuffer[29] = (StepCounterD & 0xFF0)>>8;
+                sendbuffer[30] = StepCounterD & 0x00FF;
+
+                */
+               StepCounterA = (buffer[23]<<8) | buffer[24];
+               StepCounterB = (buffer[25]<<8) | buffer[26];
+               StepCounterC = (buffer[27]<<8) | buffer[28];
+               StepCounterD = (buffer[29]<<8) | buffer[30];
+               uint8_t cncstatus = buffer[22];
+               NSLog(@"AVRController B5 Anschlag A AnschlagSet nach: %@",HomeAnschlagSet,cncstatus);
+
             }break;
-               
+#pragma mark B6             
             case 0xB6:
             {
-               NSLog(@"Anschlag B home first");
+               NSLog(@"B6 Anschlag B home first  Vertikal Stepperport 1");
                [HomeAnschlagSet addIndex:0xB6];
+               StepCounterA = (buffer[23]<<8) | buffer[24];
+               StepCounterB = (buffer[25]<<8) | buffer[26];
+               StepCounterC = (buffer[27]<<8) | buffer[28];
+               StepCounterD = (buffer[29]<<8) | buffer[30];
+               uint8_t cncstatus = buffer[22];
+               NSLog(@"AVRController B6 Anschlag B AnschlagSet nach: %@",HomeAnschlagSet,cncstatus);
+
             }break;
                
+#pragma mark B7
             case 0xB7:
             {
-               NSLog(@"Anschlag C home first");
+               NSLog(@"B7 Anschlag C home first Horizontal Stepperport2");
                [HomeAnschlagSet addIndex:0xB7];
+               StepCounterA = (buffer[23]<<8) | buffer[24];
+               StepCounterB = (buffer[25]<<8) | buffer[26];
+               StepCounterC = (buffer[27]<<8) | buffer[28];
+               StepCounterD = (buffer[29]<<8) | buffer[30];
+               uint8_t cncstatus = buffer[22];
+               NSLog(@"AVRController B7 Anschlag C AnschlagSet nach: %@",HomeAnschlagSet,cncstatus);
+
             }break;
                
             case 0xB8:
             {
-               NSLog(@"Anschlag D home first");
+               NSLog(@"B8 Anschlag D home first  Vertikal Stepperport 2");
                [HomeAnschlagSet addIndex:0xB8];
+               StepCounterA = (buffer[23]<<8) | buffer[24];
+               StepCounterB = (buffer[25]<<8) | buffer[26];
+               StepCounterC = (buffer[27]<<8) | buffer[28];
+               StepCounterD = (buffer[29]<<8) | buffer[30];
+               uint8_t cncstatus = buffer[22];
+               NSLog(@"AVRController B8 Anschlag D AnschlagSet nach: %@",HomeAnschlagSet,cncstatus);
+
             }break;
                
                
@@ -924,9 +986,16 @@ private void button4_Click(object sender, EventArgs e)
                [AVR setBusy:0];
             }break;
 
-            case 0xF0:
+            case 0xF0: // nicht verwendet
             {
                NSLog(@"antwort gohome");
+               [NotificationDic setObject:[NSNumber numberWithInt:1] forKey:@"home"];
+               uint8_t cncstatus = buffer[22];
+               [NotificationDic setObject:[NSNumber numberWithInt:cncstatus] forKey:@"cncstatus"];
+               [NotificationDic setObject:[NSNumber numberWithInt:0xF0] forKey:@"abschnittcode"];
+               NSNotificationCenter* nc=[NSNotificationCenter defaultCenter];
+               [nc postNotificationName:@"usbread" object:self userInfo:NotificationDic];
+
                
             }break;
             case 0xF2:
@@ -943,12 +1012,16 @@ private void button4_Click(object sender, EventArgs e)
          //dauer3 = [dateA timeIntervalSinceNow]*1000;
          //NSLog(@"readUSB dauer bis nach switch: %f ms", dauer);
          
-         if ([AnschlagSet count])
+         if ([AnschlagSet count] || [HomeAnschlagSet count])
          {
+            NSLog(@"StepcounterA: %d",StepCounterA);
+            NSLog(@"StepcounterB: %d",StepCounterB);
+            NSLog(@"StepcounterC: %d",StepCounterC);
+            NSLog(@"StepcounterD: %d",StepCounterD);
             for(i=Stepperposition-1;i<[SchnittDatenArray count];i++)
             {
                NSMutableArray* tempZeilenArray = [SchnittDatenArray objectAtIndex:i];
-               NSLog(@"AnschlagSet count > 0 i: %d tempZeilenArray : %@",i,tempZeilenArray );
+               NSLog(@"AnschlagSet count > 0 i: %d ",i);
                int k=0;
                
                for (k=0;k<[tempZeilenArray count];k++)
@@ -980,7 +1053,7 @@ private void button4_Click(object sender, EventArgs e)
          NSMutableIndexSet* EndIndexSet=[NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0xAA,4)]; // Datenreihe ist fertig, kein Anschlag
          [EndIndexSet addIndexesInRange:NSMakeRange(0xA5,4)];
          
-         NSMutableIndexSet* HomeIndexSet=[NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0xB5,4)]; // Datenreihe ist fertig, kein Anschlag
+         NSMutableIndexSet* HomeIndexSet=[NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0xB5,4)]; // Set (B5, b6, B7, B8) Datenreihe ist fertig, kein Anschlag
          
          // [EndIndexSet addIndexesInRange:NSMakeRange(0xB5,4)];
          
@@ -995,13 +1068,13 @@ private void button4_Click(object sender, EventArgs e)
          }
          else 
          {
-            if ([HomeIndexSet containsIndex:abschnittcode])
+            if ([HomeIndexSet containsIndex:abschnittcode]) // abschnittcode ist von Home-anschlag
             {
                
                //           NSLog(@"readUSB: home ist %d",home);
-               //           NSLog(@"readUSB: HomeAnschlagSet count: %d",[HomeAnschlagSet count]);
+               NSLog(@"readUSB: HomeAnschlagSet count: %d",[HomeAnschlagSet count]);
                //if (home == 1)
-               if ([HomeAnschlagSet count]== 1)
+               if ([HomeAnschlagSet count]== 1) // ein Anschlag, Motor A oder C)
                {
                   [[inTimer userInfo]setObject:[NSNumber numberWithInt:2]forKey:@"home"];
                   
@@ -1205,7 +1278,7 @@ private void button4_Click(object sender, EventArgs e)
    if ([[note userInfo]objectForKey:@"ein"])
    {
       ein =[[[note userInfo]objectForKey:@"ein"]intValue];
-      NSLog(@"StepperstromAktion ein: %d",ein);
+      //NSLog(@"StepperstromAktion ein: %d",ein);
    }
    char*      sendbuffer;
    

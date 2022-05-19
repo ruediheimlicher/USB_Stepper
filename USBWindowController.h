@@ -92,6 +92,13 @@
    int               halt_status;
     NSMutableIndexSet* HomeAnschlagSet;
    char*      newsendbuffer;
+   
+   
+   uint16_t StepCounterA;
+   uint16_t StepCounterB;
+   uint16_t StepCounterC;
+   uint16_t StepCounterD;
+
 }
 
 - (void)keyDown:(NSEvent*)derEvent;
